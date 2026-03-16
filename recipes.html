@@ -7,38 +7,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/spill.css">
 <style>
-.recipes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(245,240,232,.1); border:2px solid rgba(245,240,232,.15); }
-.recipe-card { background:var(--espresso); padding:2rem; cursor:pointer; transition:background .2s; position:relative; overflow:hidden; text-decoration:none; color:inherit; display:block; }
-.recipe-card:hover { background:#3d2410; }
-.recipe-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
-.recipe-card:hover::before { transform:scaleX(1); }
-.recipe-icon { font-size:2rem; margin-bottom:1rem; display:block; }
-.recipe-name { font-size:1.3rem; font-weight:800; color:var(--cream); letter-spacing:-.01em; margin-bottom:.4rem; }
-.recipe-desc { font-size:.68rem; color:rgba(245,240,232,.5); line-height:1.65; margin-bottom:1.25rem; }
-.recipe-stats { display:flex; gap:1.25rem; margin-bottom:1.5rem; }
-.rs-item { display:flex; flex-direction:column; gap:.15rem; }
-.rs-label { font-family:'Syne Mono',monospace; font-size:.52rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(245,240,232,.3); }
-.rs-val { font-size:.8rem; font-weight:700; color:var(--yellow); }
-.recipe-expand { display:none; margin-top:1rem; border-top:1px solid rgba(245,240,232,.1); padding-top:1.5rem; }
-.recipe-card.open .recipe-expand { display:block; }
-.recipe-card.open::before { transform:scaleX(1); }
-.re-step { display:flex; gap:1rem; margin-bottom:1rem; }
-.re-num { font-family:'Syne Mono',monospace; font-size:.7rem; color:var(--yellow); font-weight:700; flex-shrink:0; margin-top:2px; }
-.re-text { font-size:.72rem; color:rgba(245,240,232,.7); line-height:1.65; }
-.re-ingredients { margin-bottom:1.5rem; }
-.re-ing-title { font-size:.58rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,240,232,.4); margin-bottom:.75rem; }
-.re-ing-item { font-size:.72rem; color:rgba(245,240,232,.65); line-height:1.8; display:flex; align-items:center; gap:.5rem; }
-.re-ing-item::before { content:'·'; color:var(--yellow); }
-.recipe-toggle { font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--yellow); background:none; border:1.5px solid rgba(240,192,64,.3); padding:.4rem .9rem; cursor:pointer; font-family:'Syne',sans-serif; transition:all .15s; }
-.recipe-toggle:hover { background:rgba(240,192,64,.1); border-color:var(--yellow); }
-@media(max-width:900px){ .recipes-grid{grid-template-columns:1fr 1fr;} }
-@media(max-width:600px){ .recipes-grid{grid-template-columns:1fr;} }
+.recipes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(245,240,232,.1);border:2px solid rgba(245,240,232,.15);}
+.recipe-card{background:var(--espresso);padding:2rem;cursor:pointer;transition:background .2s;position:relative;overflow:hidden;}
+.recipe-card:hover,.recipe-card.open{background:#3d2410;}
+.recipe-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.recipe-card.open::before,.recipe-card:hover::before{transform:scaleX(1);}
+.recipe-icon{font-size:2rem;margin-bottom:1rem;display:block;}
+.recipe-name{font-size:1.2rem;font-weight:800;color:var(--cream);letter-spacing:-.01em;margin-bottom:.4rem;}
+.recipe-desc{font-size:.68rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:1.25rem;}
+.recipe-stats{display:flex;gap:1.25rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+.rs-item{display:flex;flex-direction:column;gap:.15rem;}
+.rs-label{font-family:'Syne Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.3);}
+.rs-val{font-size:.8rem;font-weight:700;color:var(--yellow);}
+.recipe-toggle{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);background:none;border:1.5px solid rgba(240,192,64,.3);padding:.4rem .9rem;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;}
+.recipe-toggle:hover{background:rgba(240,192,64,.1);border-color:var(--yellow);}
+.recipe-expand{display:none;margin-top:1.25rem;border-top:1px solid rgba(245,240,232,.1);padding-top:1.5rem;}
+.recipe-card.open .recipe-expand{display:block;}
+.re-ing-title{font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:.75rem;}
+.re-ing-item{font-size:.72rem;color:rgba(245,240,232,.65);line-height:1.8;display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.1rem;}
+.re-ing-item::before{content:'·';color:var(--yellow);flex-shrink:0;}
+.re-ingredients{margin-bottom:1.5rem;}
+.re-step{display:flex;gap:1rem;margin-bottom:.85rem;}
+.re-num{font-family:'Syne Mono',monospace;font-size:.7rem;color:var(--yellow);font-weight:700;flex-shrink:0;min-width:22px;}
+.re-text{font-size:.72rem;color:rgba(245,240,232,.7);line-height:1.65;}
+.re-tip{font-size:.65rem;color:rgba(240,192,64,.6);line-height:1.6;margin-top:1rem;padding:.75rem;border-left:2px solid rgba(240,192,64,.3);font-style:italic;}
+/* INSTANT tab */
+.instant-note{background:var(--yellow);border:2px solid var(--ink);padding:1.5rem 2.5rem;margin-bottom:2.5rem;display:flex;gap:1.5rem;align-items:center;}
+.in-emoji{font-size:2rem;flex-shrink:0;}
+.in-text{font-size:.75rem;line-height:1.75;color:var(--ink);}
+.in-text strong{font-weight:800;display:block;margin-bottom:.25rem;}
+.instant-card{background:var(--bg);}
+.instant-card:hover,.instant-card.open{background:var(--bg2);}
+.instant-card::before{background:var(--rust);}
+.instant-card .recipe-name{color:var(--ink);}
+.instant-card .recipe-desc{color:var(--mid);}
+.instant-card .recipe-toggle{color:var(--rust);border-color:rgba(212,80,26,.3);}
+.instant-card .recipe-toggle:hover{background:rgba(212,80,26,.08);border-color:var(--rust);}
+.instant-card .recipe-expand{border-top-color:var(--border);}
+.instant-card .re-ing-title{color:var(--mid);}
+.instant-card .re-ing-item{color:var(--ink);}
+.instant-card .re-ing-item::before{color:var(--rust);}
+.instant-card .re-num{color:var(--rust);}
+.instant-card .re-text{color:var(--ink);}
+.instant-card .re-tip{color:var(--mid);border-left-color:rgba(212,80,26,.3);}
+.instant-card .rs-val{color:var(--rust);}
+.instant-card .rs-label{color:var(--mid);}
+@media(max-width:900px){.recipes-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.recipes-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <div class="cur" id="cur"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav>
   <a href="index.html" class="logo-wrap">
     <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
@@ -53,224 +73,793 @@
   </ul>
   <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
 </nav>
-
 <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Recipes</span></div>
-
 <div class="page-hero">
   <div class="page-hero-bg">☕</div>
   <p class="page-hero-label">Brew Guides</p>
   <h1 class="page-hero-title">Make something<br><em>actually good.</em></h1>
-  <p class="page-hero-sub">Step-by-step recipes for every brew method. Click any card to expand the full guide.</p>
+  <p class="page-hero-sub">50 recipes for every brew method + 15 instant coffee hacks. Click any card to expand the full guide.</p>
 </div>
-
-<div class="ticker"><div class="ticker-track"><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span></div></div>
-
+<div class="ticker"><div class="ticker-track"><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span><span class="ticker-item">Instant Hacks <span class="ticker-sep">·</span></span><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span><span class="ticker-item">Instant Hacks <span class="ticker-sep">·</span></span></div></div>
 <section style="padding:5rem 2.5rem;background:var(--espresso);border-bottom:2px solid var(--ink);">
-  <div class="filter-bar" style="border-bottom-color:rgba(245,240,232,.2);">
-    <button class="filter-btn active" data-filter="all" style="color:rgba(245,240,232,.5);">All</button>
-    <button class="filter-btn" data-filter="espresso" style="color:rgba(245,240,232,.5);">Espresso</button>
-    <button class="filter-btn" data-filter="filter" style="color:rgba(245,240,232,.5);">Filter</button>
-    <button class="filter-btn" data-filter="cold" style="color:rgba(245,240,232,.5);">Cold</button>
-    <button class="filter-btn" data-filter="other" style="color:rgba(245,240,232,.5);">Other</button>
+  <div class="filter-bar" style="border-bottom-color:rgba(245,240,232,.2);margin-bottom:2.5rem;">
+    <button class="filter-btn active" data-filter="all" style="color:rgba(245,240,232,.6);">All</button>
+    <button class="filter-btn" data-filter="espresso" style="color:rgba(245,240,232,.6);">Espresso</button>
+    <button class="filter-btn" data-filter="filter" style="color:rgba(245,240,232,.6);">Filter</button>
+    <button class="filter-btn" data-filter="cold" style="color:rgba(245,240,232,.6);">Cold</button>
+    <button class="filter-btn" data-filter="milk" style="color:rgba(245,240,232,.6);">Milk Drinks</button>
+    <button class="filter-btn" data-filter="other" style="color:rgba(245,240,232,.6);">Other</button>
+    <button class="filter-btn" data-filter="instant" style="color:rgba(245,240,232,.6);">⚡ Instant Hacks</button>
   </div>
-  <div class="recipes-grid">
+  <div class="instant-note" id="instantNote" style="display:none;">
+    <div class="in-emoji">⚡</div>
+    <div class="in-text"><strong>No fancy gear? No problem.</strong>These 15 hacks turn instant coffee into drinks that are genuinely good. Not specialty-good. But good enough that you won't be embarrassed making them for friends.</div>
+  </div>
+  <div class="recipes-grid" id="recipesGrid">
 
-    <div class="recipe-card" id="flat-white" data-category="espresso">
+    <div class="recipe-card" data-category="espresso" id="flat-white">
       <span class="recipe-icon">☕</span>
       <p class="recipe-name">Classic Flat White</p>
       <p class="recipe-desc">Double ristretto, 150ml silky steamed milk. The one Australians think they invented.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
-      </div>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">18g espresso beans (medium roast)</p>
-          <p class="re-ing-item">150ml whole milk (or oat milk)</p>
-          <p class="re-ing-item">Espresso machine + steam wand</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double ristretto (18g in, ~25g out, 20-22 seconds). Preheated cup.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 150ml milk to 60-65°C. You want silky microfoam — no big bubbles.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour milk from low height, cut through the espresso. A flat white should be velvety, not frothy.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans (medium roast)</p><p class="re-ing-item">150ml whole or oat milk</p><p class="re-ing-item">Espresso machine + steam wand</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double ristretto: 18g in, ~27g out, 20–22 seconds. Use a preheated cup.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 150ml milk to 60–65°C. Silky microfoam — glossy, no big bubbles.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour milk from low height cutting through the espresso. Velvety, not frothy.</p></div>
+        <p class="re-tip">Tip: A ristretto gives more sweetness that cuts through milk better than a standard shot.</p>
       </div>
     </div>
-
-    <div class="recipe-card" id="cold-brew" data-category="cold">
+    <div class="recipe-card" data-category="espresso" id="latte">
+      <span class="recipe-icon">🥛</span>
+      <p class="recipe-name">Café Latte</p>
+      <p class="recipe-desc">A double shot, 240ml of steamed milk. The classic crowd-pleaser.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">240ml whole or oat milk</p><p class="re-ing-item">Espresso machine + steam wand</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double espresso: 18g in, 36g out, 25–30 seconds.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 240ml milk to 65°C with silky microfoam.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour milk over espresso. More milk, more mellow coffee flavour than a flat white.</p></div>
+        <p class="re-tip">Tip: A latte is more forgiving than a flat white — the extra milk balances a slightly off shot.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="cappuccino">
+      <span class="recipe-icon">🫧</span>
+      <p class="recipe-name">Cappuccino</p>
+      <p class="recipe-desc">Equal thirds: espresso, steamed milk, stiff foam. Bold, the original milk coffee.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">120ml whole milk</p><p class="re-ing-item">Espresso machine + steam wand</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double espresso: 18g in, 36g out.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 120ml milk with more foam than a latte — stiff, thick foam on top.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour steamed milk then spoon foam on top. Equal thirds espresso / milk / foam.</p></div>
+        <p class="re-tip">Tip: Traditional Italian cappuccino is smaller (150ml total) and much foamier than what most cafés serve.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="long-black">
+      <span class="recipe-icon">🖤</span>
+      <p class="recipe-name">Long Black / Americano</p>
+      <p class="recipe-desc">Hot water, double espresso poured over the top. Clean, lets the coffee speak.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">150ml hot water (just off boil)</p><p class="re-ing-item">Espresso machine</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add 150ml hot water to a preheated cup first.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a double espresso directly into the hot water. This preserves the crema.</p></div>
+        <p class="re-tip">Tip: Always water first, then espresso — this preserves the crema and tastes better than Americano (water added to espresso).</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="cortado">
+      <span class="recipe-icon">✨</span>
+      <p class="recipe-name">Cortado</p>
+      <p class="recipe-desc">Equal parts espresso and warm milk. Smaller, stronger, no foam theatre.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 small cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">60ml warm milk (minimal foam)</p><p class="re-ing-item">Espresso machine + steam wand</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double espresso: 18g in, 36g out.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 60ml milk to 60°C with minimal foam — just silky steamed milk.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour equal parts espresso and milk. Serve in a small glass.</p></div>
+        <p class="re-tip">Tip: A cortado is about balance — milk tempers the espresso without drowning it. The coffee should still be the star.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="espresso-tonic">
+      <span class="recipe-icon">🟡</span>
+      <p class="recipe-name">Espresso Tonic</p>
+      <p class="recipe-desc">Two shots over tonic water and ice. Sounds wrong. Tastes like a revelation.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso (36–40ml)</p><p class="re-ing-item">120ml quality tonic water (Fever-Tree)</p><p class="re-ing-item">Ice, tall glass</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill a tall glass with ice. Pour cold tonic water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a double espresso. Let it cool 30 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour espresso slowly over the back of a spoon onto the tonic. Float briefly then stir.</p></div>
+        <p class="re-tip">Tip: Use a light roast with fruity notes — Ethiopian or Kenyan work brilliantly. Dark roast tastes medicinal in tonic.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="iced-latte">
+      <span class="recipe-icon">🧊</span>
+      <p class="recipe-name">Iced Latte</p>
+      <p class="recipe-desc">Cold milk, ice, double espresso. Refreshing, easy, endlessly customisable.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso (36ml)</p><p class="re-ing-item">200ml cold milk</p><p class="re-ing-item">Ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill a glass with ice. Pour cold milk over ice.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a double espresso. Let cool 30 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour espresso over the milk and ice. Stir gently. Drink immediately.</p></div>
+        <p class="re-tip">Tip: For a sweeter version, add 1 tsp of vanilla syrup to the milk before adding espresso.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="affogato">
+      <span class="recipe-icon">🍨</span>
+      <p class="recipe-name">Affogato</p>
+      <p class="recipe-desc">Hot espresso poured over vanilla ice cream. A dessert that's also breakfast if you're brave.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 dessert</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1–2 scoops quality vanilla ice cream</p><p class="re-ing-item">Double espresso (hot)</p><p class="re-ing-item">Small bowl or glass</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Scoop ice cream into a cold bowl or glass.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a hot double espresso.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot espresso over the ice cream immediately. Serve at once — best when ice cream is half-melted.</p></div>
+        <p class="re-tip">Tip: A pinch of sea salt on the ice cream takes this to another level. Frangelico or Baileys on the side is the adult upgrade.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="dirty-chai">
+      <span class="recipe-icon">🌶️</span>
+      <p class="recipe-name">Dirty Chai Latte</p>
+      <p class="recipe-desc">Chai tea + espresso + steamed milk. For people who can't decide between coffee and tea.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1 chai tea bag or 1 tbsp chai concentrate</p><p class="re-ing-item">Single or double espresso</p><p class="re-ing-item">200ml steamed oat milk</p><p class="re-ing-item">60ml hot water</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Steep chai in 60ml hot water for 3 minutes. Remove bag.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a single or double espresso over the chai.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Steam oat milk to 65°C with silky microfoam. Pour over.</p></div>
+        <p class="re-tip">Tip: Oat milk works better here — its sweetness complements the spice of the chai.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="mocha">
+      <span class="recipe-icon">🍫</span>
+      <p class="recipe-name">Caffè Mocha</p>
+      <p class="recipe-desc">Espresso, chocolate, steamed milk. The gateway drug for people who don't think they like coffee.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">1–2 tbsp quality cocoa powder or chocolate syrup</p><p class="re-ing-item">200ml steamed milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add cocoa powder to cup. Pull double espresso over it. Stir until dissolved.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 200ml milk to 65°C with silky microfoam.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour milk over chocolate espresso. Dust with cocoa powder.</p></div>
+        <p class="re-tip">Tip: Use dark cocoa powder (70%+) for a more sophisticated mocha — much better than sweet syrup versions.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="ristretto">
+      <span class="recipe-icon">💎</span>
+      <p class="recipe-name">Ristretto</p>
+      <p class="recipe-desc">The sweetest, most concentrated espresso pull. The foundation of great flat whites.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">27ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans (light-medium roast)</p><p class="re-ing-item">Espresso machine</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Set your grinder slightly finer than normal.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull 18g in, targeting ~27g out in 20–25 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Should taste intensely sweet, syrupy, and chocolatey with almost no bitterness.</p></div>
+        <p class="re-tip">Tip: The ristretto pulls only the first, sweetest compounds from the grounds — stopping before the bitter ones arrive. Perfect for flat whites.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="espresso" id="espresso-martini">
+      <span class="recipe-icon">🍸</span>
+      <p class="recipe-name">Espresso Martini</p>
+      <p class="recipe-desc">The cocktail that refuses to die because it's too good to kill.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cocktail</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso (freshly pulled, hot)</p><p class="re-ing-item">50ml vodka</p><p class="re-ing-item">25ml Kahlúa</p><p class="re-ing-item">Ice + cocktail shaker</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double espresso. Allow to cool slightly (30 seconds).</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add espresso, vodka, and Kahlúa to shaker with plenty of ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Shake hard for 15 seconds. Double strain into a chilled coupe. Three coffee beans on top.</p></div>
+        <p class="re-tip">Tip: The frothy top comes from vigorous shaking and fresh espresso. Don't use cold brew here — fresh espresso proteins create the foam.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="v60">
+      <span class="recipe-icon">🍵</span>
+      <p class="recipe-name">V60 Pour Over</p>
+      <p class="recipe-desc">Slow, meditative, and produces a clarity of flavour that makes you understand why people cry at coffee.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g medium-fine ground coffee</p><p class="re-ing-item">300g water at 92°C</p><p class="re-ing-item">V60 + paper filter + gooseneck kettle + scale</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse paper filter with hot water. Discard rinse water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add grounds. Pour 40g water for bloom. Wait 30–45 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour slowly in circles to 150g, then continue to 300g. Consistent pace.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Total drain time: 3–3.5 minutes. Too slow = grind coarser. Too fast = grind finer.</p></div>
+        <p class="re-tip">Tip: The bloom is essential — fresh coffee releases CO2 that interferes with extraction if you skip it.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="4-6-method">
+      <span class="recipe-icon">🏆</span>
+      <p class="recipe-name">The 4:6 Method</p>
+      <p class="recipe-desc">Tetsu Kasuya's World Brewers Cup winning recipe. Split pours, total control.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">10 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">20g medium-coarse ground coffee</p><p class="re-ing-item">300g water at 93°C</p><p class="re-ing-item">V60 + gooseneck kettle + scale + timer</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">0:00 — Pour 50g water (bloom). Wait until 0:45.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">0:45 — Pour to 130g total. This is your sweetness/acidity phase.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">1:30 — Pour to 180g. 2:10 — Pour to 240g. 2:50 — Pour to 300g. These control strength.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Let drain fully. Total brew time ~4–5 minutes.</p></div>
+        <p class="re-tip">Tip: More water in the first phase = more acidic and sweet. More pours in second phase = stronger.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="chemex">
+      <span class="recipe-icon">🔬</span>
+      <p class="recipe-name">Chemex Pour Over</p>
+      <p class="recipe-desc">The most beautiful brewer in existence. Thicker filter = cleaner, brighter cup.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">500ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">30g medium ground coffee</p><p class="re-ing-item">500g water at 94°C</p><p class="re-ing-item">Chemex + paper filter + gooseneck kettle</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse filter thoroughly — Chemex filters are thick and add papery taste if not rinsed.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add grounds. Bloom with 60g water for 45 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour slowly in stages to 500g. Drain time: 4–5 minutes total.</p></div>
+        <p class="re-tip">Tip: The Chemex is less forgiving than the V60 — grind slightly coarser to avoid over-extraction with the thick filter.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="aeropress">
+      <span class="recipe-icon">🫙</span>
+      <p class="recipe-name">Aeropress Classic</p>
+      <p class="recipe-desc">The nerd's secret weapon. Cheap, portable, embarrasses your espresso machine.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">200ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">15g medium-fine ground coffee</p><p class="re-ing-item">200ml water at 90°C</p><p class="re-ing-item">Aeropress + paper filter + scale</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse paper filter. Place Aeropress on cup (standard position). Add grounds.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 200ml water at 90°C. Stir gently. Place plunger to create seal.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">After 2 minutes, press slowly over 30 seconds. Stop when you hear hissing.</p></div>
+        <p class="re-tip">Tip: This produces a concentrate — dilute with 150ml hot water for a regular cup, or drink straight if you want the full strength.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="aeropress-inverted">
+      <span class="recipe-icon">🙃</span>
+      <p class="recipe-name">Inverted Aeropress</p>
+      <p class="recipe-desc">Flip it upside down for more control over steep time and better results.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">200ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">15g medium-fine ground coffee</p><p class="re-ing-item">200ml water at 90°C</p><p class="re-ing-item">Aeropress + paper filter</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Flip Aeropress upside down (plunger extended). Add grounds to the chamber.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 200ml water at 90°C. Stir briefly. Steep 2 minutes.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Wet the filter, attach cap. Carefully flip onto cup. Press slowly over 30 seconds.</p></div>
+        <p class="re-tip">Tip: The inverted method prevents drip-through during steep, giving more control over extraction time.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="french-press">
+      <span class="recipe-icon">🫖</span>
+      <p class="recipe-name">French Press</p>
+      <p class="recipe-desc">Full immersion, full body, the most forgiving brew method there is.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">27g coarsely ground coffee</p><p class="re-ing-item">400ml water at 94°C</p><p class="re-ing-item">French press + timer</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Preheat French press with hot water. Discard. Add coarsely ground coffee.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 400ml water at 94°C. Stir gently. Place lid on (don't press). Set timer 4 minutes.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">After 4 minutes, press slowly and gently. Decant immediately.</p></div>
+        <p class="re-tip">Tip: Coarse grind is essential — fine grind in a French press = muddy, over-extracted, and unpleasant.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="moka-pot">
+      <span class="recipe-icon">🇮🇹</span>
+      <p class="recipe-name">Moka Pot</p>
+      <p class="recipe-desc">Stovetop concentrated coffee. Not real espresso but genuinely delicious done right.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">90ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Medium-fine ground coffee (fill basket level)</p><p class="re-ing-item">Cold water (fill to valve)</p><p class="re-ing-item">Moka pot + stovetop</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill bottom chamber with cold water to just below the safety valve.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Fill basket with ground coffee, level off. Don't tamp. Screw on top chamber tightly.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Place on low-medium heat, lid open. Remove the moment flow slows to a sputter.</p></div>
+        <p class="re-tip">Tip: Low heat is the secret. High heat causes bitterness and burning. Patience is rewarded.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="siphon">
+      <span class="recipe-icon">🧪</span>
+      <p class="recipe-name">Siphon / Vacuum Pot</p>
+      <p class="recipe-desc">The most theatrical brew method. Looks like a chemistry experiment, tastes extraordinary.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Hard</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">25g medium ground coffee</p><p class="re-ing-item">400ml water</p><p class="re-ing-item">Siphon brewer + alcohol or butane burner</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add water to bottom chamber. Secure top chamber with cloth filter.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Apply heat. Water rises into top chamber — takes a few minutes.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Add grounds to top chamber. Stir. Brew for 1 minute.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Remove heat. Vacuum draws coffee back to bottom through filter. Serve from bottom.</p></div>
+        <p class="re-tip">Tip: This method produces extraordinary clarity. Use your best, most complex beans — you'll taste everything.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="turkish">
+      <span class="recipe-icon">🥇</span>
+      <p class="recipe-name">Turkish Coffee</p>
+      <p class="recipe-desc">The oldest method still in daily use. Powder-fine grounds, slow heat, served with the grounds.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">90ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1 heaped tsp powder-fine ground coffee</p><p class="re-ing-item">60ml cold water</p><p class="re-ing-item">Optional: 1 tsp sugar</p><p class="re-ing-item">Cezve (ibrik) + stovetop</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine cold water, coffee, and sugar in the cezve. Stir until combined.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Heat over very low flame. Do not stir once heating begins.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">When foam starts to rise, remove from heat immediately. Pour slowly into a small cup. The grounds settle. Don't drink the last sip.</p></div>
+        <p class="re-tip">Tip: The foam is a sign of quality — if you lose the foam, you've cooked it too long. Slow and low is everything.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="batch-brew">
+      <span class="recipe-icon">🫗</span>
+      <p class="recipe-name">Batch Brew (Large V60)</p>
+      <p class="recipe-desc">Filter coffee for a group. Serves 4–6 and takes the same time as a single cup.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 litre</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">65g medium ground coffee</p><p class="re-ing-item">1000g water at 93°C</p><p class="re-ing-item">Large V60 (size 03) or Chemex + filter + kettle</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse filter. Add grounds. Bloom with 130g water for 45 seconds.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour in stages: 300g, 600g, 800g, 1000g. Take about 8–10 minutes total.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour into a thermal carafe immediately. Keeps well for 30 minutes.</p></div>
+        <p class="re-tip">Tip: Grind slightly coarser for large batches — more coffee to extract through and a finer grind will slow drainage too much.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="aeropress-4-6">
+      <span class="recipe-icon">🔢</span>
+      <p class="recipe-name">Aeropress 4:6 Method</p>
+      <p class="recipe-desc">Apply Kasuya's 4:6 principle to the Aeropress for more control.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">150ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">15g medium-fine ground coffee</p><p class="re-ing-item">150ml water at 88°C</p><p class="re-ing-item">Aeropress (inverted) + scale + timer</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Inverted position. Add grounds.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">0:00 — Pour 60ml water (first phase — acidity/sweetness). Steep 1 minute.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">1:00 — Pour remaining 90ml water (strength phase). Steep 1 more minute.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Flip onto cup. Press slowly over 20 seconds.</p></div>
+        <p class="re-tip">Tip: Adjusting the ratio of first to second pour changes the flavour profile. More first pour = brighter and sweeter.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="filter" id="coldbrew-filter">
+      <span class="recipe-icon">🌙</span>
+      <p class="recipe-name">Cold Brew Filter (Long Steep)</p>
+      <p class="recipe-desc">Use your V60 for a slow, cold steep that produces extraordinary clarity.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">24 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">350ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">22g medium ground coffee</p><p class="re-ing-item">350ml cold filtered water</p><p class="re-ing-item">V60 + paper filter + jar for overnight</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Set up V60 over a jar. Add grounds and damp filter.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour cold water slowly over grounds — don't rush.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Cover with plastic wrap or a plate. Refrigerate for 12–24 hours.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">The slow cold drip produces an incredibly clean, nuanced cup.</p></div>
+        <p class="re-tip">Tip: This is different from immersion cold brew — the drip method produces a cleaner, more delicate result. Best with complex light roasts.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="cold" id="cold-brew">
       <span class="recipe-icon">🧊</span>
       <p class="recipe-name">Cold Brew Concentrate</p>
-      <p class="recipe-desc">12-hour steep, zero heat, maximum vibes. Make a batch Sunday, thank yourself all week.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 hrs</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">600ml</span></div>
-      </div>
+      <p class="recipe-desc">12-hour steep, zero heat, maximum vibes. Make Sunday, thank yourself all week.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">600ml</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">100g coarsely ground coffee</p>
-          <p class="re-ing-item">600ml cold filtered water</p>
-          <p class="re-ing-item">Large jar + fine mesh strainer</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine coarse grounds (1:6 ratio) with cold water in a large jar. Stir briefly.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Cover and refrigerate for 12-16 hours. Don't over-steep or it gets bitter.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Strain through fine mesh (and paper filter if you want clarity). Store up to 2 weeks.</p></div>
-        <div class="re-step"><span class="re-num">04</span><p class="re-text">Serve 1:1 with water or milk over ice. This is concentrate — don't drink it straight unless you want to vibrate.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">100g coarsely ground coffee</p><p class="re-ing-item">600ml cold filtered water</p><p class="re-ing-item">Large jar + fine mesh strainer + coffee filter</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine coarse grounds and cold water in a large jar (1:6 ratio). Stir briefly.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Cover and refrigerate for 12–16 hours. Don't over-steep or it gets bitter.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Strain through fine mesh, then through a paper filter for clarity. Store up to 2 weeks.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Serve 1:1 with water or milk over ice. This is concentrate.</p></div>
+        <p class="re-tip">Tip: Coarse grind is essential for cold brew — too fine turns it bitter even with the long, cold extraction.</p>
       </div>
     </div>
-
-    <div class="recipe-card" id="aeropress" data-category="filter">
-      <span class="recipe-icon">🫙</span>
-      <p class="recipe-name">Aeropress Banger</p>
-      <p class="recipe-desc">The nerd's secret weapon. Cheap, portable, and will embarrass your espresso machine.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Medium</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
-      </div>
+    <div class="recipe-card" data-category="cold" id="japanese-iced">
+      <span class="recipe-icon">❄️</span>
+      <p class="recipe-name">Japanese Iced Pour Over</p>
+      <p class="recipe-desc">Brew hot directly onto ice. Fast, bright, and shockingly refreshing.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">250ml</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">15g medium-fine ground coffee</p>
-          <p class="re-ing-item">200ml water at 90°C</p>
-          <p class="re-ing-item">Aeropress + paper filter</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse paper filter. Set Aeropress in inverted position. Add 15g grounds.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 200ml water at 90°C. Stir gently. Place cap with rinsed filter.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Wait 2 minutes. Flip onto cup. Press slowly over 30 seconds. Stop when you hear hiss.</p></div>
-        <div class="re-step"><span class="re-num">04</span><p class="re-text">Dilute to taste with hot water. This is espresso-strength concentrate.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">20g medium-fine ground coffee</p><p class="re-ing-item">170g hot water at 94°C</p><p class="re-ing-item">100g ice (in the server)</p><p class="re-ing-item">V60 + filter + scale</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Place ice in your server or cup. Set V60 on top.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Bloom with 40g water for 30 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour remaining 130g water in slow circles over 2 minutes. Coffee brews hot and hits ice immediately.</p></div>
+        <p class="re-tip">Tip: Grind slightly finer than usual — you're using less water, so you need more extraction efficiency. Use a fruity light roast.</p>
       </div>
     </div>
-
-    <div class="recipe-card" id="v60" data-category="filter">
-      <span class="recipe-icon">🍵</span>
-      <p class="recipe-name">Pour Over V60</p>
-      <p class="recipe-desc">Slow, meditative, and produces a clarity of flavour that makes you emotional.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Medium</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div>
-      </div>
+    <div class="recipe-card" data-category="cold" id="shakerato">
+      <span class="recipe-icon">🍹</span>
+      <p class="recipe-name">Espresso Shakerato</p>
+      <p class="recipe-desc">Italian iced espresso shaken with ice until frothy. Cold, strong, and impossibly good.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">18g medium-fine ground coffee</p>
-          <p class="re-ing-item">300g water at 92°C</p>
-          <p class="re-ing-item">V60 + paper filter + gooseneck kettle + scale</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse filter with hot water. Discard rinse water.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Add grounds. Pour 40g water for bloom. Wait 30 seconds.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour slowly in circles to 150g, then continue to 300g. Keep consistent pace.</p></div>
-        <div class="re-step"><span class="re-num">04</span><p class="re-text">Total drain time: 3-3.5 minutes. Too slow = grind coarser. Too fast = grind finer.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso (hot)</p><p class="re-ing-item">Handful of ice cubes</p><p class="re-ing-item">Optional: 1 tsp sugar</p><p class="re-ing-item">Cocktail shaker or lidded jar</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add hot espresso, sugar (if using), and ice to the shaker.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Shake vigorously for 15–20 seconds. The espresso will emulsify and become frothy.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Strain into a chilled cocktail glass or coupe. Serve immediately while still frothy.</p></div>
+        <p class="re-tip">Tip: The shaking creates a micro-foam that's completely different from steamed milk foam — lighter, colder, and more delicate.</p>
       </div>
     </div>
-
-    <div class="recipe-card" id="espresso-tonic" data-category="cold">
-      <span class="recipe-icon">🧇</span>
-      <p class="recipe-name">Espresso Tonic</p>
-      <p class="recipe-desc">Two shots over tonic water and ice. Sounds wrong, tastes like a revelation.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div>
-      </div>
+    <div class="recipe-card" data-category="cold" id="vietnamese-iced">
+      <span class="recipe-icon">🌴</span>
+      <p class="recipe-name">Vietnamese Iced Coffee</p>
+      <p class="recipe-desc">Condensed milk, strong Phin-brewed coffee, ice. Three ingredients, maximum satisfaction.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">Double espresso (36-40ml)</p>
-          <p class="re-ing-item">120ml quality tonic water (Fever-Tree or similar)</p>
-          <p class="re-ing-item">Ice, tall glass</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill tall glass with ice. Pour in cold tonic water.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Pull double espresso. Let it cool for 30 seconds.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour espresso slowly over the back of a spoon onto the tonic. Let it float briefly, then stir.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tbsp sweetened condensed milk</p><p class="re-ing-item">20g dark roast ground coffee</p><p class="re-ing-item">Phin filter + hot water + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add condensed milk to a glass. Place Phin on top.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add coffee to Phin. Pour small amount of hot water to bloom, then fill to top.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Wait for coffee to drip through (4–5 minutes). Remove Phin, stir condensed milk in thoroughly. Pour over ice.</p></div>
+        <p class="re-tip">Tip: Traditional Vietnamese coffee uses Robusta for its higher caffeine and stronger flavour. The result is more intense than you'd expect from a small cup.</p>
       </div>
     </div>
-
-    <div class="recipe-card" id="matcha" data-category="other">
+    <div class="recipe-card" data-category="cold" id="nitro-home">
+      <span class="recipe-icon">🍺</span>
+      <p class="recipe-name">Nitro Cold Brew (Home Version)</p>
+      <p class="recipe-desc">Creamy, cascading, looks like Guinness. Made at home with a cream whipper.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">Overnight</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">400ml cold brew (diluted 1:1)</p><p class="re-ing-item">2x N2O charger cartridges</p><p class="re-ing-item">Whipped cream dispenser</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pour cold brew into dispenser. Seal.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Charge with 2 N2O cartridges. Shake well. Refrigerate overnight.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Dispense into a glass with no ice. Watch the cascade. Drink immediately.</p></div>
+        <p class="re-tip">Tip: N2O creates the creamy texture — CO2 would create a fizzy coffee soda, which is a different (also delicious) thing.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="cold" id="cold-brew-tonic">
+      <span class="recipe-icon">💧</span>
+      <p class="recipe-name">Cold Brew Tonic</p>
+      <p class="recipe-desc">Cold brew concentrate + tonic water. Like the espresso tonic's more laid-back sibling.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">60ml cold brew concentrate</p><p class="re-ing-item">120ml quality tonic water</p><p class="re-ing-item">Ice + lemon slice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill a glass with ice.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour cold brew concentrate over ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Top with tonic water. Add lemon slice. Stir gently once.</p></div>
+        <p class="re-tip">Tip: The cold brew's smoothness pairs beautifully with tonic's bitterness. More approachable than the hot espresso tonic version.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="cold" id="coffee-soda">
+      <span class="recipe-icon">🫧</span>
+      <p class="recipe-name">Coffee Soda</p>
+      <p class="recipe-desc">Cold brew + sparkling water + citrus. The summer coffee drink nobody talks about.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">60ml cold brew concentrate</p><p class="re-ing-item">150ml sparkling water</p><p class="re-ing-item">Ice + lemon or orange slice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill a glass with ice. Add cold brew concentrate.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Top with sparkling water. Squeeze citrus over the top.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Add citrus slice as garnish. Stir once gently.</p></div>
+        <p class="re-tip">Tip: A fruity Ethiopian cold brew works best here — the citrus notes amplify the coffee's natural fruit character.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="cold" id="iced-pourover-milk">
+      <span class="recipe-icon">🥛</span>
+      <p class="recipe-name">Iced Latte Pour Over Style</p>
+      <p class="recipe-desc">Pour over brewed cold, poured over milk and ice. More complex than a standard iced latte.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">350ml</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g medium-fine ground coffee</p><p class="re-ing-item">160g water at 94°C</p><p class="re-ing-item">Ice + 150ml cold milk + V60</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill your cup with ice and cold milk first.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Set V60 on top of the cup. Bloom with 30g water for 30 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour remaining 130g water slowly. Coffee brews straight into the iced milk.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Stir gently once coffee has fully dripped through.</p></div>
+        <p class="re-tip">Tip: The hot coffee hitting the cold milk creates a different extraction result to cold brew — brighter and more acidic. Use a fruity light roast.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="matcha-iced">
       <span class="recipe-icon">🌿</span>
       <p class="recipe-name">Iced Matcha Latte</p>
-      <p class="recipe-desc">Ceremonial grade, oat milk, and enough ice to make you forget it's Monday.</p>
-      <div class="recipe-stats">
-        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div>
-        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
-        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
-      </div>
+      <p class="recipe-desc">Ceremonial grade matcha, oat milk, and enough ice to forget it's Monday.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
       <button class="recipe-toggle">Show recipe ↓</button>
       <div class="recipe-expand">
-        <div class="re-ingredients">
-          <p class="re-ing-title">You'll need</p>
-          <p class="re-ing-item">2g ceremonial grade matcha</p>
-          <p class="re-ing-item">60ml hot water (75°C, not boiling)</p>
-          <p class="re-ing-item">200ml oat milk, ice, bamboo whisk</p>
-        </div>
-        <div class="re-step"><span class="re-num">01</span><p class="re-text">Sift matcha into bowl. Add hot water. Whisk in W/M motions until frothy with no lumps.</p></div>
-        <div class="re-step"><span class="re-num">02</span><p class="re-text">Fill glass with ice. Pour cold oat milk over ice.</p></div>
-        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour matcha concentrate over the top. Stir before drinking.</p></div>
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2g ceremonial grade matcha powder</p><p class="re-ing-item">60ml hot water (75°C — not boiling)</p><p class="re-ing-item">200ml oat milk + ice + bamboo whisk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Sift matcha into a bowl. Add hot water (not boiling — boiling turns matcha bitter).</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Whisk in W/M motions until frothy with no lumps. About 30 seconds.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Fill glass with ice. Pour cold oat milk. Pour matcha over the top. Stir before drinking.</p></div>
+        <p class="re-tip">Tip: Ceremonial grade matcha is worth the extra cost — culinary grade is noticeably more bitter and less complex.</p>
       </div>
     </div>
-
-  </div>
+    <div class="recipe-card" data-category="milk" id="matcha-hot">
+      <span class="recipe-icon">🫖</span>
+      <p class="recipe-name">Hot Matcha Latte</p>
+      <p class="recipe-desc">Frothy, earthy, calming — the anti-coffee for coffee people.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2g ceremonial matcha</p><p class="re-ing-item">60ml water at 75°C</p><p class="re-ing-item">200ml oat or whole milk + steam wand or frother</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Whisk matcha with 60ml water until smooth and frothy.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam or froth 200ml milk to 65°C.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour steamed milk over matcha. Dust with extra matcha powder.</p></div>
+        <p class="re-tip">Tip: Add honey or maple syrup if you prefer it sweeter — matcha has a natural bitterness that some people want to balance.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="golden-latte">
+      <span class="recipe-icon">🌟</span>
+      <p class="recipe-name">Golden Milk / Turmeric Latte</p>
+      <p class="recipe-desc">Turmeric, ginger, black pepper, steamed milk. The anti-inflammatory drink that actually tastes good.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1 tsp turmeric powder</p><p class="re-ing-item">1/4 tsp ginger powder</p><p class="re-ing-item">Pinch black pepper (activates turmeric)</p><p class="re-ing-item">1 tsp honey + 250ml oat or whole milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Mix turmeric, ginger, and black pepper in a small cup.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Heat milk until almost simmering. Whisk in spice mixture and honey.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Froth if desired. Pour into a mug. Dust with cinnamon.</p></div>
+        <p class="re-tip">Tip: The black pepper is essential — it contains piperine which increases turmeric absorption by 2000%. Don't skip it.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="oat-latte">
+      <span class="recipe-icon">🌾</span>
+      <p class="recipe-name">Perfect Oat Milk Latte</p>
+      <p class="recipe-desc">The barista-edition technique that makes the difference between good and exceptional.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">18g espresso beans</p><p class="re-ing-item">200ml barista-edition oat milk (Oatly Barista or Minor Figures)</p><p class="re-ing-item">Espresso machine + steam wand</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double ristretto: 18g in, ~27g out, 20–22 seconds.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Steam oat milk to 60°C — slightly lower than dairy. Keep the whirlpool tight.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour over ristretto. The natural sweetness of oat milk pairs beautifully with ristretto.</p></div>
+        <p class="re-tip">Tip: Regular oat milk splits in hot coffee. Always use barista-edition — it has extra fat to handle heat. Non-negotiable.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="matcha-espresso">
+      <span class="recipe-icon">💚</span>
+      <p class="recipe-name">Iced Matcha Espresso</p>
+      <p class="recipe-desc">Matcha and espresso layered over ice. Double caffeine hit, beautiful layers.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2g matcha + 60ml hot water (75°C)</p><p class="re-ing-item">Double espresso</p><p class="re-ing-item">150ml oat milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Whisk matcha with water until smooth.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Fill glass with ice. Pour oat milk over ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour matcha over milk. Pull espresso and pour over the top. Beautiful layers.</p></div>
+        <p class="re-tip">Tip: Don't stir it — let people enjoy the layers first. The gradual mixing as they drink creates different flavour combinations.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="chai-latte">
+      <span class="recipe-icon">🫚</span>
+      <p class="recipe-name">Masala Chai Latte</p>
+      <p class="recipe-desc">From scratch spiced chai with your choice of milk. The real thing, not the powder stuff.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">2 cups</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 black tea bags or 2 tsp loose leaf</p><p class="re-ing-item">1 cinnamon stick + 4 cardamom pods (crushed)</p><p class="re-ing-item">2 cloves + 1/4 tsp ginger + 1/4 tsp black pepper</p><p class="re-ing-item">400ml oat or whole milk + 1–2 tsp honey</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Lightly crush cardamom pods. Add all spices to a small pot with 100ml water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Simmer spices for 5 minutes. Add tea bags and steep 3 minutes.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Strain into pot. Add milk and heat until almost simmering. Add honey.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Froth if desired. Pour into mugs.</p></div>
+        <p class="re-tip">Tip: Making chai from whole spices is dramatically better than any powder or syrup. The aroma alone is worth it.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="brown-sugar-latte">
+      <span class="recipe-icon">🤎</span>
+      <p class="recipe-name">Brown Sugar Oat Latte</p>
+      <p class="recipe-desc">The Starbucks classic made at home for a fraction of the cost.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso</p><p class="re-ing-item">1 tbsp brown sugar + 1/2 tsp cinnamon</p><p class="re-ing-item">200ml oat milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double espresso. Stir in brown sugar and cinnamon until dissolved.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Fill glass with ice. Pour cold oat milk over ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour sweetened espresso over milk. Stir. Add more cinnamon if you like.</p></div>
+        <p class="re-tip">Tip: Dissolving the brown sugar in hot espresso first ensures it distributes evenly through the cold milk.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="milk" id="lavender-latte">
+      <span class="recipe-icon">💜</span>
+      <p class="recipe-name">Lavender Latte</p>
+      <p class="recipe-desc">Floral, calming, and genuinely delicious. The latte upgrade nobody talks about enough.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">Double espresso</p><p class="re-ing-item">1 tsp culinary lavender + 50ml water + 1 tsp honey (make lavender syrup)</p><p class="re-ing-item">200ml steamed oat milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Make lavender syrup: simmer lavender in 50ml water for 5 minutes. Strain, add honey. Cool.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pull a double espresso. Add 1–2 tsp lavender syrup.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Steam 200ml oat milk to 65°C. Pour over espresso.</p></div>
+        <p class="re-tip">Tip: Use culinary-grade dried lavender — ornamental lavender can be bitter and may contain pesticides.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="other" id="whipped-coffee">
+      <span class="recipe-icon">☁️</span>
+      <p class="recipe-name">Dalgona Whipped Coffee</p>
+      <p class="recipe-desc">Equal parts instant coffee, sugar, hot water — whipped until fluffy and magical.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tbsp instant coffee</p><p class="re-ing-item">2 tbsp white sugar</p><p class="re-ing-item">2 tbsp hot water + cold milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine instant coffee, sugar, and hot water in a bowl.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Whip with hand mixer (2 min) or whisk (5–6 min) until thick and glossy.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour cold milk over ice. Dollop whipped coffee on top. Stir before drinking.</p></div>
+        <p class="re-tip">Tip: This only works with instant coffee — the soluble coffee proteins are what allow it to whip. Ground coffee won't work.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="other" id="coffee-smoothie">
+      <span class="recipe-icon">🍌</span>
+      <p class="recipe-name">Cold Brew Coffee Smoothie</p>
+      <p class="recipe-desc">Cold brew, banana, oat milk, peanut butter. Breakfast and coffee in one genuinely good drink.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">100ml cold brew concentrate</p><p class="re-ing-item">1 frozen banana</p><p class="re-ing-item">1 tbsp peanut butter</p><p class="re-ing-item">200ml oat milk + handful of ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add all ingredients to a blender.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Blend until smooth. Taste — add more cold brew for more coffee intensity.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour into a tall glass. Optional: top with cacao nibs.</p></div>
+        <p class="re-tip">Tip: Frozen banana creates a creamy texture without ice cream. Peel and freeze ripe bananas for this.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="other" id="coffee-cocktail">
+      <span class="recipe-icon">🍸</span>
+      <p class="recipe-name">White Russian</p>
+      <p class="recipe-desc">Vodka, coffee liqueur, cream. The simplest great coffee cocktail.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cocktail</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">50ml vodka</p><p class="re-ing-item">25ml Kahlúa or Tia Maria</p><p class="re-ing-item">30ml heavy cream or oat cream</p><p class="re-ing-item">Ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill a glass with ice. Pour vodka over ice.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add coffee liqueur.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Slowly pour cream over the back of a spoon to float it on top. Don't stir — let people do that as they drink.</p></div>
+        <p class="re-tip">Tip: Oat cream works surprisingly well here and gives a slightly different (but equally good) flavour than dairy cream.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="other" id="coffee-granita">
+      <span class="recipe-icon">🧊</span>
+      <p class="recipe-name">Coffee Granita</p>
+      <p class="recipe-desc">Frozen coffee scraped into icy flakes. An Italian summer classic.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">4 servings</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">400ml strong filter coffee or cold brew</p><p class="re-ing-item">2 tbsp sugar</p><p class="re-ing-item">Optional: whipped cream to serve</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve sugar in warm coffee. Pour into a shallow baking tray.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Freeze for 1 hour. Scrape with a fork. Return to freezer.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Repeat scraping every hour for 3–4 hours until you have icy flakes.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Serve in glasses with a dollop of whipped cream.</p></div>
+        <p class="re-tip">Tip: The key is the repeated scraping — it creates the distinctive flaky texture. Don't let it freeze into a solid block without scraping.</p>
+      </div>
+    </div>
+    <div class="recipe-card" data-category="other" id="cold-brew-popsicle">
+      <span class="recipe-icon">🍦</span>
+      <p class="recipe-name">Cold Brew Coffee Popsicles</p>
+      <p class="recipe-desc">Cold brew, condensed milk, vanilla. The easiest adult popsicle you can make.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">6 popsicles</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">250ml cold brew concentrate</p><p class="re-ing-item">125ml sweetened condensed milk</p><p class="re-ing-item">1 tsp vanilla extract</p><p class="re-ing-item">Popsicle moulds</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Whisk together cold brew, condensed milk, and vanilla until well combined.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour into popsicle moulds. Insert sticks.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Freeze for at least 6 hours or overnight.</p></div><div class="re-step"><span class="re-num">04</span><p class="re-text">Run warm water over mould briefly to unmould.</p></div>
+        <p class="re-tip">Tip: These are very strong — the cold brew concentrate plus the condensed milk sweetness is a powerful combination. Consider diluting the cold brew slightly if you want a milder popsicle.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-dalgona">
+      <span class="recipe-icon">☁️</span>
+      <p class="recipe-name">Dalgona Whipped Instant</p>
+      <p class="recipe-desc">The viral quarantine drink. Instant coffee whipped until fluffy and piled over milk.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tbsp instant coffee</p><p class="re-ing-item">2 tbsp white sugar</p><p class="re-ing-item">2 tbsp hot water + cold milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine instant coffee, sugar, and hot water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Whip with hand mixer (2 min) or whisk (5 min) until thick and glossy.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour cold milk over ice. Dollop whipped mixture on top. Stir before drinking.</p></div>
+        <p class="re-tip">Tip: Only works with instant coffee — the soluble proteins are what allow whipping. Genuinely impressive for something so simple.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-iced-latte">
+      <span class="recipe-icon">🧊</span>
+      <p class="recipe-name">Instant Iced Latte</p>
+      <p class="recipe-desc">Strong instant coffee concentrate over ice and cold milk. Surprisingly decent.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">30ml boiling water</p><p class="re-ing-item">200ml cold milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in 30ml boiling water. Stir well — make it strong.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Fill a tall glass with ice. Pour cold milk over ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour the coffee concentrate over the milk and ice. Stir. Add sweetener if you like.</p></div>
+        <p class="re-tip">Tip: Use less water than usual to make the concentrate strong — it dilutes when it hits the cold milk. 2 tsp in 30ml is the right ratio.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-mocha">
+      <span class="recipe-icon">🍫</span>
+      <p class="recipe-name">Instant Coffee Mocha</p>
+      <p class="recipe-desc">Cocoa powder + instant coffee + hot milk. Chocolatey, comforting, zero equipment.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1.5 tsp instant coffee</p><p class="re-ing-item">1 tsp cocoa powder</p><p class="re-ing-item">1 tsp sugar + 250ml hot milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine instant coffee, cocoa, and sugar in a mug.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add 2 tbsp hot water and stir into a thick paste.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot milk over the paste. Stir well. Dust with cocoa powder.</p></div>
+        <p class="re-tip">Tip: Making a paste first ensures the cocoa fully dissolves and doesn't form lumps. Don't skip this step.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-cold-brew">
+      <span class="recipe-icon">🌙</span>
+      <p class="recipe-name">Overnight Instant Cold Brew</p>
+      <p class="recipe-desc">Dissolve instant in cold water. Leave overnight. Better than you'd expect.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">Overnight</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">2 drinks</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">3 tsp instant coffee</p><p class="re-ing-item">400ml cold water</p><p class="re-ing-item">Jar + fridge</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add instant coffee to a jar. Pour cold water over it. Stir until dissolved.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Refrigerate overnight (or at least 4 hours).</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Serve over ice with milk or straight. Add a pinch of salt to reduce bitterness.</p></div>
+        <p class="re-tip">Tip: Cold-dissolving instant coffee gives a smoother, less harsh flavour than hot-dissolved. The overnight rest genuinely helps.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-chai">
+      <span class="recipe-icon">🌶️</span>
+      <p class="recipe-name">Instant Dirty Chai</p>
+      <p class="recipe-desc">Chai spices + instant coffee + milk. All the flavour, none of the espresso machine.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1.5 tsp instant coffee</p><p class="re-ing-item">1/4 tsp cinnamon + pinch cardamom + pinch ginger</p><p class="re-ing-item">1 tsp honey + 250ml hot oat milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Mix instant coffee, spices, and honey in a mug.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add a small splash of hot water and stir into a spiced paste.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot oat milk over. Stir well. Dust with cinnamon.</p></div>
+        <p class="re-tip">Tip: The spices disguise the roughness of instant coffee really effectively. One of the best uses for instant.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-affogato">
+      <span class="recipe-icon">🍨</span>
+      <p class="recipe-name">Instant Coffee Affogato</p>
+      <p class="recipe-desc">Strong instant poured over ice cream. The easiest impressive dessert you can make.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 dessert</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">40ml boiling water</p><p class="re-ing-item">2 scoops vanilla ice cream</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in 40ml boiling water. Make it very strong.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Scoop ice cream into a cold glass or bowl.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot coffee over ice cream immediately. Serve at once.</p></div>
+        <p class="re-tip">Tip: The quality of the ice cream matters here — use the best vanilla you can find. The ice cream elevates the whole thing.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-frappe">
+      <span class="recipe-icon">🥤</span>
+      <p class="recipe-name">Greek Frappé</p>
+      <p class="recipe-desc">The original instant coffee frappé. Shaken with ice until foamy. A Greek classic.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">1–2 tsp Nescafé instant coffee</p><p class="re-ing-item">1–2 tsp sugar (to taste)</p><p class="re-ing-item">30ml cold water + ice + optional milk</p><p class="re-ing-item">Cocktail shaker or tall jar with lid</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add instant coffee, sugar, and cold water to shaker.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Shake vigorously for 30 seconds until thick foam forms.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Fill a tall glass with ice. Pour foamy mixture over. Top with cold water or milk.</p></div>
+        <p class="re-tip">Tip: Traditionally made with Nescafé Classic — freeze-dried instant creates more foam than spray-dried versions.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-cardamom">
+      <span class="recipe-icon">🌙</span>
+      <p class="recipe-name">Cardamom Instant Coffee</p>
+      <p class="recipe-desc">Middle Eastern-inspired instant coffee with cardamom. Earthy, aromatic, surprisingly sophisticated.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1/4 tsp ground cardamom</p><p class="re-ing-item">1 tsp sugar (optional) + 250ml hot water</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add instant coffee, cardamom, and sugar to your mug.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour hot water over and stir well.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Let settle 30 seconds. The cardamom adds floral, spiced complexity.</p></div>
+        <p class="re-tip">Tip: Fresh-ground cardamom from pods is dramatically better than pre-ground powder. Worth the extra 30 seconds.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-cinnamon">
+      <span class="recipe-icon">🫚</span>
+      <p class="recipe-name">Cinnamon Vanilla Instant Latte</p>
+      <p class="recipe-desc">Instant coffee, cinnamon, vanilla, hot milk. Tastes like a warm hug.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1/4 tsp cinnamon</p><p class="re-ing-item">1/4 tsp vanilla extract + 1 tsp sugar + 250ml hot milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Mix instant coffee, cinnamon, vanilla, and sugar in a mug with 2 tbsp hot water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour hot milk over. Stir. Froth with a milk frother if you have one.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Dust with extra cinnamon to serve.</p></div>
+        <p class="re-tip">Tip: Real vanilla extract (not essence) makes a noticeable difference. Cinnamon and vanilla work together to mask the harshness of instant.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-bulletproof">
+      <span class="recipe-icon">💛</span>
+      <p class="recipe-name">Instant Bulletproof Coffee</p>
+      <p class="recipe-desc">Instant coffee blended with butter or coconut oil. Creamy, filling, high-fat morning fuel.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">250ml hot water</p><p class="re-ing-item">1 tbsp unsalted butter or coconut oil</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in hot water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add butter or coconut oil to a blender with the coffee.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Blend for 20–30 seconds until creamy and frothy.</p></div>
+        <p class="re-tip">Tip: Don't try to stir the fat in — you need to blend it to emulsify. The result is surprisingly creamy and filling.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-protein">
+      <span class="recipe-icon">💪</span>
+      <p class="recipe-name">Coffee Protein Shake</p>
+      <p class="recipe-desc">Instant coffee + protein powder + oat milk. Pre-gym caffeine and protein in one drink.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1 scoop chocolate or vanilla protein powder</p><p class="re-ing-item">300ml cold oat milk + 1 frozen banana (optional)</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in 30ml hot water. Let cool slightly.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Blend coffee, protein powder, oat milk, and frozen banana until smooth.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Serve immediately over ice.</p></div>
+        <p class="re-tip">Tip: Chocolate protein powder with coffee is a combination that works really well — the flavours complement each other naturally.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-tiramisu">
+      <span class="recipe-icon">🍰</span>
+      <p class="recipe-name">Tiramisu Milkshake</p>
+      <p class="recipe-desc">Instant coffee, mascarpone, vanilla. Dessert in a glass, no baking required.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee + 30ml hot water</p><p class="re-ing-item">2 tbsp mascarpone</p><p class="re-ing-item">1 tsp vanilla extract + 1 tsp sugar + 200ml cold milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in hot water. Let cool.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Blend coffee, mascarpone, vanilla, sugar, milk, and ice until smooth and creamy.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour into a glass. Dust with cocoa powder. Drink immediately.</p></div>
+        <p class="re-tip">Tip: Mascarpone is the key ingredient that makes this taste like actual tiramisu. Don't substitute regular cream cheese.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-brown-sugar">
+      <span class="recipe-icon">🤎</span>
+      <p class="recipe-name">Brown Sugar Instant Latte</p>
+      <p class="recipe-desc">Starbucks-style brown sugar oat latte made at home for $0.50.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1 tbsp brown sugar + 1/2 tsp cinnamon</p><p class="re-ing-item">200ml oat milk + ice</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Mix instant coffee, brown sugar, and cinnamon with 30ml hot water into a syrup.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Fill glass with ice. Pour cold oat milk over ice.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour coffee syrup over the top. Stir. Add more cinnamon if you like.</p></div>
+        <p class="re-tip">Tip: Making it into a syrup first ensures the brown sugar fully dissolves and distributes evenly in the cold milk.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-rose">
+      <span class="recipe-icon">🌹</span>
+      <p class="recipe-name">Rose Instant Latte</p>
+      <p class="recipe-desc">Rosewater + instant coffee + oat milk. Floral, slightly sweet, unexpectedly good.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1/2 tsp rosewater (food grade)</p><p class="re-ing-item">1 tsp honey + 250ml hot oat milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Dissolve instant coffee in 30ml hot water.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Add rosewater and honey. Stir.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot oat milk over. Stir. Optional: dust with rose petals.</p></div>
+        <p class="re-tip">Tip: Rosewater is powerful — start with half a teaspoon and taste. Too much and it tastes like soap. A little goes a long way.</p>
+      </div>
+    </div>
+    <div class="recipe-card instant-card" data-category="instant" id="instant-salt-caramel">
+      <span class="recipe-icon">🧂</span>
+      <p class="recipe-name">Salted Caramel Instant Latte</p>
+      <p class="recipe-desc">Caramel sauce + pinch of salt + instant coffee + steamed milk. Café quality from a jar.</p>
+      <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients"><p class="re-ing-title">You'll need</p><p class="re-ing-item">2 tsp instant coffee</p><p class="re-ing-item">1 tbsp caramel sauce (store-bought is fine)</p><p class="re-ing-item">Pinch flaky sea salt</p><p class="re-ing-item">250ml hot oat or whole milk</p></div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Add instant coffee and caramel sauce to a mug.</p></div><div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 30ml hot water and stir into a smooth syrup.</p></div><div class="re-step"><span class="re-num">03</span><p class="re-text">Pour hot milk over. Stir. Add flaky sea salt on top.</p></div>
+        <p class="re-tip">Tip: The salt is not optional — it amplifies the caramel flavour dramatically and balances the sweetness. Use flaky salt for the best result.</p>
+      </div>
+    </div>
+  </div><!-- end recipesGrid -->
 </section>
-
 <section id="newsletter" class="nl-section">
   <div class="nl-inner">
     <div><p class="sec-label" style="color:var(--ink);">Want more?</p><h2 class="nl-title">New recipes<br>every <em>week.</em></h2><p class="nl-sub">Get new brew guides and coffee tips straight to your inbox.</p></div>
     <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. Just coffee.</p></div>
   </div>
 </section>
-
 <footer>
   <div class="footer-top">
     <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
-    <div><p class="footer-col-h">Recipes</p><ul class="footer-links"><li><a href="#flat-white">Flat White</a></li><li><a href="#cold-brew">Cold Brew</a></li><li><a href="#aeropress">Aeropress</a></li><li><a href="#v60">Pour Over</a></li></ul></div>
+    <div><p class="footer-col-h">Recipes</p><ul class="footer-links"><li><a href="#flat-white">Flat White</a></li><li><a href="#v60">V60 Pour Over</a></li><li><a href="#cold-brew">Cold Brew</a></li><li><a href="#aeropress">Aeropress</a></li></ul></div>
     <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li><li><a href="posts.html">All Posts</a></li></ul></div>
     <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
   </div>
   <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">Instagram</a><a href="#">TikTok</a></div></div>
 </footer>
-
 <script src="js/data.js"></script>
 <script src="js/spill.js"></script>
 <script>
-// Recipe expand/collapse
 document.querySelectorAll('.recipe-toggle').forEach(btn=>{
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    const card = btn.closest('.recipe-card');
-    const isOpen = card.classList.contains('open');
+    const card=btn.closest('.recipe-card');
+    const isOpen=card.classList.contains('open');
     card.classList.toggle('open');
-    btn.textContent = isOpen ? 'Show recipe ↓' : 'Hide recipe ↑';
+    btn.textContent=isOpen?'Show recipe ↓':'Hide recipe ↑';
   });
 });
-
-// Filter by category
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    const filter = btn.dataset.filter;
+    const filter=btn.dataset.filter;
+    document.getElementById('instantNote').style.display=filter==='instant'?'flex':'none';
     document.querySelectorAll('.recipe-card').forEach(card=>{
       card.style.display=(filter==='all'||card.dataset.category===filter)?'':'none';
     });
   });
 });
-
-// Open from URL hash
 if(window.location.hash){
   const card=document.querySelector(window.location.hash);
-  if(card){
-    card.classList.add('open');
-    const toggle=card.querySelector('.recipe-toggle');
-    if(toggle) toggle.textContent='Hide recipe ↑';
-    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),300);
-  }
+  if(card){card.classList.add('open');const t=card.querySelector('.recipe-toggle');if(t)t.textContent='Hide recipe ↑';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),300);}
 }
 </script>
 </body>
