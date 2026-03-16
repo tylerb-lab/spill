@@ -88,7 +88,7 @@
 <script src="js/spill.js"></script>
 <script>
 function loadBeans() {
-  const beans = SPILL_BEANS;
+  const beans = window.SPILL_BEANS || [];
   if (!beans) return;
   document.getElementById('beansGrid').innerHTML = beans.map(b=>`
     <div class="bean-card" id="${b.id}" data-category="${b.process.toLowerCase()}">

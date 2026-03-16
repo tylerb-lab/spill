@@ -84,7 +84,7 @@
 <script src="js/spill.js"></script>
 <script>
 function loadGear() {
-  const gear = SPILL_GEAR;
+  const gear = window.SPILL_GEAR || [];
   if (!gear) return;
   document.getElementById('gearGrid').innerHTML = gear.map(g=>`
     <a href="${g.link}" target="_blank" rel="noopener" class="gear-card" data-category="${g.category}">

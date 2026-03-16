@@ -145,7 +145,7 @@ function loadPost() {
   const slug = params.get('slug');
   if (!slug) { document.getElementById('postTitle').textContent = 'Post not found'; return; }
 
-  const posts = SPILL_POSTS;
+  const posts = window.SPILL_POSTS || [];
   if (!posts) return;
 
   const post = posts.find(p => p.slug === slug);

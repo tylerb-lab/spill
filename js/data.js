@@ -3,7 +3,7 @@
 ** To add a bean/gear item: same thing in the BEANS / GEAR arrays below.
 */
 
-const SPILL_POSTS = [
+window.SPILL_POSTS = [
   {
     "slug": "flat-white-fix",
     "title": "Why your flat white tastes like sadness (and how to fix it)",
@@ -72,7 +72,7 @@ const SPILL_POSTS = [
   }
 ];
 
-const SPILL_BEANS = [
+window.SPILL_BEANS = [
   {
     "id": "yirgacheffe-g1",
     "name": "Yirgacheffe G1",
@@ -123,7 +123,7 @@ const SPILL_BEANS = [
   }
 ];
 
-const SPILL_GEAR = [
+window.SPILL_GEAR = [
   {
     "id": "acaia-pearl",
     "name": "Acaia Pearl Scale",

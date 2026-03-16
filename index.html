@@ -429,8 +429,8 @@
 <script>
 // Load featured posts
 function loadHome() {
-  const posts = SPILL_POSTS;
-  const beans = SPILL_BEANS;
+  const posts = window.SPILL_POSTS || [];
+  const beans = window.SPILL_BEANS || [];
 
   // Featured grid
   if (posts) {

@@ -84,7 +84,7 @@
 <script src="js/spill.js"></script>
 <script>
 function loadPosts() {
-  const posts = SPILL_POSTS;
+  const posts = window.SPILL_POSTS || [];
   if (!posts) { document.getElementById('postsGrid').innerHTML='<div class="no-results">Could not load posts.</div>'; return; }
 
   function render(filter) {
