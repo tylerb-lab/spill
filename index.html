@@ -424,12 +424,13 @@
   </div>
 </footer>
 
+<script src="js/data.js"></script>
 <script src="js/spill.js"></script>
 <script>
 // Load featured posts
-async function loadHome() {
-  const posts = await loadData('_data/posts.json');
-  const beans = await loadData('_data/beans.json');
+function loadHome() {
+  const posts = SPILL_POSTS;
+  const beans = SPILL_BEANS;
 
   // Featured grid
   if (posts) {

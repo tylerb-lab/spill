@@ -123,15 +123,12 @@ function initSip() {
   });
 }
 
-/* ── LOAD POSTS FROM JSON ── */
-async function loadData(file) {
-  try {
-    const r = await fetch(file);
-    return await r.json();
-  } catch(e) {
-    console.warn('Could not load', file);
-    return null;
-  }
+/* ── LOAD DATA FROM GLOBALS (no fetch needed for GitHub Pages) ── */
+function loadData(file) {
+  if(file.includes('posts')) return Promise.resolve(typeof SPILL_POSTS !== 'undefined' ? SPILL_POSTS : null);
+  if(file.includes('beans')) return Promise.resolve(typeof SPILL_BEANS !== 'undefined' ? SPILL_BEANS : null);
+  if(file.includes('gear'))  return Promise.resolve(typeof SPILL_GEAR  !== 'undefined' ? SPILL_GEAR  : null);
+  return Promise.resolve(null);
 }
 
 /* ── RENDER POST TILES ── */
