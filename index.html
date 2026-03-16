@@ -349,17 +349,12 @@
 
 <!-- ALL POSTS GRID -->
 <section id="all-posts">
-  <p class="sec-label">Archive</p>
-  <h2 class="sec-title">All the <em>Spill</em></h2>
-  <div class="filter-bar filter-section">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="brew">Brew</button>
-    <button class="filter-btn" data-filter="beans">Beans</button>
-    <button class="filter-btn" data-filter="gear">Gear</button>
-    <button class="filter-btn" data-filter="tips">Tips</button>
-    <button class="filter-btn" data-filter="cafes">Cafés</button>
-  </div>
+  <p class="sec-label">Latest Posts</p>
+  <h2 class="sec-title">Fresh <em>from the blog</em></h2>
   <div class="posts-grid" id="postsGrid"><!-- loaded from JS --></div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="posts.html" class="btn btn-outline">All posts →</a>
+  </div>
 </section>
 
 <!-- NEWSLETTER -->
@@ -427,35 +422,47 @@
 <script src="js/data.js"></script>
 <script src="js/spill.js"></script>
 <script>
-// Load featured posts
-function loadHome() {
+(function() {
   const posts = window.SPILL_POSTS || [];
   const beans = window.SPILL_BEANS || [];
 
   // Featured grid
-  if (posts) {
-    const featured = posts.find(p => p.featured);
-    const others = posts.filter(p => !p.featured).slice(0, 4);
-    const grid = document.getElementById('featuredGrid');
-    if (featured) {
-      grid.innerHTML = `
-        <a href="post.html?slug=${featured.slug}" class="post-card-big">
-          <div class="pcb-img"><svg width="120" height="90" viewBox="0 0 120 90" fill="none"><ellipse cx="60" cy="45" rx="22" ry="16" fill="rgba(212,80,26,.12)" stroke="rgba(212,80,26,.2)" stroke-width="1"/><path d="M48 41 Q60 36 72 41 Q64 48 60 46Z" fill="rgba(245,240,232,.4)"/></svg></div>
-          <div class="pcb-body">
-            <p class="pcb-tag">${featured.category}</p>
-            <h3 class="pcb-title">${featured.title}</h3>
-            <p class="pcb-excerpt">${featured.excerpt}</p>
-            <div class="pcb-meta"><span class="pcb-date">${featured.date} · ${featured.readTime}</span><span class="pcb-read">Read it →</span></div>
+  const grid = document.getElementById('featuredGrid');
+  if (grid && posts.length) {
+    const featured = posts.find(p => p.featured) || posts[0];
+    const others = posts.filter(p => p.slug !== featured.slug).slice(0, 4);
+    grid.innerHTML = `
+      <a href="post.html?slug=${featured.slug}" class="post-card-big">
+        <div class="pcb-img">
+          <svg width="120" height="90" viewBox="0 0 120 90" fill="none">
+            <ellipse cx="60" cy="45" rx="22" ry="16" fill="rgba(212,80,26,.12)" stroke="rgba(212,80,26,.2)" stroke-width="1"/>
+            <path d="M48 41 Q60 36 72 41 Q64 48 60 46Z" fill="rgba(245,240,232,.4)"/>
+          </svg>
+        </div>
+        <div class="pcb-body">
+          <p class="pcb-tag">${featured.category}</p>
+          <h3 class="pcb-title">${featured.title}</h3>
+          <p class="pcb-excerpt">${featured.excerpt}</p>
+          <div class="pcb-meta">
+            <span class="pcb-date">${featured.date} · ${featured.readTime}</span>
+            <span class="pcb-read">Read it →</span>
           </div>
-        </a>
-        <div class="posts-side">${others.map(p=>`<a href="post.html?slug=${p.slug}" class="post-card-sm"><p class="pcs-tag">${p.category}</p><p class="pcs-title">${p.title}</p><p class="pcs-meta">${p.date} · ${p.readTime}</p></a>`).join('')}</div>
-      `;
-    }
+        </div>
+      </a>
+      <div class="posts-side">
+        ${others.map(p => `
+          <a href="post.html?slug=${p.slug}" class="post-card-sm">
+            <p class="pcs-tag">${p.category}</p>
+            <p class="pcs-title">${p.title}</p>
+            <p class="pcs-meta">${p.date} · ${p.readTime}</p>
+          </a>`).join('')}
+      </div>`;
   }
 
   // Beans grid
-  if (beans) {
-    document.getElementById('beansGrid').innerHTML = beans.map(b=>`
+  const beansGrid = document.getElementById('beansGrid');
+  if (beansGrid && beans.length) {
+    beansGrid.innerHTML = beans.slice(0, 4).map(b => `
       <a href="beans.html#${b.id}" class="bean-card">
         <p class="bean-origin">${b.origin} · ${b.process}</p>
         <p class="bean-name">${b.name}</p>
@@ -466,20 +473,24 @@ function loadHome() {
   }
 
   // Posts grid
-  if (posts) {
-    document.getElementById('postsGrid').innerHTML = posts.map(p=>`
+  const postsGrid = document.getElementById('postsGrid');
+  if (postsGrid && posts.length) {
+    postsGrid.innerHTML = posts.slice(0, 6).map(p => `
       <a href="post.html?slug=${p.slug}" class="post-tile" data-category="${p.category}">
-        <div class="pt-img"><svg width="60" height="40" viewBox="0 0 60 40" fill="none"><ellipse cx="30" cy="25" rx="14" ry="10" fill="rgba(212,80,26,.1)"/></svg></div>
+        <div class="pt-img">
+          <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+            <ellipse cx="30" cy="25" rx="14" ry="10" fill="rgba(212,80,26,.1)"/>
+          </svg>
+        </div>
         <p class="pt-tag">${p.category}</p>
         <p class="pt-title">${p.title}</p>
         <p class="pt-excerpt">${p.excerpt}</p>
         <div class="pt-meta"><span>${p.date}</span><span>${p.readTime}</span></div>
       </a>`).join('');
-    initFilters();
+    // re-init filters after rendering
+    if (typeof initFilters === 'function') initFilters();
   }
-}
-
-loadHome();
+})();
 </script>
 </body>
 </html>
