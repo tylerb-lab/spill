@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.about-hero {
+  padding: 8rem 2.5rem 6rem;
+  background: var(--espresso);
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6rem; align-items: center;
+}
+.about-hero-bg {
+  position: absolute; top: -10%; right: -5%;
+  font-size: 28vw; font-weight: 800;
+  color: transparent; -webkit-text-stroke: 1px rgba(245,240,232,.04);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.about-hero-label { font-family: 'Syne Mono', monospace; font-size: .65rem; letter-spacing: .2em; color: var(--yellow); margin-bottom: 1rem; }
+.about-hero-label::before { content: '// '; }
+.about-hero-title { font-size: clamp(3rem, 8vw, 7rem); font-weight: 800; line-height: .9; letter-spacing: -.03em; color: var(--cream); position: relative; z-index: 1; margin-bottom: 1.5rem; }
+.about-hero-title em { font-family: 'Crimson Pro', serif; font-style: italic; font-weight: 300; color: var(--yellow); }
+.about-hero-sub { font-size: .85rem; color: rgba(245,240,232,.55); line-height: 1.85; position: relative; z-index: 1; }
+
+.about-hero-right { position: relative; z-index: 1; }
+.about-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(245,240,232,.1); border: 2px solid rgba(245,240,232,.12); margin-bottom: 2rem; }
+.about-stat { background: var(--espresso); padding: 2rem; }
+.about-stat:hover { background: #3d2410; }
+.as-num { font-family: 'Crimson Pro', serif; font-size: 3.5rem; font-weight: 400; color: var(--yellow); line-height: 1; display: block; margin-bottom: .35rem; }
+.as-label { font-family: 'Syne Mono', monospace; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(245,240,232,.35); }
+.about-hero-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+.about-tag { font-size: .58rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--cream); border: 1.5px solid rgba(245,240,232,.2); padding: .3rem .75rem; }
+
+/* MANIFESTO */
+.manifesto { padding: 7rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--bg); }
+.manifesto-inner { max-width: 760px; margin: 0 auto; }
+.manifesto-label { font-family: 'Syne Mono', monospace; font-size: .65rem; letter-spacing: .2em; color: var(--rust); margin-bottom: 1rem; }
+.manifesto-label::before { content: '// '; }
+.manifesto-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -.02em; color: var(--ink); margin-bottom: 3rem; }
+.manifesto-title em { font-family: 'Crimson Pro', serif; font-style: italic; font-weight: 300; }
+.manifesto-body { font-family: 'Crimson Pro', serif; font-size: 1.2rem; font-weight: 300; line-height: 1.9; color: var(--ink); }
+.manifesto-body p { margin-bottom: 1.75rem; }
+.manifesto-body strong { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95em; color: var(--ink); }
+.manifesto-body .pull-quote {
+  font-size: 1.5rem; font-style: italic; font-weight: 300;
+  color: var(--rust); border-left: 3px solid var(--rust);
+  padding: 1rem 2rem; margin: 2.5rem 0;
+  line-height: 1.5;
+}
+
+/* VALUES */
+.values { padding: 7rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--espresso); }
+.values .sec-label { color: var(--yellow); }
+.values .sec-title { color: var(--cream); }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(245,240,232,.1); border: 2px solid rgba(245,240,232,.12); }
+.value-card { background: var(--espresso); padding: 2.5rem; transition: background .2s; }
+.value-card:hover { background: #3d2410; }
+.value-num { font-family: 'Syne Mono', monospace; font-size: .75rem; color: var(--yellow); font-weight: 700; margin-bottom: 1.25rem; display: block; }
+.value-title { font-size: 1.2rem; font-weight: 800; color: var(--cream); letter-spacing: -.01em; margin-bottom: .75rem; }
+.value-body { font-size: .72rem; color: rgba(245,240,232,.5); line-height: 1.75; }
+
+/* BEHIND THE SCENES */
+.behind { padding: 7rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--bg); }
+.behind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--ink); border: 2px solid var(--ink); margin-top: 3rem; }
+.behind-card { background: var(--bg); padding: 2.5rem; transition: background .2s; }
+.behind-card:hover { background: var(--bg2); }
+.behind-card:hover .bc-title { color: var(--rust); }
+.bc-label { font-family: 'Syne Mono', monospace; font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--rust); margin-bottom: .75rem; }
+.bc-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .75rem; transition: color .2s; }
+.bc-body { font-size: .72rem; color: var(--mid); line-height: 1.75; }
+
+/* FAQ */
+.faq { padding: 7rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--bg2); }
+.faq-list { display: flex; flex-direction: column; gap: 2px; background: var(--ink); border: 2px solid var(--ink); margin-top: 3rem; }
+.faq-row { background: var(--bg2); padding: 2rem 2.5rem; cursor: pointer; transition: background .2s; }
+.faq-row:hover { background: var(--bg3); }
+.faq-row.open { background: var(--bg3); }
+.faq-row.open .faq-arrow { transform: rotate(90deg); }
+.faq-row.open .faq-a { display: block; }
+.faq-q { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.faq-arrow { font-size: 1rem; color: var(--rust); transition: transform .25s; flex-shrink: 0; }
+.faq-a { display: none; font-size: .75rem; color: var(--mid); line-height: 1.8; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+@media(max-width:900px){
+  .about-hero { grid-template-columns: 1fr; gap: 3rem; padding: 7rem 1.5rem 4rem; }
+  .values-grid { grid-template-columns: 1fr 1fr; }
+  .behind-grid { grid-template-columns: 1fr; }
+  .manifesto,.values,.behind,.faq { padding: 5rem 1.5rem; }
+}
+@media(max-width:600px){
+  .values-grid { grid-template-columns: 1fr; }
+  .about-stat-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>About</span></div>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="about-hero-bg">☕</div>
+  <div>
+    <p class="about-hero-label">Who we are</p>
+    <h1 class="about-hero-title">We know too<br>much about<br><em>coffee.</em></h1>
+    <p class="about-hero-sub">Spill is a coffee blog run by people who got a little too deep into specialty coffee and decided to write about it. Recipes, reviews, gear picks, and the occasional hot take.</p>
+  </div>
+  <div class="about-hero-right">
+    <div class="about-stat-grid">
+      <div class="about-stat"><span class="as-num">75+</span><span class="as-label">Articles published</span></div>
+      <div class="about-stat"><span class="as-num">50</span><span class="as-label">Brew recipes</span></div>
+      <div class="about-stat"><span class="as-num">30</span><span class="as-label">Beans reviewed</span></div>
+      <div class="about-stat"><span class="as-num">30</span><span class="as-label">Gear picks</span></div>
+    </div>
+    <div class="about-hero-tags">
+      <span class="about-tag">Sydney, AU</span>
+      <span class="about-tag">Est. 2024</span>
+      <span class="about-tag">No sponsors</span>
+      <span class="about-tag">No ads</span>
+      <span class="about-tag">Just coffee</span>
+    </div>
+  </div>
+</section>
+
+<div class="ticker"><div class="ticker-track"><span class="ticker-item">Honest Reviews <span class="ticker-sep">·</span></span><span class="ticker-item">No Sponsors <span class="ticker-sep">·</span></span><span class="ticker-item">Real Opinions <span class="ticker-sep">·</span></span><span class="ticker-item">Sydney AU <span class="ticker-sep">·</span></span><span class="ticker-item">Est. 2024 <span class="ticker-sep">·</span></span><span class="ticker-item">Just Coffee <span class="ticker-sep">·</span></span><span class="ticker-item">Honest Reviews <span class="ticker-sep">·</span></span><span class="ticker-item">No Sponsors <span class="ticker-sep">·</span></span><span class="ticker-item">Real Opinions <span class="ticker-sep">·</span></span><span class="ticker-item">Sydney AU <span class="ticker-sep">·</span></span><span class="ticker-item">Est. 2024 <span class="ticker-sep">·</span></span><span class="ticker-item">Just Coffee <span class="ticker-sep">·</span></span></div></div>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="manifesto-inner">
+    <p class="manifesto-label">The story</p>
+    <h2 class="manifesto-title">Why we started<br><em>spilling.</em></h2>
+    <div class="manifesto-body">
+      <p>It started the way it always starts. A good cup of coffee at a café that made us wonder why ours at home tasted nothing like it. Then a grinder. Then a scale. Then an Aeropress. Then a V60. Then an argument about water mineral content at 7am on a Tuesday.</p>
+
+      <p class="pull-quote">"Most coffee content is either intimidatingly technical or annoyingly vague. We wanted something in the middle."</p>
+
+      <p>The specialty coffee world can be deeply unwelcoming. There's a certain kind of coffee person who makes you feel bad for not knowing the difference between a washed and natural process, or for owning a capsule machine, or for — god forbid — adding sugar. That's not us. We don't care how you take your coffee. We just want to help you understand it a bit better if you're curious.</p>
+
+      <p><strong>What Spill actually is:</strong> honest takes on beans, brews, and gear. Recipes worth making. Gear picks based on what's actually worth your money. Tips that come from real experimentation and a lot of trial and error.</p>
+
+      <p>No sponsored content. No affiliate links quietly tucked into gear reviews. No "gifted" beans that we're obligated to say nice things about. If something is good, we'll say so. If it's a waste of money, we'll say that too.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <p class="sec-label">What we stand for</p>
+  <h2 class="sec-title">The Spill <em>principles.</em></h2>
+  <div class="values-grid">
+    <div class="value-card">
+      <span class="value-num">01</span>
+      <p class="value-title">Honest above everything</p>
+      <p class="value-body">We write what we actually think. If something isn't worth your money, we'll say so. Our opinions aren't for sale and we don't do sponsored content.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-num">02</span>
+      <p class="value-title">No gatekeeping</p>
+      <p class="value-body">Coffee is for everyone. You don't need a $3000 machine or a palate trained by years of cupping sessions. We write for people who are curious, wherever they're starting from.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-num">03</span>
+      <p class="value-title">Actually practical</p>
+      <p class="value-body">Tips that work at home with real equipment. Recipes tested in a kitchen, not a lab. Gear recommendations based on value, not spec sheets. Useful first, impressive second.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-num">04</span>
+      <p class="value-title">Personality included</p>
+      <p class="value-body">Coffee writing doesn't have to be dry. We have opinions. We have takes. The flat white one Australians think they invented is a running theme. We're not sorry.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-num">05</span>
+      <p class="value-title">Quality over quantity</p>
+      <p class="value-body">We'd rather write one piece that's actually useful than five that pad a content calendar. Every recipe has been made. Every bean has been tasted. Every gear pick has been used.</p>
+    </div>
+    <div class="value-card">
+      <span class="value-num">06</span>
+      <p class="value-title">Coffee as a practice</p>
+      <p class="value-body">Making coffee well is a skill. It takes time, experimentation, and a willingness to drink a few bad cups on the way to good ones. We're here for the whole journey.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEHIND THE SCENES -->
+<section class="behind">
+  <p class="sec-label">Behind the blog</p>
+  <h2 class="sec-title">How we <em>work.</em></h2>
+  <div class="behind-grid">
+    <div class="behind-card">
+      <p class="bc-label">Bean reviews</p>
+      <p class="bc-title">Research-driven, opinion-led</p>
+      <p class="bc-body">Our bean reviews draw on deep research, cupping notes from the specialty community, and genuine enthusiasm for origin and process. Every score reflects a considered opinion, not a brand relationship.</p>
+    </div>
+    <div class="behind-card">
+      <p class="bc-label">Gear reviews</p>
+      <p class="bc-title">Honestly researched picks</p>
+      <p class="bc-body">Our gear picks are based on thorough research, community consensus, and a genuine understanding of what makes coffee equipment worth owning. We only recommend things we'd actually buy ourselves.</p>
+    </div>
+    <div class="behind-card">
+      <p class="bc-label">Recipes</p>
+      <p class="bc-title">Built to actually work</p>
+      <p class="bc-body">Every recipe on Spill is grounded in the established science of extraction and tested technique. The ratios are based on what produces a good cup in the real world. If a recipe has a specific tip, there's a reason for it.</p>
+    </div>
+    <div class="behind-card">
+      <p class="bc-label">Café reviews</p>
+      <p class="bc-title">Honest verdicts, no relationships</p>
+      <p class="bc-body">Our café coverage is based on genuine visits and community reputation. The goal is always the same: tell you whether it's actually worth going to, not to build brand relationships.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <p class="sec-label">Common questions</p>
+  <h2 class="sec-title">Things people <em>ask us.</em></h2>
+  <div class="faq-list">
+    <div class="faq-row">
+      <div class="faq-q">Do you accept sponsored content or paid reviews?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">No. Spill doesn't accept payment or compensation in exchange for coverage. If you're a brand wanting to get featured, the answer is to make something genuinely good.</p>
+    </div>
+    <div class="faq-row">
+      <div class="faq-q">Can I submit a café or bean for review?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">You can suggest one — we read everything. But we can't guarantee coverage, and if we do visit or try it, we'll do so anonymously and on our own timeline. Suggestions don't get preferential treatment.</p>
+    </div>
+    <div class="faq-row">
+      <div class="faq-q">Where are you based?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">Sydney, Australia. Our café reviews are mostly Sydney and Melbourne focused, but our bean reviews, gear picks, and brew guides are relevant wherever you are in the world.</p>
+    </div>
+    <div class="faq-row">
+      <div class="faq-q">How do you score beans out of 10?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">Honestly and subjectively. We taste each bean multiple ways — at least as filter and espresso where applicable — across multiple sessions. The score reflects our genuine assessment of flavour complexity, processing quality, and value for money. A 9.0 is exceptional. An 8.0 is very good. Below 7.5 doesn't usually make it onto the site.</p>
+    </div>
+    <div class="faq-row">
+      <div class="faq-q">Why don't you have more social media presence?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">We're working on it. The blog comes first — we'd rather have a site full of genuinely useful content than a great Instagram with thin writing behind it. More coming.</p>
+    </div>
+    <div class="faq-row">
+      <div class="faq-q">Can I contribute a recipe or article?<span class="faq-arrow">→</span></div>
+      <p class="faq-a">We're not currently taking contributions, but that might change as the site grows. Get in touch via the newsletter if you're interested — we'll keep your details.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div>
+      <p class="sec-label" style="color:var(--ink);">Stay in the loop</p>
+      <h2 class="nl-title">Coffee stuff,<br>in your inbox,<br><em>weekly.</em></h2>
+      <p class="nl-sub">New recipes, reviews, and tips every week. No spam, no sponsored content. Just coffee.</p>
+    </div>
+    <div>
+      <form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form>
+      <p class="nl-note">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Content</p><ul class="footer-links"><li><a href="recipes.html">Brew Guides</a></li><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="posts.html">All Posts</a></li><li><a href="about.html">About</a></li><li><a href="index.html#newsletter">Newsletter</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">Instagram</a><a href="#">TikTok</a></div></div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/spill.js"></script>
+<script>
+document.querySelectorAll('.faq-row').forEach(row => {
+  row.addEventListener('click', () => row.classList.toggle('open'));
+});
+</script>
+</body>
+</html>
