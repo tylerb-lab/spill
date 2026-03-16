@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tips — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.tips-list { display:flex; flex-direction:column; gap:2px; background:var(--ink); border:2px solid var(--ink); }
+.tip-row { background:var(--bg); display:grid; grid-template-columns:70px 1fr auto; align-items:start; gap:1.5rem; padding:2rem; transition:background .15s; cursor:pointer; border:none; }
+.tip-row:hover { background:var(--bg2); }
+.tip-row.open { background:var(--bg2); }
+.tip-row.open .tip-arrow { transform:rotate(90deg); opacity:1; }
+.tip-row.open .tip-title { color:var(--rust); }
+.tip-num { font-family:'Syne Mono',monospace; font-size:1rem; color:var(--rust); font-weight:700; padding-top:2px; }
+.tip-content {}
+.tip-title { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; margin-bottom:.35rem; transition:color .2s; }
+.tip-desc { font-size:.72rem; color:var(--mid); line-height:1.65; }
+.tip-expand { display:none; margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--border); }
+.tip-row.open .tip-expand { display:block; }
+.tip-expand-body { font-family:'Crimson Pro',serif; font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:1rem; }
+.tip-expand-body strong { font-family:'Syne',sans-serif; font-weight:700; font-size:.95em; }
+.tip-tag { font-size:.55rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--rust); background:rgba(212,80,26,.08); border:1px solid rgba(212,80,26,.18); padding:.25rem .65rem; display:inline-block; margin-bottom:1rem; }
+.tip-arrow { font-size:1rem; color:var(--rust); opacity:.4; transition:opacity .2s,transform .3s; padding-top:4px; }
+@media(max-width:600px){ .tip-row{grid-template-columns:50px 1fr auto;padding:1.5rem;gap:1rem;} }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html" class="active">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Tips</span></div>
+
+<div class="page-hero">
+  <div class="page-hero-bg">💡</div>
+  <p class="page-hero-label">Quick Wins</p>
+  <h1 class="page-hero-title">Tips that<br><em>actually work.</em></h1>
+  <p class="page-hero-sub">No gatekeeping. No pretentious nonsense. The actual things that make your coffee better starting today. Click any tip to read more.</p>
+</div>
+
+<div class="ticker"><div class="ticker-track"><span class="ticker-item">Grinding <span class="ticker-sep">·</span></span><span class="ticker-item">Water <span class="ticker-sep">·</span></span><span class="ticker-item">Beans <span class="ticker-sep">·</span></span><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Temperature <span class="ticker-sep">·</span></span><span class="ticker-item">Storage <span class="ticker-sep">·</span></span><span class="ticker-item">Grinding <span class="ticker-sep">·</span></span><span class="ticker-item">Water <span class="ticker-sep">·</span></span><span class="ticker-item">Beans <span class="ticker-sep">·</span></span><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Temperature <span class="ticker-sep">·</span></span><span class="ticker-item">Storage <span class="ticker-sep">·</span></span></div></div>
+
+<section style="padding:5rem 2.5rem;border-bottom:2px solid var(--ink);">
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="brewing">Brewing</button>
+    <button class="filter-btn" data-filter="espresso">Espresso</button>
+    <button class="filter-btn" data-filter="beans">Beans</button>
+    <button class="filter-btn" data-filter="equipment">Equipment</button>
+  </div>
+  <div class="tips-list">
+
+    <div class="tip-row" id="scale" data-category="brewing">
+      <span class="tip-num">01</span>
+      <div class="tip-content">
+        <p class="tip-tag">Brewing</p>
+        <p class="tip-title">Weigh your coffee, not your pride</p>
+        <p class="tip-desc">Eyeballing grounds is why your Monday tastes different to your Friday.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">A kitchen scale is the single highest-return upgrade you can make to your coffee setup. It costs $15-30 and fixes the biggest variable in home brewing: inconsistency.<br><br><strong>The problem with scoops</strong><br>Coffee density varies significantly between roasts and origins. A scoop of light roast Yirgacheffe weighs about 20% less than a scoop of dark roast Brazilian. Eyeballing means you're measuring volume, not mass — and brewing ratio is always mass-based.<br><br><strong>What ratio to use</strong><br>Start with 1:15 for filter (15g coffee to 225ml water) and 1:2 for espresso (18g in, 36g out). Adjust from there based on taste. Once you're measuring, you can actually reproduce results.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" id="water" data-category="brewing">
+      <span class="tip-num">02</span>
+      <div class="tip-content">
+        <p class="tip-tag">Water</p>
+        <p class="tip-title">Your water is probably ruining everything</p>
+        <p class="tip-desc">Chlorinated tap water doesn't just taste bad — it actively fights your coffee's flavour compounds.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">Coffee is 98-99% water. If your water tastes weird, your coffee will taste weird. This seems obvious but it's the most overlooked variable in home brewing.<br><br><strong>The chlorine problem</strong><br>Most Australian tap water contains chlorine or chloramine as a disinfectant. These compounds don't just add an off-flavour — they interfere with the extraction chemistry and suppress the aromatic compounds you're trying to taste.<br><br><strong>The mineral problem</strong><br>You also need some minerals in the water for proper extraction. Distilled water actually produces worse coffee than tap water because it's too pure — there's nothing to grab onto the flavour compounds during extraction. The sweet spot is filtered tap water (removes chlorine, keeps minerals).<br><br><strong>The fix</strong><br>A basic Brita filter is enough. Fill it, use it, taste the difference. It's the cheapest upgrade you'll ever make.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" id="beans" data-category="beans">
+      <span class="tip-num">03</span>
+      <div class="tip-content">
+        <p class="tip-tag">Beans</p>
+        <p class="tip-title">Fresh beans > expensive machine</p>
+        <p class="tip-desc">Beans roasted more than 4 weeks ago are stale. A basic grinder + fresh beans beats a $2000 machine + supermarket coffee.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">Coffee beans are at their best between 3-21 days after roasting. After that, the CO2 that protects the volatile aromatics starts to dissipate, and the flavours go flat. After 4-6 weeks, the oils oxidise and the coffee tastes musty or papery.<br><br><strong>Why supermarket coffee is usually terrible</strong><br>Supermarket coffee is roasted months before you buy it. By the time it's packaged, shipped, warehoused, shelved, and purchased, it's often 3-6 months post-roast. No matter how fancy the bag looks, stale is stale.<br><br><strong>Where to get fresh beans in Australia</strong><br>Most specialty roasters ship within 1-3 days of roasting. Try Ona Coffee, ST Ali, Proud Mary, Market Lane, or a local specialty roaster. Many will ship nationally. The price difference between supermarket and specialty is $5-10 per 250g — for daily coffee drinkers, that's literally 10-20 cents per cup.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" id="preheat" data-category="espresso">
+      <span class="tip-num">04</span>
+      <div class="tip-content">
+        <p class="tip-tag">Espresso</p>
+        <p class="tip-title">Preheat literally everything</p>
+        <p class="tip-desc">Cold cup + hot espresso = temperature drop before it reaches your mouth.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">Espresso is pulled at around 90-94°C. A cold ceramic cup can drop the drink temperature by 5-10°C before the first sip. In a 60ml ristretto, that's a significant portion of the drink. Temperature affects how you perceive flavour — especially sweetness and acidity.<br><br><strong>The fix</strong><br>Run the group head (the bit where the portafilter attaches) for 5-10 seconds before pulling your shot. This also flushes out old water that's been sitting in the boiler.<br><br>Fill your cup with hot water from the group head or steam wand while the shot is pulling. Empty it before the shot drops in. Takes 5 extra seconds. Makes a real difference.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" data-category="espresso">
+      <span class="tip-num">05</span>
+      <div class="tip-content">
+        <p class="tip-tag">Grinding</p>
+        <p class="tip-title">Grind size is a dial, not a setting</p>
+        <p class="tip-desc">Sour espresso = grind finer. Bitter = grind coarser. That's 90% of troubleshooting.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">The most common espresso troubleshooting question is "why does my shot taste bad?" The answer is almost always grind size.<br><br><strong>The flavour map</strong><br>Under-extracted coffee (too coarse, too fast) tastes sour, sharp, and thin. Over-extracted coffee (too fine, too slow) tastes bitter, dry, and harsh. Properly extracted coffee tastes sweet, balanced, and has a clean finish.<br><br><strong>The target</strong><br>For a standard double espresso: 18g in, 36g out, in 25-30 seconds. If it runs faster, go finer. If it runs slower, go coarser. Change one variable at a time and taste every shot.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" data-category="beans">
+      <span class="tip-num">06</span>
+      <div class="tip-content">
+        <p class="tip-tag">Storage</p>
+        <p class="tip-title">Stop storing beans in the fridge</p>
+        <p class="tip-desc">The fridge introduces moisture and absorbs odours from everything around it. Your coffee will taste like last Tuesday's leftovers.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">The fridge myth persists because people assume cold = preserved. But refrigeration introduces two big problems for coffee: moisture and odour absorption.<br><br><strong>The right storage</strong><br>Airtight container, away from light, at room temperature. A dedicated coffee canister with a one-way valve (lets CO2 out, keeps oxygen out) is ideal. The original bag with the valve works fine too if you reseal it properly.<br><br><strong>The freezer is actually fine (with caveats)</strong><br>If you buy in bulk, the freezer works well — but only if you freeze in single-use portions in airtight bags, and let them come to room temperature before opening. The issue with freezing isn't temperature, it's condensation when the bag opens. Get it right and you can freeze beans for up to 6 months without flavour loss.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+    <div class="tip-row" data-category="equipment">
+      <span class="tip-num">07</span>
+      <div class="tip-content">
+        <p class="tip-tag">Equipment</p>
+        <p class="tip-title">Clean your machine. Seriously.</p>
+        <p class="tip-desc">Old coffee oils go rancid. A machine that hasn't been cleaned in months is making every cup taste slightly off.</p>
+        <div class="tip-expand">
+          <p class="tip-expand-body">Coffee contains oils that build up on every surface they touch — your portafilter basket, the group head, the steam wand. Left alone, those oils oxidise and go rancid. Every shot you pull extracts a little of that rancid oil into your cup.<br><br><strong>Daily</strong><br>Rinse the portafilter and basket after every use. Run blank shots through the group head. Purge the steam wand before and after frothing.<br><br><strong>Weekly</strong><br>Backflush with blind basket and cleaning tablet. Wipe down the steam wand with damp cloth immediately after each use (milk proteins bake on quickly).<br><br><strong>Monthly</strong><br>Soak the portafilter basket in a cleaning solution overnight. Descale if your water is hard.</p>
+        </div>
+      </div>
+      <span class="tip-arrow">→</span>
+    </div>
+
+  </div>
+</section>
+
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div><p class="sec-label" style="color:var(--ink);">Level up</p><h2 class="nl-title">New tips<br>every <em>week.</em></h2><p class="nl-sub">Get practical, no-nonsense coffee tips straight to your inbox every week.</p></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. Just useful stuff.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Content</p><ul class="footer-links"><li><a href="recipes.html">Brew Guides</a></li><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="posts.html">All Posts</a></li><li><a href="index.html#newsletter">Newsletter</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">IG</a><a href="#">TK</a></div></div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+// Expand tips on click
+document.querySelectorAll('.tip-row').forEach(row=>{
+  row.addEventListener('click',()=>{
+    row.classList.toggle('open');
+  });
+});
+
+// Filter
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter=btn.dataset.filter;
+    document.querySelectorAll('.tip-row').forEach(row=>{
+      row.style.display=(filter==='all'||row.dataset.category===filter)?'':'none';
+    });
+  });
+});
+
+// Open from hash
+if(window.location.hash){
+  const el=document.querySelector(window.location.hash);
+  if(el){ el.classList.add('open'); setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300); }
+}
+</script>
+</body>
+</html>

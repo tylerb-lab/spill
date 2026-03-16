@@ -1,0 +1,68 @@
+[
+  {
+    "id": "acaia-pearl",
+    "name": "Acaia Pearl Scale",
+    "category": "scales",
+    "icon": "⚖️",
+    "desc": "Overkill for most people. Essential for the rest of us. Connects to an app, measures to 0.1g, charges by USB. Worth every cent.",
+    "price": "~$250 AUD",
+    "verdict": "Buy it",
+    "rating": 9.5,
+    "link": "https://acaia.co"
+  },
+  {
+    "id": "aeropress",
+    "name": "Aeropress Original",
+    "category": "brewers",
+    "icon": "🫙",
+    "desc": "$60. Makes incredible coffee. Survives being dropped. Works anywhere. There's a reason every specialty coffee person owns one.",
+    "price": "~$60 AUD",
+    "verdict": "No brainer",
+    "rating": 9.8,
+    "link": "https://aeropress.com"
+  },
+  {
+    "id": "1zpresso-jx",
+    "name": "1Zpresso JX-Pro",
+    "category": "grinders",
+    "icon": "🔩",
+    "desc": "Hand grinder that rivals electric grinders twice its price. Produces exceptional grind consistency for espresso and filter.",
+    "price": "~$180 AUD",
+    "verdict": "Best value",
+    "rating": 9.2,
+    "link": "https://1zpresso.coffee"
+  },
+  {
+    "id": "fellow-stagg",
+    "name": "Fellow Stagg EKG",
+    "category": "kettles",
+    "icon": "🌡️",
+    "desc": "Temperature control, gooseneck for precision pouring, looks incredible on your bench. Does everything you need and nothing you don't.",
+    "price": "~$220 AUD",
+    "verdict": "Worth it",
+    "rating": 9.0,
+    "link": "https://fellowproducts.com"
+  },
+  {
+    "id": "timemore-c2",
+    "name": "Timemore C2",
+    "category": "grinders",
+    "icon": "✏️",
+    "desc": "The best value hand grinder on the market. At $80 it produces results that will embarrass grinders twice its price. Start here.",
+    "price": "~$80 AUD",
+    "verdict": "Best entry",
+    "rating": 8.8,
+    "link": "https://timemore.com"
+  },
+  {
+    "id": "v60",
+    "name": "Hario V60 (size 02)",
+    "category": "brewers",
+    "icon": "☕",
+    "desc": "The pour over brewer that started a movement. Ceramic or glass — both work. The conical design and spiral ribs produce a clean, bright cup.",
+    "price": "~$30-60 AUD",
+    "verdict": "Classic",
+    "rating": 9.3,
+    "link": "https://hario.com"
+  }
+]

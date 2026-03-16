@@ -1,0 +1,102 @@
+backend:
+  name: github
+  repo: tylerb-lab/tylerb-lab.github.io
+  branch: main
+  base_url: https://api.netlify.com
+
+# Allow editorial workflow (draft/review/publish)
+publish_mode: editorial_workflow
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+
+  # ── POSTS ──
+  - name: "posts"
+    label: "Posts"
+    label_singular: "Post"
+    folder: "_data"
+    extension: "json"
+    format: "json"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: slug
+    summary: "{{title}} — {{date}}"
+    # Since we use a single JSON array, use a list
+    # We store all posts in _data/posts.json as an array.
+    # Netlify CMS works best with individual files — use this config:
+    files:
+      - label: "All Posts"
+        name: "posts"
+        file: "_data/posts.json"
+        fields:
+          - label: "Posts"
+            name: "posts"
+            widget: list
+            fields:
+              - {label: "Slug", name: slug, widget: string, hint: "URL-friendly ID e.g. my-first-post"}
+              - {label: "Title", name: title, widget: string}
+              - label: "Category"
+                name: category
+                widget: select
+                options: ["brew", "beans", "gear", "tips", "cafes"]
+              - {label: "Excerpt", name: excerpt, widget: text}
+              - {label: "Date", name: date, widget: string, hint: "e.g. March 10, 2026"}
+              - {label: "Read Time", name: readTime, widget: string, hint: "e.g. 5 min read"}
+              - {label: "Featured", name: featured, widget: boolean, default: false}
+              - {label: "Image (optional)", name: image, widget: string, required: false}
+              - label: "Content"
+                name: content
+                widget: text
+                hint: "Use **bold** for headings, - for bullets"
+
+  # ── BEAN REVIEWS ──
+  - name: "beans"
+    label: "Bean Reviews"
+    files:
+      - label: "All Beans"
+        name: "beans"
+        file: "_data/beans.json"
+        fields:
+          - label: "Beans"
+            name: "beans"
+            widget: list
+            fields:
+              - {label: "ID", name: id, widget: string, hint: "URL-friendly e.g. yirgacheffe-g1"}
+              - {label: "Name", name: name, widget: string}
+              - {label: "Origin Country", name: origin, widget: string}
+              - label: "Process"
+                name: process
+                widget: select
+                options: ["Natural", "Washed", "Honey", "Anaerobic", "Other"]
+              - {label: "Tasting Notes", name: notes, widget: string, hint: "One line description"}
+              - {label: "Score (out of 10)", name: score, widget: number, value_type: float, min: 0, max: 10, step: 0.1}
+              - {label: "Price", name: price, widget: string, hint: "e.g. ~$28 / 250g"}
+              - {label: "Best For", name: bestFor, widget: string, hint: "e.g. Filter, Espresso"}
+              - {label: "Verdict", name: verdict, widget: string, hint: "Short verdict e.g. Buy it immediately"}
+
+  # ── GEAR ──
+  - name: "gear"
+    label: "Gear Reviews"
+    files:
+      - label: "All Gear"
+        name: "gear"
+        file: "_data/gear.json"
+        fields:
+          - label: "Gear"
+            name: "gear"
+            widget: list
+            fields:
+              - {label: "ID", name: id, widget: string}
+              - {label: "Name", name: name, widget: string}
+              - label: "Category"
+                name: category
+                widget: select
+                options: ["grinders", "brewers", "scales", "kettles", "machines", "accessories"]
+              - {label: "Icon (emoji)", name: icon, widget: string, hint: "One emoji e.g. ⚖️"}
+              - {label: "Description", name: desc, widget: text}
+              - {label: "Price", name: price, widget: string, hint: "e.g. ~$250 AUD"}
+              - {label: "Verdict", name: verdict, widget: string, hint: "e.g. Buy it, Skip it"}
+              - {label: "Rating (out of 10)", name: rating, widget: number, value_type: float, min: 0, max: 10, step: 0.1}
+              - {label: "Link", name: link, widget: string, hint: "Product URL"}

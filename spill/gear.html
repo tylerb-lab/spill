@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gear — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.gear-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:var(--ink); border:2px solid var(--ink); }
+.gear-card { background:var(--bg); padding:2rem; display:flex; gap:1.5rem; align-items:flex-start; cursor:pointer; transition:background .2s; text-decoration:none; color:inherit; }
+.gear-card:hover { background:var(--bg2); }
+.gear-icon { width:60px; height:60px; background:var(--bg3); border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; }
+.gear-info {}
+.gear-name { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; margin-bottom:.35rem; }
+.gear-desc { font-size:.68rem; color:var(--mid); line-height:1.65; margin-bottom:.85rem; }
+.gear-footer { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+.gear-price { font-family:'Syne Mono',monospace; font-size:.72rem; font-weight:700; color:var(--rust); }
+.gear-verdict { font-size:.52rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; background:var(--yellow); border:1.5px solid var(--ink); padding:.15rem .5rem; }
+.gear-rating { font-family:'Syne Mono',monospace; font-size:.65rem; color:var(--mid); margin-left:auto; }
+@media(max-width:900px){ .gear-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html" class="active">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Gear</span></div>
+
+<div class="page-hero">
+  <div class="page-hero-bg">🔩</div>
+  <p class="page-hero-label">Equipment</p>
+  <h1 class="page-hero-title">Gear we<br><em>actually use.</em></h1>
+  <p class="page-hero-sub">No affiliate links. No free stuff. Just honest opinions about the equipment that earns its spot on our bench every morning.</p>
+</div>
+
+<div class="ticker"><div class="ticker-track"><span class="ticker-item">Grinders <span class="ticker-sep">·</span></span><span class="ticker-item">Scales <span class="ticker-sep">·</span></span><span class="ticker-item">Kettles <span class="ticker-sep">·</span></span><span class="ticker-item">Brewers <span class="ticker-sep">·</span></span><span class="ticker-item">Machines <span class="ticker-sep">·</span></span><span class="ticker-item">Accessories <span class="ticker-sep">·</span></span><span class="ticker-item">Grinders <span class="ticker-sep">·</span></span><span class="ticker-item">Scales <span class="ticker-sep">·</span></span><span class="ticker-item">Kettles <span class="ticker-sep">·</span></span><span class="ticker-item">Brewers <span class="ticker-sep">·</span></span><span class="ticker-item">Machines <span class="ticker-sep">·</span></span><span class="ticker-item">Accessories <span class="ticker-sep">·</span></span></div></div>
+
+<section style="padding:5rem 2.5rem;border-bottom:2px solid var(--ink);">
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="grinders">Grinders</button>
+    <button class="filter-btn" data-filter="brewers">Brewers</button>
+    <button class="filter-btn" data-filter="scales">Scales</button>
+    <button class="filter-btn" data-filter="kettles">Kettles</button>
+  </div>
+  <div class="gear-grid" id="gearGrid">
+    <div style="padding:3rem;color:var(--mid);font-family:'Syne Mono',monospace;font-size:.7rem;">Loading...</div>
+  </div>
+</section>
+
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div><p class="sec-label" style="color:var(--ink);">Gear updates</p><h2 class="nl-title">New picks<br>when they're <em>worth it.</em></h2><p class="nl-sub">We only recommend gear we'd actually buy again. New reviews when we find something worth your money.</p></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. No affiliate nonsense.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Content</p><ul class="footer-links"><li><a href="recipes.html">Brew Guides</a></li><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="posts.html">All Posts</a></li><li><a href="index.html#newsletter">Newsletter</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">IG</a><a href="#">TK</a></div></div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+async function loadGear() {
+  const gear = await loadData('_data/gear.json');
+  if (!gear) return;
+  document.getElementById('gearGrid').innerHTML = gear.map(g=>`
+    <a href="${g.link}" target="_blank" rel="noopener" class="gear-card" data-category="${g.category}">
+      <div class="gear-icon">${g.icon}</div>
+      <div class="gear-info">
+        <p class="gear-name">${g.name}</p>
+        <p class="gear-desc">${g.desc}</p>
+        <div class="gear-footer">
+          <span class="gear-price">${g.price}</span>
+          <span class="gear-verdict">${g.verdict}</span>
+          <span class="gear-rating">${g.rating}/10</span>
+        </div>
+      </div>
+    </a>`).join('');
+
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter=btn.dataset.filter;
+      document.querySelectorAll('.gear-card').forEach(card=>{
+        card.style.display=(filter==='all'||card.dataset.category===filter)?'':'none';
+      });
+    });
+  });
+}
+loadGear();
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bean Reviews — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.beans-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:rgba(245,240,232,.1); border:2px solid rgba(245,240,232,.15); }
+.bean-card { background:var(--green); padding:2rem; transition:background .2s; }
+.bean-card:hover { background:#1e3820; }
+.bean-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; }
+.bean-origin { font-family:'Syne Mono',monospace; font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(245,240,232,.4); margin-bottom:.4rem; }
+.bean-name { font-size:1.4rem; font-weight:800; color:var(--cream); letter-spacing:-.01em; }
+.bean-score { text-align:right; }
+.bs-num { font-family:'Crimson Pro',serif; font-size:3rem; font-weight:400; color:var(--yellow); line-height:1; display:block; }
+.bs-label { font-size:.52rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(245,240,232,.3); }
+.bean-process { display:inline-block; font-size:.54rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; background:rgba(240,192,64,.15); border:1px solid rgba(240,192,64,.3); color:var(--yellow); padding:.2rem .6rem; margin-bottom:1rem; }
+.bean-notes { font-family:'Crimson Pro',serif; font-size:1.05rem; font-style:italic; color:rgba(245,240,232,.65); line-height:1.6; margin-bottom:1.25rem; padding:1rem; border-left:2px solid var(--yellow); }
+.bean-details { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-bottom:1.25rem; }
+.bd-item {}
+.bd-label { font-family:'Syne Mono',monospace; font-size:.52rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(245,240,232,.3); margin-bottom:.2rem; }
+.bd-val { font-size:.78rem; color:var(--cream); font-weight:600; }
+.bean-verdict { font-size:.62rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; background:var(--yellow); color:var(--ink); border:1.5px solid var(--ink); padding:.3rem .75rem; display:inline-block; }
+@media(max-width:900px){ .beans-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html" class="active">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Bean Reviews</span></div>
+
+<div class="page-hero" style="background:var(--green);">
+  <div class="page-hero-bg">🌿</div>
+  <p class="page-hero-label">Origin Reviews</p>
+  <h1 class="page-hero-title">Beans we're<br><em>actually into.</em></h1>
+  <p class="page-hero-sub">Honest reviews. No sponsored content. No free bags. Just beans we bought, tasted, and have opinions about.</p>
+</div>
+
+<div class="ticker" style="background:var(--green);border-color:rgba(245,240,232,.2);"><div class="ticker-track"><span class="ticker-item" style="color:rgba(245,240,232,.5);">Ethiopia <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Colombia <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Guatemala <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Sumatra <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Kenya <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Brazil <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Ethiopia <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Colombia <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Guatemala <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Sumatra <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Kenya <span class="ticker-sep">·</span></span><span class="ticker-item" style="color:rgba(245,240,232,.5);">Brazil <span class="ticker-sep">·</span></span></div></div>
+
+<section style="padding:5rem 2.5rem;background:var(--green);border-bottom:2px solid var(--ink);">
+  <div class="filter-bar" style="border-bottom-color:rgba(245,240,232,.15);">
+    <button class="filter-btn active" data-filter="all" style="color:rgba(245,240,232,.5);">All</button>
+    <button class="filter-btn" data-filter="natural" style="color:rgba(245,240,232,.5);">Natural</button>
+    <button class="filter-btn" data-filter="washed" style="color:rgba(245,240,232,.5);">Washed</button>
+    <button class="filter-btn" data-filter="honey" style="color:rgba(245,240,232,.5);">Honey</button>
+  </div>
+  <div class="beans-grid" id="beansGrid">
+    <div style="padding:3rem;color:rgba(245,240,232,.3);font-family:'Syne Mono',monospace;font-size:.7rem;">Loading...</div>
+  </div>
+</section>
+
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div><p class="sec-label" style="color:var(--ink);">Stay fresh</p><h2 class="nl-title">New reviews<br>every <em>week.</em></h2><p class="nl-sub">We try new beans so you don't have to waste money on bad ones.</p></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. Just honest coffee reviews.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Content</p><ul class="footer-links"><li><a href="recipes.html">Brew Guides</a></li><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="posts.html">All Posts</a></li><li><a href="index.html#newsletter">Newsletter</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">IG</a><a href="#">TK</a></div></div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+async function loadBeans() {
+  const beans = await loadData('_data/beans.json');
+  if (!beans) return;
+  document.getElementById('beansGrid').innerHTML = beans.map(b=>`
+    <div class="bean-card" id="${b.id}" data-category="${b.process.toLowerCase()}">
+      <div class="bean-header">
+        <div>
+          <p class="bean-origin">${b.origin}</p>
+          <p class="bean-name">${b.name}</p>
+        </div>
+        <div class="bean-score">
+          <span class="bs-num">${b.score}</span>
+          <span class="bs-label">/ 10</span>
+        </div>
+      </div>
+      <span class="bean-process">${b.process}</span>
+      <p class="bean-notes">"${b.notes}"</p>
+      <div class="bean-details">
+        <div class="bd-item"><p class="bd-label">Best for</p><p class="bd-val">${b.bestFor}</p></div>
+        <div class="bd-item"><p class="bd-label">Price</p><p class="bd-val">${b.price}</p></div>
+      </div>
+      <span class="bean-verdict">${b.verdict}</span>
+    </div>`).join('');
+
+  // filter
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter=btn.dataset.filter;
+      document.querySelectorAll('.bean-card').forEach(card=>{
+        card.style.display=(filter==='all'||card.dataset.category===filter)?'':'none';
+      });
+    });
+  });
+
+  if(window.location.hash){
+    const el=document.querySelector(window.location.hash);
+    if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300);
+  }
+}
+loadBeans();
+</script>
+</body>
+</html>

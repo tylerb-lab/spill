@@ -1,0 +1,50 @@
+[
+  {
+    "id": "yirgacheffe-g1",
+    "name": "Yirgacheffe G1",
+    "origin": "Ethiopia",
+    "process": "Natural",
+    "notes": "Blueberry, dark chocolate, a little bit of chaos.",
+    "score": 9.1,
+    "price": "~$28 / 250g",
+    "roaster": "Various",
+    "bestFor": "Filter",
+    "verdict": "Buy it immediately"
+  },
+  {
+    "id": "huila-excelso",
+    "name": "Huila Excelso",
+    "origin": "Colombia",
+    "process": "Washed",
+    "notes": "Caramel, red apple, consistent as your most reliable friend.",
+    "score": 8.8,
+    "price": "~$24 / 250g",
+    "roaster": "Various",
+    "bestFor": "Espresso & Filter",
+    "verdict": "Crowd pleaser"
+  },
+  {
+    "id": "antigua-shb",
+    "name": "Antigua SHB",
+    "origin": "Guatemala",
+    "process": "Honey",
+    "notes": "Brown sugar, stone fruit, wildly good as filter.",
+    "score": 8.6,
+    "price": "~$26 / 250g",
+    "roaster": "Various",
+    "bestFor": "Filter",
+    "verdict": "Underrated"
+  },
+  {
+    "id": "mandheling-dp",
+    "name": "Mandheling DP",
+    "origin": "Sumatra",
+    "process": "Wet-hulled",
+    "notes": "Earthy, cedar, full body. The coffee equivalent of a firm handshake.",
+    "score": 8.3,
+    "price": "~$22 / 250g",
+    "roaster": "Various",
+    "bestFor": "Espresso",
+    "verdict": "For the bold"
+  }
+]

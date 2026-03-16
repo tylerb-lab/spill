@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spill. — Coffee Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  padding-top: 74px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid var(--ink);
+  overflow: hidden;
+}
+.hero-left {
+  padding: 4rem 3rem;
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--espresso);
+}
+.hero-bg-text {
+  position: absolute; top: 50%; right: -5%;
+  transform: translateY(-50%);
+  font-size: 22vw; font-weight: 800;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(245,240,232,.05);
+  line-height: 1; pointer-events: none; user-select: none;
+  animation: spinSlow 40s linear infinite;
+}
+@keyframes spinSlow{from{transform:translateY(-50%) rotate(0deg)}to{transform:translateY(-50%) rotate(360deg)}}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--yellow); border: 1.5px solid var(--ink);
+  padding: .3rem .8rem;
+  font-size: .62rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  width: fit-content; color: var(--ink);
+}
+.hero-tag-dot { width:6px; height:6px; border-radius:50%; background:var(--rust); animation:blink 1.5s step-end infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.hero-h1 {
+  font-size: clamp(3rem, 5.5vw, 5.5rem);
+  font-weight: 800; line-height: .95; letter-spacing: -.03em;
+  color: var(--cream); position: relative; z-index: 1;
+}
+.hero-h1 .italic {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-weight: 300; font-size: 1.1em; color: var(--yellow); display: block;
+}
+
+.hero-body { font-size: .82rem; font-weight: 400; line-height: 1.85; color: rgba(245,240,232,.6); max-width: 340px; }
+
+.hero-btns { display: flex; gap: .75rem; flex-wrap: wrap; }
+
+.hero-right {
+  position: relative; overflow: hidden;
+  background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 500px;
+}
+.hero-cup-wrap {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+}
+.steam-trails {
+  position: relative; width: 200px; height: 50px; margin-bottom: -10px;
+}
+.steam-trail { position: absolute; bottom: 0; animation: trailUp 2.5s ease-in-out infinite; transform-origin: bottom; }
+.st1{left:38%;animation-delay:0s} .st2{left:50%;animation-delay:.5s} .st3{left:62%;animation-delay:1s}
+@keyframes trailUp{0%{transform:translateY(0) scaleX(1);opacity:0}20%{opacity:.7}100%{transform:translateY(-50px) scaleX(2);opacity:0}}
+
+.big-cup { animation: cupBounce 4s ease-in-out infinite; cursor: none; }
+@keyframes cupBounce{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-16px) rotate(1deg)}}
+
+.hero-article {
+  position: absolute; bottom: 2rem; left: 2rem; right: 2rem;
+  background: var(--cream); border: 2px solid var(--ink); padding: 1.5rem; z-index: 3;
+  text-decoration: none; color: inherit;
+  transition: background .15s;
+}
+.hero-article:hover { background: var(--bg3); }
+.ha-tag { font-size: .58rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--rust); margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
+.ha-tag::before { content:'☕'; }
+.ha-title { font-size: 1.05rem; font-weight: 800; line-height: 1.1; margin-bottom: .5rem; letter-spacing: -.01em; }
+.ha-meta { font-family: 'Syne Mono', monospace; font-size: .58rem; color: var(--mid); display: flex; gap: 1rem; }
+
+/* ── FEATURED POSTS ── */
+#featured { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); }
+.featured-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+.post-card-big { background: var(--bg); overflow: hidden; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit; display: block; }
+.post-card-big:hover { background: var(--bg2); }
+.pcb-img { aspect-ratio: 4/3; background: var(--bg3); display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 2px solid var(--ink); }
+.pcb-body { padding: 2rem; }
+.pcb-tag { font-size: .58rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--rust); margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+.pcb-tag::before { content: ''; width: 16px; height: 2px; background: var(--rust); display: block; }
+.pcb-title { font-size: 1.5rem; font-weight: 800; line-height: 1.05; letter-spacing: -.02em; margin-bottom: .75rem; }
+.pcb-excerpt { font-size: .72rem; color: var(--mid); line-height: 1.75; margin-bottom: 1.25rem; }
+.pcb-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border); }
+.pcb-date { font-family: 'Syne Mono', monospace; font-size: .58rem; color: var(--mid); }
+.pcb-read { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--rust); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: gap .2s; }
+.post-card-big:hover .pcb-read { gap: .7rem; }
+
+.posts-side { display: flex; flex-direction: column; }
+.post-card-sm { background: var(--bg); padding: 1.5rem 1.75rem; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: .5rem; flex: 1; border-bottom: 2px solid var(--ink); }
+.post-card-sm:last-child { border-bottom: none; }
+.post-card-sm:hover { background: var(--bg2); }
+.post-card-sm:hover .pcs-title { color: var(--rust); }
+.pcs-tag { font-size: .55rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--rust); }
+.pcs-title { font-size: 1rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; transition: color .2s; }
+.pcs-meta { font-family: 'Syne Mono', monospace; font-size: .55rem; color: var(--mid); }
+
+/* ── RECIPE PREVIEW ── */
+#recipes-preview { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--espresso); }
+#recipes-preview .sec-label { color: var(--yellow); }
+#recipes-preview .sec-title { color: var(--cream); }
+.recipe-grid-home { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: rgba(245,240,232,.1); border: 2px solid rgba(245,240,232,.15); }
+.recipe-card { background: var(--espresso); padding: 2rem; cursor: pointer; transition: background .2s; position: relative; overflow: hidden; text-decoration: none; color: inherit; display: block; }
+.recipe-card:hover { background: #3d2410; }
+.recipe-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+.recipe-card:hover::before { transform: scaleX(1); }
+.recipe-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+.recipe-name { font-size: 1.3rem; font-weight: 800; color: var(--cream); letter-spacing: -.01em; margin-bottom: .4rem; }
+.recipe-desc { font-size: .68rem; color: rgba(245,240,232,.5); line-height: 1.65; margin-bottom: 1.25rem; }
+.recipe-stats { display: flex; gap: 1.25rem; }
+.rs-item { display: flex; flex-direction: column; gap: .15rem; }
+.rs-label { font-family: 'Syne Mono', monospace; font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(245,240,232,.3); }
+.rs-val { font-size: .8rem; font-weight: 700; color: var(--yellow); }
+.recipes-cta { margin-top: 2.5rem; text-align: center; }
+
+/* ── TIPS PREVIEW ── */
+#tips-preview { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); }
+.tips-header { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; align-items: end; }
+.tips-intro { font-size: .78rem; color: var(--mid); line-height: 1.85; }
+.tips-list { display: flex; flex-direction: column; gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+.tip-row { background: var(--bg); display: grid; grid-template-columns: 60px 1fr auto; align-items: center; gap: 1.5rem; padding: 1.5rem 2rem; transition: background .15s; cursor: pointer; text-decoration: none; color: inherit; }
+.tip-row:hover { background: var(--bg2); }
+.tip-row:hover .tip-arrow { opacity: 1; transform: translateX(4px); }
+.tip-row:hover .tip-title { color: var(--rust); }
+.tip-num { font-family: 'Syne Mono', monospace; font-size: .8rem; color: var(--rust); font-weight: 700; }
+.tip-content {}
+.tip-title { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; transition: color .2s; margin-bottom: .2rem; }
+.tip-desc { font-size: .65rem; color: var(--mid); line-height: 1.55; }
+.tip-tag { font-size: .52rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--rust); background: rgba(212,80,26,.1); border: 1px solid rgba(212,80,26,.2); padding: .2rem .6rem; white-space: nowrap; }
+.tip-arrow { font-size: 1rem; color: var(--rust); opacity: 0; transition: opacity .2s, transform .2s; }
+
+/* ── BEANS PREVIEW ── */
+#beans-preview { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--green); }
+#beans-preview .sec-label { color: var(--yellow); }
+#beans-preview .sec-title { color: var(--cream); }
+.beans-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: rgba(245,240,232,.1); border: 2px solid rgba(245,240,232,.15); }
+.bean-card { background: var(--green); padding: 1.75rem; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit; display: block; }
+.bean-card:hover { background: #1e3820; }
+.bean-origin { font-family: 'Syne Mono', monospace; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(245,240,232,.4); margin-bottom: .5rem; }
+.bean-name { font-size: 1.1rem; font-weight: 800; color: var(--cream); margin-bottom: .5rem; letter-spacing: -.01em; }
+.bean-notes { font-size: .65rem; color: rgba(245,240,232,.55); line-height: 1.6; margin-bottom: 1rem; font-style: italic; }
+.bean-score { display: flex; align-items: center; gap: .5rem; margin-bottom: .4rem; }
+.bs-num { font-family: 'Crimson Pro', serif; font-size: 2rem; font-weight: 400; color: var(--yellow); line-height: 1; }
+.bs-label { font-size: .52rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(245,240,232,.3); }
+.bean-price { font-family: 'Syne Mono', monospace; font-size: .65rem; color: var(--yellow); }
+
+/* ── ALL POSTS ── */
+#all-posts { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); }
+.posts-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+.post-tile { background: var(--bg); padding: 1.75rem; cursor: pointer; transition: background .2s; text-decoration: none; color: inherit; display: block; }
+.post-tile:hover { background: var(--bg2); }
+.post-tile:hover .pt-title { color: var(--rust); }
+.pt-img { aspect-ratio: 16/9; background: var(--bg3); display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; overflow: hidden; }
+.pt-tag { font-size: .54rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+.pt-title { font-size: 1rem; font-weight: 800; line-height: 1.15; letter-spacing: -.01em; margin-bottom: .5rem; transition: color .2s; }
+.pt-excerpt { font-size: .65rem; color: var(--mid); line-height: 1.65; margin-bottom: .75rem; }
+.pt-meta { font-family: 'Syne Mono', monospace; font-size: .54rem; color: var(--mid); display: flex; justify-content: space-between; }
+
+@media(max-width:900px){
+  #hero { grid-template-columns: 1fr; }
+  .hero-left { border-right: none; border-bottom: 2px solid var(--ink); }
+  .hero-right { min-height: 400px; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .recipe-grid-home { grid-template-columns: 1fr 1fr; }
+  .beans-grid { grid-template-columns: 1fr 1fr; }
+  .tips-header { grid-template-columns: 1fr; }
+  .posts-grid { grid-template-columns: 1fr 1fr; }
+  #featured,#recipes-preview,#tips-preview,#beans-preview,#all-posts { padding: 4rem 1.5rem; }
+}
+@media(max-width:600px){
+  .recipe-grid-home,.beans-grid,.posts-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark">
+      <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+        <g class="logo-cup">
+          <path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/>
+          <ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/>
+          <ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/>
+          <path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/>
+        <path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/>
+        <path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">Spill<span>.</span></div>
+      <div class="logo-sub">coffee blog</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-bg-text">☕</div>
+    <div class="hero-tag fade-in"><div class="hero-tag-dot"></div>Est. 2024 — Coffee Blog</div>
+    <h1 class="hero-h1 fade-in-1">
+      We know<br>too much<br>
+      <span class="italic">about coffee.</span>
+    </h1>
+    <p class="hero-body fade-in-2">Recipes, reviews, rants, and the occasional existential crisis about grind size. Spill is where coffee people come to feel understood.</p>
+    <div class="hero-btns fade-in-3">
+      <a href="#featured" class="btn btn-filled">Start reading →</a>
+      <a href="recipes.html" class="btn btn-outline" style="color:var(--cream);border-color:rgba(245,240,232,.4);">Brew guides</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-cup-wrap">
+      <div class="steam-trails">
+        <svg class="steam-trail st1" width="16" height="40" viewBox="0 0 16 40"><path d="M8 40 Q4 28 8 18 Q12 8 8 0" stroke="rgba(26,18,8,.2)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <svg class="steam-trail st2" width="16" height="40" viewBox="0 0 16 40"><path d="M8 40 Q4 28 8 18 Q12 8 8 0" stroke="rgba(26,18,8,.15)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <svg class="steam-trail st3" width="16" height="40" viewBox="0 0 16 40"><path d="M8 40 Q4 28 8 18 Q12 8 8 0" stroke="rgba(26,18,8,.18)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <svg class="big-cup" id="bigCup" width="240" height="280" viewBox="0 0 260 300" fill="none">
+        <ellipse cx="130" cy="276" rx="80" ry="10" fill="rgba(0,0,0,.15)"/>
+        <ellipse cx="130" cy="264" rx="75" ry="11" fill="#3d2210"/>
+        <ellipse cx="130" cy="262" rx="60" ry="8" fill="#4a2912"/>
+        <path d="M62 110 Q58 230 72 240 Q130 260 188 240 Q202 230 198 110 Z" fill="#f5f0e8"/>
+        <path d="M62 110 Q58 230 72 240 Q130 260 188 240 Q202 230 198 110 Z" stroke="#1a1208" stroke-width="2.5"/>
+        <ellipse cx="130" cy="110" rx="68" ry="18" fill="#e8e0cc" stroke="#1a1208" stroke-width="2.5"/>
+        <ellipse cx="130" cy="110" rx="60" ry="15" fill="#3d1f08"/>
+        <path d="M110 106 Q115 100 120 106 Q125 100 130 106" stroke="rgba(245,240,232,.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M120 106 Q120 114 130 118 Q140 114 140 106 Q135 100 130 106 Q125 100 120 106Z" fill="rgba(245,240,232,.18)"/>
+        <path d="M198 140 Q240 140 240 175 Q240 210 198 210" stroke="#1a1208" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <path d="M198 140 Q240 140 240 175 Q240 210 198 210" stroke="#f5f0e8" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <rect x="80" y="148" width="100" height="66" rx="4" fill="rgba(26,18,8,.04)" stroke="rgba(26,18,8,.08)" stroke-width="1"/>
+        <text x="130" y="178" font-family="'Syne',sans-serif" font-size="14" fill="rgba(26,18,8,.2)" text-anchor="middle" font-weight="800">Spill.</text>
+        <text x="130" y="192" font-family="'Syne',sans-serif" font-size="6" fill="rgba(26,18,8,.12)" text-anchor="middle" letter-spacing="3">COFFEE BLOG</text>
+        <path d="M72 130 Q70 170 72 200" stroke="rgba(255,255,255,.5)" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <a href="post.html?slug=flat-white-fix" class="hero-article">
+      <p class="ha-tag">Featured</p>
+      <p class="ha-title">Why your flat white tastes like sadness (and how to fix it)</p>
+      <div class="ha-meta"><span>5 min read</span><span>Brew Guides</span><span>March 2026</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Brew Guides <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Bean Reviews <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Gear Picks <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Hot Takes <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Café Reviews <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Tips & Tricks <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Brew Guides <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Bean Reviews <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Gear Picks <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Hot Takes <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Café Reviews <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Tips & Tricks <span class="ticker-sep">·</span></span>
+  </div>
+</div>
+
+<!-- FEATURED POSTS -->
+<section id="featured">
+  <p class="sec-label">Latest</p>
+  <h2 class="sec-title">Fresh <em>Reads</em></h2>
+  <div class="featured-grid" id="featuredGrid">
+    <!-- loaded from JS -->
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="posts.html" class="btn btn-outline">See all posts →</a>
+  </div>
+</section>
+
+<!-- RECIPES PREVIEW -->
+<section id="recipes-preview">
+  <p class="sec-label">Brew Guides</p>
+  <h2 class="sec-title">Make <em>something good</em></h2>
+  <div class="recipe-grid-home">
+    <a href="recipes.html#flat-white" class="recipe-card"><span class="recipe-icon">☕</span><p class="recipe-name">Classic Flat White</p><p class="recipe-desc">Double ristretto, 150ml silky milk. The one Australians think they invented.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div></div></a>
+    <a href="recipes.html#cold-brew" class="recipe-card"><span class="recipe-icon">🧊</span><p class="recipe-name">Cold Brew Concentrate</p><p class="recipe-desc">12-hour steep, zero heat, maximum vibes. Make a big batch on Sunday.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div></div></a>
+    <a href="recipes.html#aeropress" class="recipe-card"><span class="recipe-icon">🫙</span><p class="recipe-name">Aeropress Banger</p><p class="recipe-desc">The nerd's secret weapon. Cheap, portable, and will embarrass your espresso machine.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div></div></a>
+    <a href="recipes.html#v60" class="recipe-card"><span class="recipe-icon">🍵</span><p class="recipe-name">Pour Over V60</p><p class="recipe-desc">Slow, meditative, and produces a clarity of flavour that makes you emotional.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div></div></a>
+    <a href="recipes.html#espresso-tonic" class="recipe-card"><span class="recipe-icon">🧇</span><p class="recipe-name">Espresso Tonic</p><p class="recipe-desc">Two shots over tonic water and ice. Sounds wrong, tastes like a revelation.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div></div></a>
+    <a href="recipes.html#matcha" class="recipe-card"><span class="recipe-icon">🌿</span><p class="recipe-name">Iced Matcha Latte</p><p class="recipe-desc">Ceremonial grade, oat milk, and enough ice to make you forget it's Monday.</p><div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div></div></a>
+  </div>
+  <div class="recipes-cta">
+    <a href="recipes.html" class="btn btn-filled" style="background:var(--yellow);color:var(--ink);border-color:var(--ink);">All recipes →</a>
+  </div>
+</section>
+
+<!-- TIPS PREVIEW -->
+<section id="tips-preview">
+  <div class="tips-header">
+    <div><p class="sec-label">Quick Wins</p><h2 class="sec-title">Tips that<br>actually <em>work</em></h2></div>
+    <p class="tips-intro">No gatekeeping. No pretentious nonsense. Just the actual things that will make your coffee better starting today.</p>
+  </div>
+  <div class="tips-list">
+    <a href="tips.html#scale" class="tip-row"><span class="tip-num">01</span><div class="tip-content"><p class="tip-title">Weigh your coffee, not your pride</p><p class="tip-desc">A $15 scale fixes inconsistency permanently.</p></div><span class="tip-tag">Brewing</span><span class="tip-arrow">→</span></a>
+    <a href="tips.html#water" class="tip-row"><span class="tip-num">02</span><div class="tip-content"><p class="tip-title">Your water is probably ruining everything</p><p class="tip-desc">Filtered water is the cheapest upgrade you'll ever make.</p></div><span class="tip-tag">Water</span><span class="tip-arrow">→</span></a>
+    <a href="tips.html#beans" class="tip-row"><span class="tip-num">03</span><div class="tip-content"><p class="tip-title">Fresh beans > expensive machine</p><p class="tip-desc">Beans over 4 weeks old are stale. Always.</p></div><span class="tip-tag">Beans</span><span class="tip-arrow">→</span></a>
+    <a href="tips.html#preheat" class="tip-row"><span class="tip-num">04</span><div class="tip-content"><p class="tip-title">Preheat literally everything</p><p class="tip-desc">Cold cup + hot espresso = sad coffee.</p></div><span class="tip-tag">Espresso</span><span class="tip-arrow">→</span></a>
+  </div>
+  <div style="margin-top:2rem;"><a href="tips.html" class="btn btn-outline">All tips →</a></div>
+</section>
+
+<!-- BEANS PREVIEW -->
+<section id="beans-preview">
+  <p class="sec-label">Origin Reviews</p>
+  <h2 class="sec-title">Beans we're <em>into</em></h2>
+  <div class="beans-grid" id="beansGrid"><!-- loaded from JS --></div>
+  <div style="margin-top:2.5rem;text-align:center;"><a href="beans.html" class="btn btn-filled" style="background:var(--yellow);color:var(--ink);border-color:var(--ink);">All bean reviews →</a></div>
+</section>
+
+<!-- ALL POSTS GRID -->
+<section id="all-posts">
+  <p class="sec-label">Archive</p>
+  <h2 class="sec-title">All the <em>Spill</em></h2>
+  <div class="filter-bar filter-section">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="brew">Brew</button>
+    <button class="filter-btn" data-filter="beans">Beans</button>
+    <button class="filter-btn" data-filter="gear">Gear</button>
+    <button class="filter-btn" data-filter="tips">Tips</button>
+    <button class="filter-btn" data-filter="cafes">Cafés</button>
+  </div>
+  <div class="posts-grid" id="postsGrid"><!-- loaded from JS --></div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div>
+      <p class="sec-label" style="color:var(--ink);">Stay in the loop</p>
+      <h2 class="nl-title">Coffee stuff,<br>in your inbox,<br><em>weekly.</em></h2>
+      <p class="nl-sub">One email a week. New recipes, reviews, and tips that make your Monday morning less tragic.</p>
+    </div>
+    <div>
+      <form class="nl-form" onsubmit="return false;">
+        <input type="email" placeholder="your@email.com">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="nl-note">No spam. No sponsored content. Just coffee stuff.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo-text">Spill<span>.</span></span>
+      <p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p>
+    </div>
+    <div>
+      <p class="footer-col-h">Content</p>
+      <ul class="footer-links">
+        <li><a href="recipes.html">Brew Guides</a></li>
+        <li><a href="beans.html">Bean Reviews</a></li>
+        <li><a href="gear.html">Gear</a></li>
+        <li><a href="tips.html">Tips</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-h">Explore</p>
+      <ul class="footer-links">
+        <li><a href="posts.html?filter=cafes">Café Reviews</a></li>
+        <li><a href="posts.html">All Posts</a></li>
+        <li><a href="#featured">Latest</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-h">Follow</p>
+      <ul class="footer-links">
+        <li><a href="#" target="_blank">Instagram</a></li>
+        <li><a href="#" target="_blank">TikTok</a></li>
+        <li><a href="#" target="_blank">Pinterest</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Spill. Coffee Blog</span>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="#">Pinterest</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+// Load featured posts
+async function loadHome() {
+  const posts = await loadData('_data/posts.json');
+  const beans = await loadData('_data/beans.json');
+
+  // Featured grid
+  if (posts) {
+    const featured = posts.find(p => p.featured);
+    const others = posts.filter(p => !p.featured).slice(0, 4);
+    const grid = document.getElementById('featuredGrid');
+    if (featured) {
+      grid.innerHTML = `
+        <a href="post.html?slug=${featured.slug}" class="post-card-big">
+          <div class="pcb-img"><svg width="120" height="90" viewBox="0 0 120 90" fill="none"><ellipse cx="60" cy="45" rx="22" ry="16" fill="rgba(212,80,26,.12)" stroke="rgba(212,80,26,.2)" stroke-width="1"/><path d="M48 41 Q60 36 72 41 Q64 48 60 46Z" fill="rgba(245,240,232,.4)"/></svg></div>
+          <div class="pcb-body">
+            <p class="pcb-tag">${featured.category}</p>
+            <h3 class="pcb-title">${featured.title}</h3>
+            <p class="pcb-excerpt">${featured.excerpt}</p>
+            <div class="pcb-meta"><span class="pcb-date">${featured.date} · ${featured.readTime}</span><span class="pcb-read">Read it →</span></div>
+          </div>
+        </a>
+        <div class="posts-side">${others.map(p=>`<a href="post.html?slug=${p.slug}" class="post-card-sm"><p class="pcs-tag">${p.category}</p><p class="pcs-title">${p.title}</p><p class="pcs-meta">${p.date} · ${p.readTime}</p></a>`).join('')}</div>
+      `;
+    }
+  }
+
+  // Beans grid
+  if (beans) {
+    document.getElementById('beansGrid').innerHTML = beans.map(b=>`
+      <a href="beans.html#${b.id}" class="bean-card">
+        <p class="bean-origin">${b.origin} · ${b.process}</p>
+        <p class="bean-name">${b.name}</p>
+        <p class="bean-notes">"${b.notes}"</p>
+        <div class="bean-score"><span class="bs-num">${b.score}</span><span class="bs-label">/ 10</span></div>
+        <p class="bean-price">${b.price}</p>
+      </a>`).join('');
+  }
+
+  // Posts grid
+  if (posts) {
+    document.getElementById('postsGrid').innerHTML = posts.map(p=>`
+      <a href="post.html?slug=${p.slug}" class="post-tile" data-category="${p.category}">
+        <div class="pt-img"><svg width="60" height="40" viewBox="0 0 60 40" fill="none"><ellipse cx="30" cy="25" rx="14" ry="10" fill="rgba(212,80,26,.1)"/></svg></div>
+        <p class="pt-tag">${p.category}</p>
+        <p class="pt-title">${p.title}</p>
+        <p class="pt-excerpt">${p.excerpt}</p>
+        <div class="pt-meta"><span>${p.date}</span><span>${p.readTime}</span></div>
+      </a>`).join('');
+    initFilters();
+  }
+}
+
+loadHome();
+</script>
+</body>
+</html>

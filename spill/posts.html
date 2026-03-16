@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Posts — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.posts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--ink); border:2px solid var(--ink); }
+.post-tile { background:var(--bg); padding:1.75rem; text-decoration:none; color:inherit; display:block; transition:background .2s; }
+.post-tile:hover { background:var(--bg2); }
+.post-tile:hover .pt-title { color:var(--rust); }
+.pt-img { aspect-ratio:16/9; background:var(--bg3); display:flex; align-items:center; justify-content:center; margin-bottom:1.1rem; overflow:hidden; }
+.pt-img img { width:100%;height:100%;object-fit:cover; }
+.pt-tag { font-size:.54rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--rust); margin-bottom:.4rem; }
+.pt-title { font-size:1rem; font-weight:800; line-height:1.15; letter-spacing:-.01em; margin-bottom:.5rem; transition:color .2s; }
+.pt-excerpt { font-size:.65rem; color:var(--mid); line-height:1.65; margin-bottom:.75rem; }
+.pt-meta { font-family:'Syne Mono',monospace; font-size:.54rem; color:var(--mid); display:flex; justify-content:space-between; }
+.no-results { padding:4rem; text-align:center; font-family:'Syne Mono',monospace; font-size:.7rem; color:var(--mid); grid-column:1/-1; }
+@media(max-width:900px){ .posts-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:600px){ .posts-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html" class="active">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>All Posts</span></div>
+
+<div class="page-hero">
+  <div class="page-hero-bg">📖</div>
+  <p class="page-hero-label">Archive</p>
+  <h1 class="page-hero-title">All the<br><em>Spill.</em></h1>
+  <p class="page-hero-sub">Every recipe, review, tip, and take we've ever published. Filter by category or just scroll.</p>
+</div>
+
+<section style="padding:5rem 2.5rem;border-bottom:2px solid var(--ink);">
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="brew">Brew</button>
+    <button class="filter-btn" data-filter="beans">Beans</button>
+    <button class="filter-btn" data-filter="gear">Gear</button>
+    <button class="filter-btn" data-filter="tips">Tips</button>
+    <button class="filter-btn" data-filter="cafes">Cafés</button>
+  </div>
+  <div class="posts-grid" id="postsGrid">
+    <div class="no-results">Loading posts...</div>
+  </div>
+</section>
+
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div><p class="sec-label" style="color:var(--ink);">Don't miss anything</p><h2 class="nl-title">Weekly coffee<br><em>goodness.</em></h2><p class="nl-sub">New posts every week. Subscribe and they'll land in your inbox.</p></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. Unsubscribe anytime.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Content</p><ul class="footer-links"><li><a href="recipes.html">Brew Guides</a></li><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="posts.html">All Posts</a></li><li><a href="index.html#newsletter">Newsletter</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">IG</a><a href="#">TK</a></div></div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+async function loadPosts() {
+  const posts = await loadData('_data/posts.json');
+  if (!posts) { document.getElementById('postsGrid').innerHTML='<div class="no-results">Could not load posts.</div>'; return; }
+
+  function render(filter) {
+    const filtered = filter==='all' ? posts : posts.filter(p=>p.category===filter);
+    if(!filtered.length) return '<div class="no-results">No posts in this category yet.</div>';
+    return filtered.map(p=>`
+      <a href="post.html?slug=${p.slug}" class="post-tile" data-category="${p.category}">
+        <div class="pt-img"><svg width="60" height="40" viewBox="0 0 60 40" fill="none"><ellipse cx="30" cy="25" rx="14" ry="10" fill="rgba(212,80,26,.1)"/><path d="M22 22 Q30 17 38 22 Q33 28 30 26Z" fill="rgba(245,240,232,.3)"/></svg></div>
+        <p class="pt-tag">${p.category}</p>
+        <p class="pt-title">${p.title}</p>
+        <p class="pt-excerpt">${p.excerpt}</p>
+        <div class="pt-meta"><span>${p.date}</span><span>${p.readTime}</span></div>
+      </a>`).join('');
+  }
+
+  document.getElementById('postsGrid').innerHTML = render('all');
+
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('postsGrid').innerHTML = render(btn.dataset.filter);
+    });
+  });
+
+  // Apply URL filter param
+  const params = new URLSearchParams(window.location.search);
+  const filterParam = params.get('filter');
+  if(filterParam){
+    const btn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+    if(btn) btn.click();
+  }
+}
+loadPosts();
+</script>
+</body>
+</html>

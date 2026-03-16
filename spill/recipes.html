@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipes — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/spill.css">
+<style>
+.recipes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(245,240,232,.1); border:2px solid rgba(245,240,232,.15); }
+.recipe-card { background:var(--espresso); padding:2rem; cursor:pointer; transition:background .2s; position:relative; overflow:hidden; text-decoration:none; color:inherit; display:block; }
+.recipe-card:hover { background:#3d2410; }
+.recipe-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+.recipe-card:hover::before { transform:scaleX(1); }
+.recipe-icon { font-size:2rem; margin-bottom:1rem; display:block; }
+.recipe-name { font-size:1.3rem; font-weight:800; color:var(--cream); letter-spacing:-.01em; margin-bottom:.4rem; }
+.recipe-desc { font-size:.68rem; color:rgba(245,240,232,.5); line-height:1.65; margin-bottom:1.25rem; }
+.recipe-stats { display:flex; gap:1.25rem; margin-bottom:1.5rem; }
+.rs-item { display:flex; flex-direction:column; gap:.15rem; }
+.rs-label { font-family:'Syne Mono',monospace; font-size:.52rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(245,240,232,.3); }
+.rs-val { font-size:.8rem; font-weight:700; color:var(--yellow); }
+.recipe-expand { display:none; margin-top:1rem; border-top:1px solid rgba(245,240,232,.1); padding-top:1.5rem; }
+.recipe-card.open .recipe-expand { display:block; }
+.recipe-card.open::before { transform:scaleX(1); }
+.re-step { display:flex; gap:1rem; margin-bottom:1rem; }
+.re-num { font-family:'Syne Mono',monospace; font-size:.7rem; color:var(--yellow); font-weight:700; flex-shrink:0; margin-top:2px; }
+.re-text { font-size:.72rem; color:rgba(245,240,232,.7); line-height:1.65; }
+.re-ingredients { margin-bottom:1.5rem; }
+.re-ing-title { font-size:.58rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,240,232,.4); margin-bottom:.75rem; }
+.re-ing-item { font-size:.72rem; color:rgba(245,240,232,.65); line-height:1.8; display:flex; align-items:center; gap:.5rem; }
+.re-ing-item::before { content:'·'; color:var(--yellow); }
+.recipe-toggle { font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--yellow); background:none; border:1.5px solid rgba(240,192,64,.3); padding:.4rem .9rem; cursor:pointer; font-family:'Syne',sans-serif; transition:all .15s; }
+.recipe-toggle:hover { background:rgba(240,192,64,.1); border-color:var(--yellow); }
+@media(max-width:900px){ .recipes-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:600px){ .recipes-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-mark"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><g class="logo-cup"><path d="M9 18 Q8 34 12 36 Q21 39 30 36 Q34 34 33 18 Z" fill="#1a1208"/><ellipse cx="21" cy="18" rx="12" ry="4" fill="#2d1a08"/><ellipse cx="21" cy="18" rx="10" ry="3" fill="#d4501a" opacity=".85"/><path d="M33 22 Q40 22 40 28 Q40 34 33 34" stroke="#1a1208" stroke-width="3" fill="none" stroke-linecap="round"/></g><path class="logo-steam" d="M16 16 Q14 12 16 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M21 15 Q19 10 21 6" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/><path class="logo-steam" d="M26 16 Q24 12 26 8" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg></div>
+    <div><div class="logo-text">Spill<span>.</span></div><div class="logo-sub">coffee blog</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="recipes.html" class="active">Recipes</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="beans.html">Beans</a></li>
+    <li><a href="gear.html">Gear</a></li>
+    <li><a href="posts.html">All Posts</a></li>
+  </ul>
+  <a href="index.html#newsletter" class="nav-sub">Subscribe ☕</a>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Recipes</span></div>
+
+<div class="page-hero">
+  <div class="page-hero-bg">☕</div>
+  <p class="page-hero-label">Brew Guides</p>
+  <h1 class="page-hero-title">Make something<br><em>actually good.</em></h1>
+  <p class="page-hero-sub">Step-by-step recipes for every brew method. Click any card to expand the full guide.</p>
+</div>
+
+<div class="ticker"><div class="ticker-track"><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span><span class="ticker-item">Espresso <span class="ticker-sep">·</span></span><span class="ticker-item">Pour Over <span class="ticker-sep">·</span></span><span class="ticker-item">Cold Brew <span class="ticker-sep">·</span></span><span class="ticker-item">Aeropress <span class="ticker-sep">·</span></span><span class="ticker-item">French Press <span class="ticker-sep">·</span></span><span class="ticker-item">Moka Pot <span class="ticker-sep">·</span></span></div></div>
+
+<section style="padding:5rem 2.5rem;background:var(--espresso);border-bottom:2px solid var(--ink);">
+  <div class="filter-bar" style="border-bottom-color:rgba(245,240,232,.2);">
+    <button class="filter-btn active" data-filter="all" style="color:rgba(245,240,232,.5);">All</button>
+    <button class="filter-btn" data-filter="espresso" style="color:rgba(245,240,232,.5);">Espresso</button>
+    <button class="filter-btn" data-filter="filter" style="color:rgba(245,240,232,.5);">Filter</button>
+    <button class="filter-btn" data-filter="cold" style="color:rgba(245,240,232,.5);">Cold</button>
+    <button class="filter-btn" data-filter="other" style="color:rgba(245,240,232,.5);">Other</button>
+  </div>
+  <div class="recipes-grid">
+
+    <div class="recipe-card" id="flat-white" data-category="espresso">
+      <span class="recipe-icon">☕</span>
+      <p class="recipe-name">Classic Flat White</p>
+      <p class="recipe-desc">Double ristretto, 150ml silky steamed milk. The one Australians think they invented.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">18g espresso beans (medium roast)</p>
+          <p class="re-ing-item">150ml whole milk (or oat milk)</p>
+          <p class="re-ing-item">Espresso machine + steam wand</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Pull a double ristretto (18g in, ~25g out, 20-22 seconds). Preheated cup.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Steam 150ml milk to 60-65°C. You want silky microfoam — no big bubbles.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour milk from low height, cut through the espresso. A flat white should be velvety, not frothy.</p></div>
+      </div>
+    </div>
+
+    <div class="recipe-card" id="cold-brew" data-category="cold">
+      <span class="recipe-icon">🧊</span>
+      <p class="recipe-name">Cold Brew Concentrate</p>
+      <p class="recipe-desc">12-hour steep, zero heat, maximum vibes. Make a batch Sunday, thank yourself all week.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 hrs</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">600ml</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">100g coarsely ground coffee</p>
+          <p class="re-ing-item">600ml cold filtered water</p>
+          <p class="re-ing-item">Large jar + fine mesh strainer</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Combine coarse grounds (1:6 ratio) with cold water in a large jar. Stir briefly.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Cover and refrigerate for 12-16 hours. Don't over-steep or it gets bitter.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Strain through fine mesh (and paper filter if you want clarity). Store up to 2 weeks.</p></div>
+        <div class="re-step"><span class="re-num">04</span><p class="re-text">Serve 1:1 with water or milk over ice. This is concentrate — don't drink it straight unless you want to vibrate.</p></div>
+      </div>
+    </div>
+
+    <div class="recipe-card" id="aeropress" data-category="filter">
+      <span class="recipe-icon">🫙</span>
+      <p class="recipe-name">Aeropress Banger</p>
+      <p class="recipe-desc">The nerd's secret weapon. Cheap, portable, and will embarrass your espresso machine.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Medium</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">15g medium-fine ground coffee</p>
+          <p class="re-ing-item">200ml water at 90°C</p>
+          <p class="re-ing-item">Aeropress + paper filter</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse paper filter. Set Aeropress in inverted position. Add 15g grounds.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Pour 200ml water at 90°C. Stir gently. Place cap with rinsed filter.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Wait 2 minutes. Flip onto cup. Press slowly over 30 seconds. Stop when you hear hiss.</p></div>
+        <div class="re-step"><span class="re-num">04</span><p class="re-text">Dilute to taste with hot water. This is espresso-strength concentrate.</p></div>
+      </div>
+    </div>
+
+    <div class="recipe-card" id="v60" data-category="filter">
+      <span class="recipe-icon">🍵</span>
+      <p class="recipe-name">Pour Over V60</p>
+      <p class="recipe-desc">Slow, meditative, and produces a clarity of flavour that makes you emotional.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Medium</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">18g medium-fine ground coffee</p>
+          <p class="re-ing-item">300g water at 92°C</p>
+          <p class="re-ing-item">V60 + paper filter + gooseneck kettle + scale</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Rinse filter with hot water. Discard rinse water.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Add grounds. Pour 40g water for bloom. Wait 30 seconds.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour slowly in circles to 150g, then continue to 300g. Keep consistent pace.</p></div>
+        <div class="re-step"><span class="re-num">04</span><p class="re-text">Total drain time: 3-3.5 minutes. Too slow = grind coarser. Too fast = grind finer.</p></div>
+      </div>
+    </div>
+
+    <div class="recipe-card" id="espresso-tonic" data-category="cold">
+      <span class="recipe-icon">🧇</span>
+      <p class="recipe-name">Espresso Tonic</p>
+      <p class="recipe-desc">Two shots over tonic water and ice. Sounds wrong, tastes like a revelation.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">Double espresso (36-40ml)</p>
+          <p class="re-ing-item">120ml quality tonic water (Fever-Tree or similar)</p>
+          <p class="re-ing-item">Ice, tall glass</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Fill tall glass with ice. Pour in cold tonic water.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Pull double espresso. Let it cool for 30 seconds.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour espresso slowly over the back of a spoon onto the tonic. Let it float briefly, then stir.</p></div>
+      </div>
+    </div>
+
+    <div class="recipe-card" id="matcha" data-category="other">
+      <span class="recipe-icon">🌿</span>
+      <p class="recipe-name">Iced Matcha Latte</p>
+      <p class="recipe-desc">Ceremonial grade, oat milk, and enough ice to make you forget it's Monday.</p>
+      <div class="recipe-stats">
+        <div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div>
+        <div class="rs-item"><span class="rs-label">Difficulty</span><span class="rs-val">Easy</span></div>
+        <div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div>
+      </div>
+      <button class="recipe-toggle">Show recipe ↓</button>
+      <div class="recipe-expand">
+        <div class="re-ingredients">
+          <p class="re-ing-title">You'll need</p>
+          <p class="re-ing-item">2g ceremonial grade matcha</p>
+          <p class="re-ing-item">60ml hot water (75°C, not boiling)</p>
+          <p class="re-ing-item">200ml oat milk, ice, bamboo whisk</p>
+        </div>
+        <div class="re-step"><span class="re-num">01</span><p class="re-text">Sift matcha into bowl. Add hot water. Whisk in W/M motions until frothy with no lumps.</p></div>
+        <div class="re-step"><span class="re-num">02</span><p class="re-text">Fill glass with ice. Pour cold oat milk over ice.</p></div>
+        <div class="re-step"><span class="re-num">03</span><p class="re-text">Pour matcha concentrate over the top. Stir before drinking.</p></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <div><p class="sec-label" style="color:var(--ink);">Want more?</p><h2 class="nl-title">New recipes<br>every <em>week.</em></h2><p class="nl-sub">Get new brew guides and coffee tips straight to your inbox.</p></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="email" placeholder="your@email.com"><button type="submit">Subscribe</button></form><p class="nl-note">No spam. Just coffee.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div><span class="footer-logo-text">Spill<span>.</span></span><p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p></div>
+    <div><p class="footer-col-h">Recipes</p><ul class="footer-links"><li><a href="#flat-white">Flat White</a></li><li><a href="#cold-brew">Cold Brew</a></li><li><a href="#aeropress">Aeropress</a></li><li><a href="#v60">Pour Over</a></li></ul></div>
+    <div><p class="footer-col-h">Explore</p><ul class="footer-links"><li><a href="beans.html">Bean Reviews</a></li><li><a href="gear.html">Gear</a></li><li><a href="tips.html">Tips</a></li><li><a href="posts.html">All Posts</a></li></ul></div>
+    <div><p class="footer-col-h">Follow</p><ul class="footer-links"><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Spill. Coffee Blog</span><div class="footer-socials"><a href="#">Instagram</a><a href="#">TikTok</a></div></div>
+</footer>
+
+<script src="js/spill.js"></script>
+<script>
+// Recipe expand/collapse
+document.querySelectorAll('.recipe-toggle').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const card = btn.closest('.recipe-card');
+    const isOpen = card.classList.contains('open');
+    card.classList.toggle('open');
+    btn.textContent = isOpen ? 'Show recipe ↓' : 'Hide recipe ↑';
+  });
+});
+
+// Filter by category
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.recipe-card').forEach(card=>{
+      card.style.display=(filter==='all'||card.dataset.category===filter)?'':'none';
+    });
+  });
+});
+
+// Open from URL hash
+if(window.location.hash){
+  const card=document.querySelector(window.location.hash);
+  if(card){
+    card.classList.add('open');
+    const toggle=card.querySelector('.recipe-toggle');
+    if(toggle) toggle.textContent='Hide recipe ↑';
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),300);
+  }
+}
+</script>
+</body>
+</html>

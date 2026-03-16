@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "flat-white-fix",
+    "title": "Why your flat white tastes like sadness (and how to fix it)",
+    "category": "brew",
+    "excerpt": "You bought decent beans. Your machine cost more than your first car. And yet. Here's the actual reason your espresso is sour, bitter, or just deeply uninspiring.",
+    "date": "March 10, 2026",
+    "readTime": "5 min read",
+    "image": "",
+    "featured": true,
+    "content": "Let's start with the uncomfortable truth: most home espresso is bad. Not because the equipment is bad. Not because the beans are bad. Because nobody told you about the three variables that actually matter.\n\n**Grind size is everything**\n\nIf your espresso tastes sour, your grind is too coarse. If it tastes bitter, too fine. That's 90% of troubleshooting right there. Get a burr grinder with easy adjustment and start there.\n\n**Your water is probably ruining it**\n\nChlorinated tap water doesn't just taste bad — it actively fights with your coffee's flavour compounds. Filtered water or a Brita jug is the cheapest upgrade you'll ever make.\n\n**Preheat everything**\n\nA cold portafilter and cup drop your shot temperature by 5-10°C before it even hits your mouth. Run hot water through the portafilter, fill your cup with hot water while the shot pulls. Empty it before pouring. This alone will transform your flat white."
+  },
+  {
+    "slug": "yirgacheffe-review",
+    "title": "Ethiopian Yirgacheffe: the wine drinker's gateway drug",
+    "category": "beans",
+    "excerpt": "Blueberry, dark chocolate, and a little bit of chaos. Ethiopia's most famous region produces coffee that makes people cry at breakfast.",
+    "date": "March 8, 2026",
+    "readTime": "4 min read",
+    "image": "",
+    "featured": false,
+    "content": "If someone tells you coffee can't taste like blueberries, hand them a cup of natural-processed Yirgacheffe and wait.\n\n**What is Yirgacheffe?**\n\nYirgacheffe is a small town in the Gedeo Zone of southern Ethiopia. It's considered the birthplace of coffee — there are wild coffee plants growing in the forests around it that have never been cultivated. The altitude (1,750–2,200m) and the ancient heirloom varieties growing there produce some of the most complex coffees on earth.\n\n**What does it taste like?**\n\nNatural processed: blueberry, dark chocolate, wine, tropical fruit. The flavours hit you before the coffee even reaches your mouth.\n\nWashed processed: cleaner, brighter — jasmine, bergamot, lemon. More delicate but just as stunning.\n\n**Best brew method**\n\nFilter. Always filter. Pour over (V60 or Chemex) lets the floral and fruit notes sing. Espresso works but it's like putting a Michelin star meal in a blender."
+  },
+  {
+    "slug": "hand-grinder-test",
+    "title": "I tested 6 hand grinders so you don't have to",
+    "category": "gear",
+    "excerpt": "From $30 bin finds to $300 precision instruments. Here's what actually matters and what's just good marketing.",
+    "date": "March 5, 2026",
+    "readTime": "7 min read",
+    "image": "",
+    "featured": false,
+    "content": "I spent three weeks grinding the same beans on six different hand grinders and drinking the results. My arms are tired. My palate is confused. Here's what I found.\n\n**The lineup**\n\n1. Hario Skerton Pro ($60) — the classic entry point\n2. Timemore C2 ($80) — the value king\n3. 1Zpresso JX-Pro ($180) — the overachiever\n4. Commandante C40 ($300) — the object of desire\n5. Porlex Mini ($70) — the traveller\n6. Generic Amazon grinder ($30) — the cautionary tale\n\n**The verdict**\n\nThe 1Zpresso JX-Pro wins at every price point. It produces a grind consistency that rivals electric grinders at twice the price, the adjustment is intuitive, and it feels like it was built to survive a nuclear event.\n\nThe Timemore C2 is the best value. At $80 it produces results that will embarrass grinders twice its price.\n\nDon't buy the Amazon grinder. Just don't."
+  },
+  {
+    "slug": "barista-home-setup",
+    "title": "The one thing baristas notice about your home setup",
+    "category": "tips",
+    "excerpt": "It's not your machine. It's not your beans. It's the one thing nobody talks about that professionals spot immediately.",
+    "date": "March 1, 2026",
+    "readTime": "3 min read",
+    "image": "",
+    "featured": false,
+    "content": "I asked six working baristas what they notice first when someone invites them over for coffee. Every single one said the same thing.\n\nYour grinder.\n\n**Why grinders matter more than machines**\n\nA blade grinder — even an expensive one — produces uneven particle sizes. Some pieces are dust, some are rocks. The dust over-extracts (bitter), the rocks under-extract (sour), and what ends up in your cup is the average of both, which is somehow worse than either.\n\nA burr grinder — even a cheap one — produces consistent particle sizes. Everything extracts at the same rate. The difference in the cup is enormous.\n\n**What to buy**\n\nFor espresso: Breville Smart Grinder Pro ($300) is the entry point. For filter: Baratza Encore ($200) is the benchmark.\n\nFor hand grinding: Timemore C2 ($80) is where you start."
+  },
+  {
+    "slug": "proud-mary-review",
+    "title": "Proud Mary Melbourne: worth the hype after all these years?",
+    "category": "cafes",
+    "excerpt": "One of Melbourne's most famous specialty cafés. We went back for the fifth time this year. Here's the honest verdict.",
+    "date": "Feb 26, 2026",
+    "readTime": "5 min read",
+    "image": "",
+    "featured": false,
+    "content": "Proud Mary opened in 2009 and has been consistently ranked among Australia's best specialty cafés ever since. That's a long time to stay at the top. We went back.\n\n**The coffee**\n\nStill exceptional. The single origin filter options are genuinely exciting — they rotate based on what head roaster Nolan Hirte thinks is worth drinking. The espresso is calibrated within an inch of its life. You can taste the care.\n\n**The food**\n\nBetter than it used to be. The corn fritters have a cult following for good reason. The banana bread is dangerous.\n\n**The vibe**\n\nBusy. Always busy. Saturday morning is not for the faint-hearted. Weekday mornings before 9am are a completely different experience — quieter, more personal, worth rearranging your schedule for.\n\n**Verdict**\n\n9/10. One of the few places that has genuinely earned its reputation and keeps earning it."
+  },
+  {
+    "slug": "pour-over-beginner",
+    "title": "The beginner's guide to not ruining pour over",
+    "category": "brew",
+    "excerpt": "Everything you need to pull off a V60 without crying into the sink at 7am. Starting from absolute zero.",
+    "date": "Feb 20, 2026",
+    "readTime": "6 min read",
+    "image": "",
+    "featured": false,
+    "content": "Pour over looks intimidating. It's actually very simple. Here's the whole thing.\n\n**What you need**\n\n- V60 or Chemex ($30-80)\n- Gooseneck kettle (any temperature-control one works)\n- Burr grinder\n- Scale\n- Timer\n- Paper filters\n- Good beans (fresh roast, within 4 weeks)\n\n**The recipe (makes 300ml)**\n\n- 18g coffee, medium-fine grind\n- 300g water at 92°C\n- Total brew time: 3-3.5 minutes\n\n**The method**\n\n1. Rinse the filter with hot water (removes paper taste, preheats the vessel)\n2. Add grounds, make a small well in the centre\n3. Pour 40g water slowly to bloom — this degasses the coffee. Wait 30 seconds.\n4. Pour in slow circles to 150g\n5. Continue pouring in circles to 300g\n6. Let it drain fully\n\nIf it takes longer than 4 minutes, grind coarser. Shorter than 2.5 minutes, grind finer."
+  }
+]
