@@ -12,7 +12,9 @@
 .recipe-card:hover,.recipe-card.open{background:#3d2410;}
 .recipe-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
 .recipe-card.open::before,.recipe-card:hover::before{transform:scaleX(1);}
-.recipe-icon{font-size:2rem;margin-bottom:1rem;display:block;}
+.recipe-icon{display:none;}
+.recipe-cat-label{font-family:'Syne Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,192,64,.5);margin-bottom:.6rem;display:block;}
+.instant-card .recipe-cat-label{color:rgba(212,80,26,.5);}
 .recipe-name{font-size:1.2rem;font-weight:800;color:var(--cream);letter-spacing:-.01em;margin-bottom:.4rem;}
 .recipe-desc{font-size:.68rem;color:rgba(245,240,232,.5);line-height:1.65;margin-bottom:1.25rem;}
 .recipe-stats{display:flex;gap:1.25rem;margin-bottom:1.25rem;flex-wrap:wrap;}
@@ -98,7 +100,7 @@
   <div class="recipes-grid" id="recipesGrid">
 
     <div class="recipe-card" data-category="espresso" id="flat-white">
-      <span class="recipe-icon">☕</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Classic Flat White</p>
       <p class="recipe-desc">Double ristretto, 150ml silky steamed milk. The one Australians think they invented.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -110,7 +112,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="latte">
-      <span class="recipe-icon">🥛</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Café Latte</p>
       <p class="recipe-desc">A double shot, 240ml of steamed milk. The classic crowd-pleaser.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -122,7 +124,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="cappuccino">
-      <span class="recipe-icon">🫧</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Cappuccino</p>
       <p class="recipe-desc">Equal thirds: espresso, steamed milk, stiff foam. Bold, the original milk coffee.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -134,7 +136,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="long-black">
-      <span class="recipe-icon">🖤</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Long Black / Americano</p>
       <p class="recipe-desc">Hot water, double espresso poured over the top. Clean, lets the coffee speak.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -146,7 +148,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="cortado">
-      <span class="recipe-icon">✨</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Cortado</p>
       <p class="recipe-desc">Equal parts espresso and warm milk. Smaller, stronger, no foam theatre.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 small cup</span></div></div>
@@ -158,7 +160,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="espresso-tonic">
-      <span class="recipe-icon">🟡</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Espresso Tonic</p>
       <p class="recipe-desc">Two shots over tonic water and ice. Sounds wrong. Tastes like a revelation.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -170,7 +172,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="iced-latte">
-      <span class="recipe-icon">🧊</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Iced Latte</p>
       <p class="recipe-desc">Cold milk, ice, double espresso. Refreshing, easy, endlessly customisable.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -182,7 +184,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="affogato">
-      <span class="recipe-icon">🍨</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Affogato</p>
       <p class="recipe-desc">Hot espresso poured over vanilla ice cream. A dessert that's also breakfast if you're brave.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 dessert</span></div></div>
@@ -194,7 +196,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="dirty-chai">
-      <span class="recipe-icon">🌶️</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Dirty Chai Latte</p>
       <p class="recipe-desc">Chai tea + espresso + steamed milk. For people who can't decide between coffee and tea.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -206,7 +208,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="mocha">
-      <span class="recipe-icon">🍫</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Caffè Mocha</p>
       <p class="recipe-desc">Espresso, chocolate, steamed milk. The gateway drug for people who don't think they like coffee.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -218,7 +220,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="ristretto">
-      <span class="recipe-icon">💎</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Ristretto</p>
       <p class="recipe-desc">The sweetest, most concentrated espresso pull. The foundation of great flat whites.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">27ml</span></div></div>
@@ -230,7 +232,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="espresso" id="espresso-martini">
-      <span class="recipe-icon">🍸</span>
+      <span class="recipe-cat-label">Espresso</span>
       <p class="recipe-name">Espresso Martini</p>
       <p class="recipe-desc">The cocktail that refuses to die because it's too good to kill.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cocktail</span></div></div>
@@ -242,7 +244,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="v60">
-      <span class="recipe-icon">🍵</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">V60 Pour Over</p>
       <p class="recipe-desc">Slow, meditative, and produces a clarity of flavour that makes you understand why people cry at coffee.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div></div>
@@ -254,7 +256,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="4-6-method">
-      <span class="recipe-icon">🏆</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">The 4:6 Method</p>
       <p class="recipe-desc">Tetsu Kasuya's World Brewers Cup winning recipe. Split pours, total control.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">10 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">300ml</span></div></div>
@@ -266,7 +268,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="chemex">
-      <span class="recipe-icon">🔬</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Chemex Pour Over</p>
       <p class="recipe-desc">The most beautiful brewer in existence. Thicker filter = cleaner, brighter cup.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">500ml</span></div></div>
@@ -278,7 +280,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="aeropress">
-      <span class="recipe-icon">🫙</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Aeropress Classic</p>
       <p class="recipe-desc">The nerd's secret weapon. Cheap, portable, embarrasses your espresso machine.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">200ml</span></div></div>
@@ -290,7 +292,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="aeropress-inverted">
-      <span class="recipe-icon">🙃</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Inverted Aeropress</p>
       <p class="recipe-desc">Flip it upside down for more control over steep time and better results.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">200ml</span></div></div>
@@ -302,7 +304,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="french-press">
-      <span class="recipe-icon">🫖</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">French Press</p>
       <p class="recipe-desc">Full immersion, full body, the most forgiving brew method there is.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
@@ -314,7 +316,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="moka-pot">
-      <span class="recipe-icon">🇮🇹</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Moka Pot</p>
       <p class="recipe-desc">Stovetop concentrated coffee. Not real espresso but genuinely delicious done right.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">90ml</span></div></div>
@@ -326,7 +328,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="siphon">
-      <span class="recipe-icon">🧪</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Siphon / Vacuum Pot</p>
       <p class="recipe-desc">The most theatrical brew method. Looks like a chemistry experiment, tastes extraordinary.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Hard</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
@@ -338,7 +340,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="turkish">
-      <span class="recipe-icon">🥇</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Turkish Coffee</p>
       <p class="recipe-desc">The oldest method still in daily use. Powder-fine grounds, slow heat, served with the grounds.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">90ml</span></div></div>
@@ -350,7 +352,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="batch-brew">
-      <span class="recipe-icon">🫗</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Batch Brew (Large V60)</p>
       <p class="recipe-desc">Filter coffee for a group. Serves 4–6 and takes the same time as a single cup.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 litre</span></div></div>
@@ -362,7 +364,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="aeropress-4-6">
-      <span class="recipe-icon">🔢</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Aeropress 4:6 Method</p>
       <p class="recipe-desc">Apply Kasuya's 4:6 principle to the Aeropress for more control.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">150ml</span></div></div>
@@ -374,7 +376,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="filter" id="coldbrew-filter">
-      <span class="recipe-icon">🌙</span>
+      <span class="recipe-cat-label">Filter</span>
       <p class="recipe-name">Cold Brew Filter (Long Steep)</p>
       <p class="recipe-desc">Use your V60 for a slow, cold steep that produces extraordinary clarity.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">24 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">350ml</span></div></div>
@@ -386,7 +388,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="cold-brew">
-      <span class="recipe-icon">🧊</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Cold Brew Concentrate</p>
       <p class="recipe-desc">12-hour steep, zero heat, maximum vibes. Make Sunday, thank yourself all week.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">12 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">600ml</span></div></div>
@@ -398,7 +400,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="japanese-iced">
-      <span class="recipe-icon">❄️</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Japanese Iced Pour Over</p>
       <p class="recipe-desc">Brew hot directly onto ice. Fast, bright, and shockingly refreshing.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">250ml</span></div></div>
@@ -410,7 +412,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="shakerato">
-      <span class="recipe-icon">🍹</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Espresso Shakerato</p>
       <p class="recipe-desc">Italian iced espresso shaken with ice until frothy. Cold, strong, and impossibly good.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -422,7 +424,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="vietnamese-iced">
-      <span class="recipe-icon">🌴</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Vietnamese Iced Coffee</p>
       <p class="recipe-desc">Condensed milk, strong Phin-brewed coffee, ice. Three ingredients, maximum satisfaction.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -434,7 +436,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="nitro-home">
-      <span class="recipe-icon">🍺</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Nitro Cold Brew (Home Version)</p>
       <p class="recipe-desc">Creamy, cascading, looks like Guinness. Made at home with a cream whipper.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">Overnight</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">400ml</span></div></div>
@@ -446,7 +448,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="cold-brew-tonic">
-      <span class="recipe-icon">💧</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Cold Brew Tonic</p>
       <p class="recipe-desc">Cold brew concentrate + tonic water. Like the espresso tonic's more laid-back sibling.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -458,7 +460,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="coffee-soda">
-      <span class="recipe-icon">🫧</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Coffee Soda</p>
       <p class="recipe-desc">Cold brew + sparkling water + citrus. The summer coffee drink nobody talks about.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -470,7 +472,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="cold" id="iced-pourover-milk">
-      <span class="recipe-icon">🥛</span>
+      <span class="recipe-cat-label">Cold Brew</span>
       <p class="recipe-name">Iced Latte Pour Over Style</p>
       <p class="recipe-desc">Pour over brewed cold, poured over milk and ice. More complex than a standard iced latte.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">350ml</span></div></div>
@@ -482,7 +484,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="matcha-iced">
-      <span class="recipe-icon">🌿</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Iced Matcha Latte</p>
       <p class="recipe-desc">Ceremonial grade matcha, oat milk, and enough ice to forget it's Monday.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -494,7 +496,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="matcha-hot">
-      <span class="recipe-icon">🫖</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Hot Matcha Latte</p>
       <p class="recipe-desc">Frothy, earthy, calming — the anti-coffee for coffee people.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -506,7 +508,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="golden-latte">
-      <span class="recipe-icon">🌟</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Golden Milk / Turmeric Latte</p>
       <p class="recipe-desc">Turmeric, ginger, black pepper, steamed milk. The anti-inflammatory drink that actually tastes good.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -518,7 +520,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="oat-latte">
-      <span class="recipe-icon">🌾</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Perfect Oat Milk Latte</p>
       <p class="recipe-desc">The barista-edition technique that makes the difference between good and exceptional.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -530,7 +532,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="matcha-espresso">
-      <span class="recipe-icon">💚</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Iced Matcha Espresso</p>
       <p class="recipe-desc">Matcha and espresso layered over ice. Double caffeine hit, beautiful layers.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -542,7 +544,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="chai-latte">
-      <span class="recipe-icon">🫚</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Masala Chai Latte</p>
       <p class="recipe-desc">From scratch spiced chai with your choice of milk. The real thing, not the powder stuff.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">15 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">2 cups</span></div></div>
@@ -554,7 +556,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="brown-sugar-latte">
-      <span class="recipe-icon">🤎</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Brown Sugar Oat Latte</p>
       <p class="recipe-desc">The Starbucks classic made at home for a fraction of the cost.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -566,7 +568,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="milk" id="lavender-latte">
-      <span class="recipe-icon">💜</span>
+      <span class="recipe-cat-label">Milk Drinks</span>
       <p class="recipe-name">Lavender Latte</p>
       <p class="recipe-desc">Floral, calming, and genuinely delicious. The latte upgrade nobody talks about enough.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">8 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Medium</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -578,7 +580,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="other" id="whipped-coffee">
-      <span class="recipe-icon">☁️</span>
+      <span class="recipe-cat-label">Other</span>
       <p class="recipe-name">Dalgona Whipped Coffee</p>
       <p class="recipe-desc">Equal parts instant coffee, sugar, hot water — whipped until fluffy and magical.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -590,7 +592,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="other" id="coffee-smoothie">
-      <span class="recipe-icon">🍌</span>
+      <span class="recipe-cat-label">Other</span>
       <p class="recipe-name">Cold Brew Coffee Smoothie</p>
       <p class="recipe-desc">Cold brew, banana, oat milk, peanut butter. Breakfast and coffee in one genuinely good drink.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -602,7 +604,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="other" id="coffee-cocktail">
-      <span class="recipe-icon">🍸</span>
+      <span class="recipe-cat-label">Other</span>
       <p class="recipe-name">White Russian</p>
       <p class="recipe-desc">Vodka, coffee liqueur, cream. The simplest great coffee cocktail.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">2 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cocktail</span></div></div>
@@ -614,7 +616,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="other" id="coffee-granita">
-      <span class="recipe-icon">🧊</span>
+      <span class="recipe-cat-label">Other</span>
       <p class="recipe-name">Coffee Granita</p>
       <p class="recipe-desc">Frozen coffee scraped into icy flakes. An Italian summer classic.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">4 servings</span></div></div>
@@ -626,7 +628,7 @@
       </div>
     </div>
     <div class="recipe-card" data-category="other" id="cold-brew-popsicle">
-      <span class="recipe-icon">🍦</span>
+      <span class="recipe-cat-label">Other</span>
       <p class="recipe-name">Cold Brew Coffee Popsicles</p>
       <p class="recipe-desc">Cold brew, condensed milk, vanilla. The easiest adult popsicle you can make.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">6 hrs</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">6 popsicles</span></div></div>
@@ -638,7 +640,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-dalgona">
-      <span class="recipe-icon">☁️</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Dalgona Whipped Instant</p>
       <p class="recipe-desc">The viral quarantine drink. Instant coffee whipped until fluffy and piled over milk.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -650,7 +652,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-iced-latte">
-      <span class="recipe-icon">🧊</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Instant Iced Latte</p>
       <p class="recipe-desc">Strong instant coffee concentrate over ice and cold milk. Surprisingly decent.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -662,7 +664,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-mocha">
-      <span class="recipe-icon">🍫</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Instant Coffee Mocha</p>
       <p class="recipe-desc">Cocoa powder + instant coffee + hot milk. Chocolatey, comforting, zero equipment.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -674,7 +676,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-cold-brew">
-      <span class="recipe-icon">🌙</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Overnight Instant Cold Brew</p>
       <p class="recipe-desc">Dissolve instant in cold water. Leave overnight. Better than you'd expect.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">Overnight</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">2 drinks</span></div></div>
@@ -686,7 +688,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-chai">
-      <span class="recipe-icon">🌶️</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Instant Dirty Chai</p>
       <p class="recipe-desc">Chai spices + instant coffee + milk. All the flavour, none of the espresso machine.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -698,7 +700,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-affogato">
-      <span class="recipe-icon">🍨</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Instant Coffee Affogato</p>
       <p class="recipe-desc">Strong instant poured over ice cream. The easiest impressive dessert you can make.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 dessert</span></div></div>
@@ -710,7 +712,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-frappe">
-      <span class="recipe-icon">🥤</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Greek Frappé</p>
       <p class="recipe-desc">The original instant coffee frappé. Shaken with ice until foamy. A Greek classic.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -722,7 +724,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-cardamom">
-      <span class="recipe-icon">🌙</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Cardamom Instant Coffee</p>
       <p class="recipe-desc">Middle Eastern-inspired instant coffee with cardamom. Earthy, aromatic, surprisingly sophisticated.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -734,7 +736,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-cinnamon">
-      <span class="recipe-icon">🫚</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Cinnamon Vanilla Instant Latte</p>
       <p class="recipe-desc">Instant coffee, cinnamon, vanilla, hot milk. Tastes like a warm hug.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -746,7 +748,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-bulletproof">
-      <span class="recipe-icon">💛</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Instant Bulletproof Coffee</p>
       <p class="recipe-desc">Instant coffee blended with butter or coconut oil. Creamy, filling, high-fat morning fuel.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -758,7 +760,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-protein">
-      <span class="recipe-icon">💪</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Coffee Protein Shake</p>
       <p class="recipe-desc">Instant coffee + protein powder + oat milk. Pre-gym caffeine and protein in one drink.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">3 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -770,7 +772,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-tiramisu">
-      <span class="recipe-icon">🍰</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Tiramisu Milkshake</p>
       <p class="recipe-desc">Instant coffee, mascarpone, vanilla. Dessert in a glass, no baking required.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -782,7 +784,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-brown-sugar">
-      <span class="recipe-icon">🤎</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Brown Sugar Instant Latte</p>
       <p class="recipe-desc">Starbucks-style brown sugar oat latte made at home for $0.50.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 drink</span></div></div>
@@ -794,7 +796,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-rose">
-      <span class="recipe-icon">🌹</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Rose Instant Latte</p>
       <p class="recipe-desc">Rosewater + instant coffee + oat milk. Floral, slightly sweet, unexpectedly good.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">4 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
@@ -806,7 +808,7 @@
       </div>
     </div>
     <div class="recipe-card instant-card" data-category="instant" id="instant-salt-caramel">
-      <span class="recipe-icon">🧂</span>
+      <span class="recipe-cat-label">Instant Hack</span>
       <p class="recipe-name">Salted Caramel Instant Latte</p>
       <p class="recipe-desc">Caramel sauce + pinch of salt + instant coffee + steamed milk. Café quality from a jar.</p>
       <div class="recipe-stats"><div class="rs-item"><span class="rs-label">Time</span><span class="rs-val">5 min</span></div><div class="rs-item"><span class="rs-label">Diff</span><span class="rs-val">Easy</span></div><div class="rs-item"><span class="rs-label">Yield</span><span class="rs-val">1 cup</span></div></div>
