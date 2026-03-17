@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Oracle — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital,wght@1,300;1,400;0,300&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0d0a06;
+  --rust:#d4501a;
+  --yellow:#f0c040;
+  --cream:#f5f0e8;
+  --espresso:#2d1a08;
+  --text:rgba(245,240,232,.85);
+  --dim:rgba(245,240,232,.3);
+  --dimmer:rgba(245,240,232,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Syne Mono',monospace;overflow-x:hidden;cursor:none}
+
+#cur{position:fixed;width:7px;height:7px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#crr{position:fixed;width:24px;height:24px;border:1px solid rgba(212,80,26,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease}
+
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:500;opacity:.5}
+
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;z-index:10}
+.back:hover{color:var(--rust)}
+.stag{position:fixed;top:26px;right:28px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(212,80,26,.4)}
+
+/* smoke particles */
+.smoke{position:fixed;border-radius:50%;pointer-events:none;animation:smokeUp linear infinite;opacity:0}
+@keyframes smokeUp{0%{transform:translateY(0) scale(1);opacity:0}15%{opacity:.15}85%{opacity:.05}100%{transform:translateY(-60vh) scale(3);opacity:0}}
+
+/* page */
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;position:relative}
+
+/* header */
+.hdr{margin-bottom:56px;opacity:0;animation:fadeUp .8s ease .1s forwards}
+.oracle-eye{width:64px;height:64px;margin:0 auto 20px;position:relative}
+.eye-outer{width:64px;height:64px;border-radius:50%;border:1px solid rgba(212,80,26,.3);display:flex;align-items:center;justify-content:center;animation:eyePulse 4s ease-in-out infinite}
+.eye-inner{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 40% 40%, var(--rust), #6a1a04);animation:eyeGlow 4s ease-in-out infinite}
+@keyframes eyePulse{0%,100%{transform:scale(1);border-color:rgba(212,80,26,.3)}50%{transform:scale(1.08);border-color:rgba(212,80,26,.6)}}
+@keyframes eyeGlow{0%,100%{box-shadow:0 0 8px rgba(212,80,26,.4)}50%{box-shadow:0 0 24px rgba(212,80,26,.8)}}
+
+.oracle-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--rust);margin-bottom:10px;opacity:.7}
+.oracle-title{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(42px,8vw,72px);line-height:.92;letter-spacing:-.02em;color:var(--cream);margin-bottom:10px}
+.oracle-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+/* input */
+.ask-wrap{width:100%;max-width:560px;margin-bottom:48px;opacity:0;animation:fadeUp .8s ease .3s forwards}
+.ask-input{
+  width:100%;background:transparent;
+  border:none;border-bottom:1px solid rgba(245,240,232,.15);
+  font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(18px,3vw,26px);
+  color:var(--cream);text-align:center;padding:14px 8px;
+  outline:none;letter-spacing:.01em;
+  transition:border-color .3s;
+  caret-color:var(--rust);
+}
+.ask-input::placeholder{color:var(--dimmer)}
+.ask-input:focus{border-color:rgba(212,80,26,.5)}
+
+.ask-hint{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);margin-top:10px;transition:opacity .3s}
+
+/* ask button */
+.ask-btn{
+  background:transparent;border:1px solid rgba(212,80,26,.35);
+  color:var(--rust);font-family:'Syne Mono',monospace;
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  padding:12px 32px;border-radius:2px;cursor:pointer;
+  transition:all .2s;margin-top:20px;
+  opacity:0;animation:fadeUp .8s ease .5s forwards;
+}
+.ask-btn:hover{background:rgba(212,80,26,.08);border-color:var(--rust)}
+.ask-btn:active{transform:scale(.97)}
+.ask-btn:disabled{opacity:.3;pointer-events:none}
+
+/* response area */
+.response-area{
+  width:100%;max-width:560px;
+  min-height:120px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;animation:fadeUp .8s ease .6s forwards;
+}
+
+.resp-state-idle{
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);
+  display:flex;align-items:center;gap:12px;
+}
+.resp-state-idle::before,.resp-state-idle::after{content:'';width:24px;height:1px;background:var(--dimmer)}
+
+.resp-thinking{display:none;flex-direction:column;align-items:center;gap:14px}
+.think-dots{display:flex;gap:6px}
+.td{width:5px;height:5px;border-radius:50%;background:var(--rust);animation:tdPulse 1.2s ease-in-out infinite}
+.td:nth-child(2){animation-delay:.2s}
+.td:nth-child(3){animation-delay:.4s}
+@keyframes tdPulse{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.think-text{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+
+.resp-answer{display:none;flex-direction:column;align-items:center;gap:0}
+.resp-divider{width:1px;height:32px;background:linear-gradient(to bottom,transparent,rgba(212,80,26,.4),transparent);margin-bottom:20px}
+.resp-category{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);opacity:.6;margin-bottom:14px}
+.resp-text{
+  font-family:'Crimson Pro',serif;font-style:italic;
+  font-size:clamp(20px,3.5vw,32px);line-height:1.35;
+  letter-spacing:-.01em;color:var(--cream);
+  margin-bottom:18px;
+}
+.resp-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:32px}
+.resp-again{
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);background:none;border:none;cursor:pointer;
+  transition:color .2s;font-family:'Syne Mono',monospace;padding:8px;
+}
+.resp-again:hover{color:var(--rust)}
+
+/* history */
+.history{width:100%;max-width:560px;margin-top:40px;opacity:0;animation:fadeUp .8s ease .8s forwards}
+.history-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);margin-bottom:14px}
+.history-list{display:flex;flex-direction:column;gap:8px}
+.history-item{font-size:12px;color:var(--dimmer);letter-spacing:.03em;font-family:'Crimson Pro',serif;font-style:italic;transition:color .2s;cursor:default}
+.history-item:hover{color:var(--dim)}
+.history-item span{color:rgba(212,80,26,.4);font-style:normal;font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.1em;margin-right:8px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.page{padding:70px 20px}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="crr"></div>
+<a href="index.html" class="back">← spill.</a>
+<span class="stag">the oracle</span>
+
+<div class="page">
+  <div class="hdr">
+    <div class="oracle-eye">
+      <div class="eye-outer"><div class="eye-inner"></div></div>
+    </div>
+    <p class="oracle-label">Spill. Oracle</p>
+    <h1 class="oracle-title">ask the<br>grounds.</h1>
+    <p class="oracle-sub">the coffee knows</p>
+  </div>
+
+  <div class="ask-wrap">
+    <input class="ask-input" id="askInput" type="text" placeholder="ask your question..." maxlength="120" autocomplete="off" spellcheck="false"/>
+    <p class="ask-hint">press enter or click consult</p>
+  </div>
+
+  <button class="ask-btn" id="askBtn">consult the oracle</button>
+
+  <div class="response-area" id="respArea">
+    <p class="resp-state-idle" id="stateIdle">the grounds await</p>
+    <div class="resp-thinking" id="stateThinking">
+      <div class="think-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+      <p class="think-text">reading the grounds</p>
+    </div>
+    <div class="resp-answer" id="stateAnswer">
+      <div class="resp-divider"></div>
+      <p class="resp-category" id="respCategory">brew wisdom</p>
+      <p class="resp-text" id="respText"></p>
+      <p class="resp-sub" id="respSub"></p>
+      <button class="resp-again" id="askAgain">ask again →</button>
+    </div>
+  </div>
+
+  <div class="history" id="historyWrap" style="display:none">
+    <p class="history-label">previous consultations</p>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</div>
+
+<script>
+// cursor
+const cur=document.getElementById('cur'),crr=document.getElementById('crr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.11;ry+=(my-ry)*.11;crr.style.left=rx+'px';crr.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+// smoke
+for(let i=0;i<18;i++){
+  const s=document.createElement('div');
+  s.className='smoke';
+  const sz=20+Math.random()*40;
+  s.style.cssText=`width:${sz}px;height:${sz}px;background:rgba(245,240,232,0.018);left:${Math.random()*100}%;bottom:0;animation-duration:${12+Math.random()*16}s;animation-delay:${Math.random()*12}s`;
+  document.body.appendChild(s);
+}
+
+// oracle responses
+const RESPONSES = [
+  { text: "The answer is yes. It was always yes. Order the second coffee.", sub: "the grounds do not lie", cat: "certainty" },
+  { text: "Something is holding you back. It tastes like under-extraction.", sub: "adjust your grind", cat: "obstruction" },
+  { text: "Not today. Come back after the third cup.", sub: "timing is everything", cat: "patience" },
+  { text: "You already know the answer. You just wanted someone to blame.", sub: "the oracle sees all", cat: "self-knowledge" },
+  { text: "The path forward smells like fresh grounds and bad decisions. Take it.", sub: "fortune favours the caffeinated", cat: "courage" },
+  { text: "Someone is thinking about you. They are also thinking about coffee. These are not unrelated.", sub: "the grounds reveal connections", cat: "relationships" },
+  { text: "What you are looking for is in the last place you would think to look. It usually is.", sub: "seek and ye shall find", cat: "searching" },
+  { text: "The answer changes depending on how long you let it steep.", sub: "patience is a brew method", cat: "time" },
+  { text: "Stop asking questions and start making choices. Also, buy better beans.", sub: "the oracle grows impatient", cat: "action" },
+  { text: "This is a good idea. Most good ideas feel like bad ideas at first. Like cold brew.", sub: "trust the process", cat: "faith" },
+  { text: "You are overthinking it. Exactly like you overthink your grind size.", sub: "simplicity is a virtue", cat: "clarity" },
+  { text: "The situation will improve. Everything tastes better after 9am.", sub: "the morning always comes", cat: "hope" },
+  { text: "There is more than one right answer. There is also more than one correct brew ratio. Both are true.", sub: "nuance is underrated", cat: "complexity" },
+  { text: "Let it go. Like a shot that ran too long. You cannot save it now.", sub: "release what cannot be saved", cat: "acceptance" },
+  { text: "Trust your instincts. They are usually right, especially about people and roast profiles.", sub: "the gut knows", cat: "intuition" },
+  { text: "Not everything needs to be optimised. Sometimes a bad coffee in a good moment is perfect.", sub: "context is everything", cat: "perspective" },
+  { text: "The thing you are afraid of is much smaller than it looks. So is a ristretto. Both are powerful.", sub: "do not underestimate small things", cat: "fear" },
+  { text: "Someone owes you an apology. The oracle recommends you drink something while you wait.", sub: "brew in peace", cat: "patience" },
+  { text: "You have outgrown something. This is normal. So is switching from milk to black.", sub: "growth requires change", cat: "evolution" },
+  { text: "The answer will arrive on its own schedule, like a late pour over. Worth it.", sub: "good things take time", cat: "waiting" },
+  { text: "Do the thing. The worst case is a bad cup. You have survived those before.", sub: "resilience is a skill", cat: "action" },
+  { text: "You are closer than you think. The last bloom always looks like failure right before it opens.", sub: "keep going", cat: "perseverance" },
+  { text: "Rest. Even espresso machines need descaling.", sub: "maintenance is not weakness", cat: "rest" },
+  { text: "The grounds say: yes, but not yet. The grounds are rarely wrong about timing.", sub: "wait for the right moment", cat: "timing" },
+  { text: "It will work out. Not perfectly. But perfectly enough.", sub: "enough is enough", cat: "acceptance" },
+];
+
+let lastIdx = -1;
+let history = [];
+
+function getResponse(question) {
+  // Simple hash of question to pick deterministically but feel magical
+  let idx;
+  if(question.trim().length > 0) {
+    let hash = 0;
+    for(let i=0;i<question.length;i++) hash = (hash*31+question.charCodeAt(i)) % RESPONSES.length;
+    // Avoid repeating last
+    idx = hash === lastIdx ? (hash+1) % RESPONSES.length : hash;
+  } else {
+    idx = Math.floor(Math.random()*RESPONSES.length);
+  }
+  lastIdx = idx;
+  return RESPONSES[idx];
+}
+
+// UI refs
+const input = document.getElementById('askInput');
+const btn = document.getElementById('askBtn');
+const stIdle = document.getElementById('stateIdle');
+const stThink = document.getElementById('stateThinking');
+const stAnswer = document.getElementById('stateAnswer');
+const respText = document.getElementById('respText');
+const respSub = document.getElementById('respSub');
+const respCat = document.getElementById('respCategory');
+const askAgain = document.getElementById('askAgain');
+const histWrap = document.getElementById('historyWrap');
+const histList = document.getElementById('historyList');
+
+function showIdle(){ stIdle.style.display='flex'; stThink.style.display='none'; stAnswer.style.display='none'; }
+function showThinking(){ stIdle.style.display='none'; stThink.style.display='flex'; stAnswer.style.display='none'; }
+function showAnswer(r){
+  stIdle.style.display='none'; stThink.style.display='none';
+  stAnswer.style.display='flex';
+  respCat.textContent = r.cat;
+  respText.textContent = '';
+  respSub.textContent = '';
+  // typewriter effect
+  let i=0;
+  const txt = r.text;
+  function type(){
+    if(i<txt.length){ respText.textContent+=txt[i++]; setTimeout(type, 22); }
+    else { respSub.textContent = r.sub; }
+  }
+  setTimeout(type, 100);
+}
+
+function consult(){
+  const q = input.value.trim();
+  if(!q) return;
+  btn.disabled = true;
+  showThinking();
+  const delay = 1400 + Math.random()*800;
+  setTimeout(()=>{
+    const r = getResponse(q);
+    showAnswer(r);
+    addHistory(q, r);
+    btn.disabled = false;
+  }, delay);
+}
+
+function addHistory(q, r){
+  history.unshift({q, r});
+  if(history.length > 3) history.pop();
+  histList.innerHTML = history.map(h=>
+    `<div class="history-item"><span>Q</span>${h.q.length > 50 ? h.q.slice(0,50)+'...' : h.q}</div>`
+  ).join('');
+  histWrap.style.display = 'block';
+}
+
+btn.addEventListener('click', consult);
+input.addEventListener('keydown', e=>{ if(e.key==='Enter') consult(); });
+askAgain.addEventListener('click', ()=>{ input.value=''; showIdle(); input.focus(); });
+
+// start focused
+setTimeout(()=>input.focus(), 800);
+</script>
+</body>
+</html>

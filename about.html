@@ -294,6 +294,19 @@
 document.querySelectorAll('.faq-row').forEach(row => {
   row.addEventListener('click', () => row.classList.toggle('open'));
 });
+
+// 3 min idle → void
+(function(){
+  let timer=null;
+  function reset(){
+    clearTimeout(timer);
+    timer=setTimeout(()=>window.location.href='void.html', 3*60*1000);
+  }
+  ['mousemove','keydown','scroll','click','touchstart'].forEach(e=>
+    document.addEventListener(e, reset, {passive:true})
+  );
+  reset();
+})();
 </script>
 </body>
 </html>

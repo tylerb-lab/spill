@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital@1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;cursor:none}
+
+#cur{position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:.4}
+
+.back{position:fixed;top:24px;left:28px;font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.12);text-decoration:none;z-index:10;transition:color .3s}
+.back:hover{color:rgba(255,255,255,.5)}
+
+.container{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center}
+
+/* phase 1 — waiting */
+#phase-wait{opacity:1;transition:opacity 1.5s ease}
+.cursor-blink{width:2px;height:28px;background:#fff;opacity:.5;animation:blink .9s step-end infinite;margin:0 auto}
+@keyframes blink{0%,100%{opacity:.5}50%{opacity:0}}
+
+/* phase 2 — text reveal */
+#phase-text{opacity:0;transition:opacity 2s ease;pointer-events:none}
+#phase-text.show{opacity:1;pointer-events:auto}
+
+.void-line{
+  font-family:'Syne Mono',monospace;
+  font-size:clamp(10px,1.4vw,13px);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.18);
+  margin-bottom:6px;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+.void-line.in{opacity:1;transform:translateY(0)}
+
+.void-main{
+  font-family:'Crimson Pro',serif;
+  font-style:italic;
+  font-size:clamp(28px,5vw,56px);
+  color:#fff;
+  line-height:1.15;
+  letter-spacing:-.01em;
+  margin:28px 0 32px;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity 1.2s ease .4s, transform 1.2s ease .4s;
+}
+.void-main.in{opacity:1;transform:translateY(0)}
+.void-main em{color:rgba(255,255,255,.35);font-style:normal}
+
+.void-sub{
+  font-family:'Syne Mono',monospace;
+  font-size:clamp(9px,1.2vw,11px);
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.14);
+  margin-bottom:60px;
+  opacity:0;
+  transition:opacity 1s ease .9s;
+}
+.void-sub.in{opacity:1}
+
+.void-back{
+  font-family:'Syne Mono',monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.2);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,.1);
+  padding:10px 24px;
+  border-radius:2px;
+  opacity:0;
+  transition:opacity .8s ease 1.4s, color .2s, border-color .2s;
+}
+.void-back.in{opacity:1}
+.void-back:hover{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3)}
+
+/* particles */
+.particle{
+  position:fixed;
+  width:1px;height:1px;
+  background:#fff;
+  border-radius:50%;
+  pointer-events:none;
+  animation:drift linear infinite;
+  opacity:0;
+}
+@keyframes drift{
+  0%{transform:translateY(100vh) translateX(0);opacity:0}
+  10%{opacity:.4}
+  90%{opacity:.1}
+  100%{transform:translateY(-20px) translateX(var(--dx));opacity:0}
+}
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:500;opacity:.6}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<a href="index.html" class="back">← spill.</a>
+
+<!-- phase 1: waiting -->
+<div class="container" id="phase-wait">
+  <div class="cursor-blink"></div>
+</div>
+
+<!-- phase 2: message -->
+<div class="container" id="phase-text">
+  <p class="void-line" id="vl1"> Welcome to the void.</p>
+  <p class="void-main" id="vm">the coffee gets cold.<br><em>everything</em> gets cold.<br>brew another one.</p>
+  <p class="void-sub" id="vs">spill. — est. 2026 — still brewing</p>
+  <a href="index.html" class="void-back" id="vb">go back to the light</a>
+</div>
+
+<script>
+// cursor
+const cur=document.getElementById('cur');
+let mx=window.innerWidth/2,my=window.innerHeight/2;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
+
+// particles
+for(let i=0;i<40;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  p.style.cssText=`left:${Math.random()*100}%;--dx:${(Math.random()-0.5)*80}px;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s;width:${Math.random()>0.7?2:1}px;height:${Math.random()>0.7?2:1}px;opacity:${Math.random()*0.4}`;
+  document.body.appendChild(p);
+}
+
+// sequence
+const wait = document.getElementById('phase-wait');
+const text = document.getElementById('phase-text');
+
+setTimeout(()=>{
+  wait.style.opacity='0';
+  setTimeout(()=>{
+    wait.style.display='none';
+    text.classList.add('show');
+    setTimeout(()=>document.getElementById('vl1').classList.add('in'),200);
+    setTimeout(()=>document.getElementById('vm').classList.add('in'),600);
+    setTimeout(()=>document.getElementById('vs').classList.add('in'),1100);
+    setTimeout(()=>document.getElementById('vb').classList.add('in'),1600);
+  },1500);
+},4000);
+</script>
+</body>
+</html>
