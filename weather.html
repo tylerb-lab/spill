@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is it a good day for coffee?</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Syne',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transition:background .8s,color .8s;}
+:root{--bg:#f5f0e8;--ink:#2d1a08;--rust:#d4501a;--yellow:#f0c040;--mid:#7a6a50;--border:rgba(45,26,8,.15);}
+body.good{--bg:#2a4a28;--ink:#f5f0e8;--border:rgba(245,240,232,.15);}
+body.bad{--bg:#3a1a08;--ink:#f5f0e8;--border:rgba(245,240,232,.15);}
+body.ok{--bg:#2d1a08;--ink:#f5f0e8;--border:rgba(245,240,232,.15);}
+
+#wrap{max-width:600px;width:100%;text-align:center;}
+
+.label{font-family:'Syne Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--rust);margin-bottom:1rem;}
+.label::before{content:'// ';}
+
+.verdict{font-size:clamp(3rem,12vw,7rem);font-weight:800;line-height:.9;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.verdict em{color:var(--rust);font-style:normal;}
+
+.score-wrap{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2rem;}
+.score-bar{width:200px;height:8px;background:rgba(0,0,0,.15);border-radius:4px;overflow:hidden;}
+.score-fill{height:100%;background:var(--rust);border-radius:4px;transition:width 1.5s cubic-bezier(.4,0,.2,1);}
+.score-num{font-family:'Syne Mono',monospace;font-size:.75rem;letter-spacing:.1em;color:var(--rust);}
+
+.reason{font-size:.85rem;line-height:1.9;color:var(--mid);max-width:420px;margin:0 auto 2.5rem;font-weight:400;}
+body.good .reason, body.bad .reason, body.ok .reason{color:rgba(245,240,232,.6);}
+
+.conditions{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:2px solid var(--border);margin-bottom:2.5rem;}
+.cond{padding:1.25rem 1rem;text-align:center;}
+body:not(.bad):not(.ok):not(.good) .cond{background:var(--bg);}
+body.good .cond, body.bad .cond, body.ok .cond{background:rgba(245,240,232,.05);}
+.cond-val{font-size:1.4rem;font-weight:800;color:var(--rust);display:block;margin-bottom:.2rem;}
+.cond-label{font-family:'Syne Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+body.good .cond-label, body.bad .cond-label, body.ok .cond-label{color:rgba(245,240,232,.4);}
+
+.brew-tip{border:2px solid var(--border);padding:1.25rem 1.5rem;text-align:left;margin-bottom:2rem;}
+.brew-tip-title{font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rust);margin-bottom:.5rem;}
+.brew-tip-text{font-size:.78rem;line-height:1.75;color:var(--mid);}
+body.good .brew-tip-text, body.bad .brew-tip-text, body.ok .brew-tip-text{color:rgba(245,240,232,.55);}
+
+.reload{font-family:'Syne Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rust);background:none;border:1.5px solid rgba(212,80,26,.3);padding:.5rem 1.2rem;cursor:pointer;transition:all .2s;}
+.reload:hover{background:rgba(212,80,26,.1);border-color:var(--rust);}
+
+.loading{font-size:1.5rem;font-weight:800;letter-spacing:.1em;opacity:.5;}
+
+#backLink{position:fixed;bottom:1.5rem;left:1.5rem;font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:rgba(212,80,26,.4);text-decoration:none;text-transform:uppercase;}
+#backLink:hover{color:var(--rust);}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <p class="label">Sydney Coffee Conditions</p>
+  <div id="content"><p class="loading">Checking the weather...</p></div>
+</div>
+<a href="index.html" id="backLink">← Back to Spill</a>
+<script>
+const TIPS = {
+  good: [
+    "Humidity is ideal — your beans won't have absorbed excess moisture overnight. Pull those shots.",
+    "Cool, low-humidity mornings produce the best extraction. Your grind will be consistent today.",
+    "Perfect conditions. Light roast, V60, no excuses for a bad cup.",
+    "The atmosphere is on your side. Ethiopian natural, filter, window open. Go.",
+  ],
+  ok: [
+    "Decent conditions. Nothing exceptional. Your technique matters more than the weather today.",
+    "Moderate humidity means your beans may have absorbed a little moisture. Grind slightly finer.",
+    "Not ideal, not bad. A reliable Colombian washed will forgive the conditions.",
+    "The weather is average. Your coffee doesn't have to be. Focus on your pour.",
+  ],
+  bad: [
+    "High humidity has been working on your beans all night. Grind finer to compensate.",
+    "Hot and humid — espresso will struggle. This is a cold brew day. You have cold brew, right?",
+    "Elevated humidity means absorbed moisture in your beans. They'll extract faster. Watch your time.",
+    "The heat is doing things to your milk. Keep it refrigerated until the last second.",
+    "High temps affect extraction. Lower your water temp by 2°C today.",
+  ]
+};
+
+const SCIENCE = {
+  humidity: {
+    good: "Low humidity keeps beans dry and grind consistent.",
+    ok: "Moderate humidity — minor effect on grind size.",
+    bad: "High humidity causes beans to absorb moisture, speeding up extraction.",
+  },
+  temp: {
+    good: "Cool temps mean slower staling and better milk steaming.",
+    ok: "Mild temps — minimal effect on brewing.",
+    bad: "Heat accelerates bean oxidation and makes milk harder to steam properly.",
+  },
+  condition: {
+    good: "Clear skies mean stable pressure — ideal extraction conditions.",
+    ok: "Overcast but stable. Fine for coffee.",
+    bad: "Storm pressure can subtly affect extraction. Slightly unusual flavour notes.",
+  }
+};
+
+async function getWeather() {
+  // Open-Meteo — free, no key required, very reliable
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=-33.8688&longitude=151.2093&current=temperature_2m,relative_humidity_2m,weathercode&timezone=Australia/Sydney';
+  const res = await fetch(url);
+  const data = await res.json();
+  return {
+    temp: Math.round(data.current.temperature_2m),
+    humidity: data.current.relative_humidity_2m,
+    code: data.current.weathercode,
+  };
+}
+
+function scoreWeather(temp, humidity, code) {
+  let score = 100;
+  let reasons = [];
+
+  // Humidity scoring (biggest factor)
+  if (humidity > 75) { score -= 40; reasons.push('humidity is very high (' + humidity + '%)'); }
+  else if (humidity > 60) { score -= 20; reasons.push('humidity is elevated (' + humidity + '%)'); }
+  else if (humidity < 35) { score -= 10; reasons.push('humidity is very low (' + humidity + '% — static may affect grind)'); }
+  else { reasons.push('humidity is ideal (' + humidity + '%)'); }
+
+  // Temperature scoring
+  if (temp > 32) { score -= 30; reasons.push('it\'s very hot (' + temp + '°C — cold brew territory)'); }
+  else if (temp > 26) { score -= 15; reasons.push('it\'s warm (' + temp + '°C)'); }
+  else if (temp < 10) { score -= 5; reasons.push('it\'s cold (' + temp + '°C — espresso weather honestly)'); }
+  else { reasons.push('temperature is perfect (' + temp + '°C)'); }
+
+  // Weather condition
+  if (code >= 95) { score -= 20; reasons.push('there\'s a thunderstorm (low pressure affects extraction)'); }
+  else if (code >= 61) { score -= 10; reasons.push('it\'s raining (good excuse to stay in and brew filter)'); }
+  else if (code === 0) { reasons.push('clear skies'); }
+
+  return { score: Math.max(0, Math.min(100, score)), reasons };
+}
+
+function getConditionLabel(code) {
+  if (code === 0) return 'Clear';
+  if (code <= 3) return 'Cloudy';
+  if (code <= 48) return 'Foggy';
+  if (code <= 67) return 'Raining';
+  if (code <= 77) return 'Snowing';
+  if (code <= 82) return 'Showers';
+  return 'Stormy';
+}
+
+function getVerdict(score) {
+  if (score >= 75) return { text: 'Yes.', class: 'good', tier: 'good' };
+  if (score >= 50) return { text: 'Mostly.', class: 'ok', tier: 'ok' };
+  if (score >= 30) return { text: 'Debatable.', class: 'ok', tier: 'ok' };
+  return { text: 'Brew anyway.', class: 'bad', tier: 'bad' };
+}
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getBrewTip(score, temp, humidity) {
+  if (score >= 75) return "Pull your best shot today. Conditions are on your side — don't waste it on a capsule machine.";
+  if (humidity > 70) return "Grind 1-2 clicks finer than usual to compensate for moisture absorption in your beans. Check your dose weight — humid beans pack differently.";
+  if (temp > 28) return "Lower your espresso water temp to 90°C instead of 93°C. Heat amplifies bitterness today. Consider iced filter over hot espresso.";
+  if (score >= 50) return "Nothing special about today's conditions. Focus on your technique — consistent pour, accurate dose, clean equipment.";
+  return "Genuinely bad brewing conditions. Make cold brew instead — it's forgiving, and you prepped it last night. Right?";
+}
+
+async function render() {
+  try {
+    const { temp, humidity, code } = await getWeather();
+    const { score, reasons } = scoreWeather(temp, humidity, code);
+    const verdict = getVerdict(score);
+    const condition = getConditionLabel(code);
+
+    document.body.className = verdict.class;
+
+    const html = `
+      <h1 class="verdict">${verdict.text}</h1>
+      <div class="score-wrap">
+        <div class="score-bar"><div class="score-fill" id="sf" style="width:0%"></div></div>
+        <span class="score-num">${score}/100</span>
+      </div>
+      <p class="reason">${reasons.join(', ')}. ${randomFrom(TIPS[verdict.tier])}</p>
+      <div class="conditions">
+        <div class="cond"><span class="cond-val">${humidity}%</span><span class="cond-label">Humidity</span></div>
+        <div class="cond"><span class="cond-val">${temp}°C</span><span class="cond-label">Temp</span></div>
+        <div class="cond"><span class="cond-val">${condition}</span><span class="cond-label">Conditions</span></div>
+      </div>
+      <div class="brew-tip">
+        <p class="brew-tip-title">Today's brewing adjustment</p>
+        <p class="brew-tip-text">${getBrewTip(score, temp, humidity)}</p>
+      </div>
+      <button class="reload" onclick="location.reload()">Check again ↻</button>
+    `;
+
+    document.getElementById('content').innerHTML = html;
+    setTimeout(() => {
+      const sf = document.getElementById('sf');
+      if (sf) sf.style.width = score + '%';
+    }, 100);
+
+  } catch(e) {
+    document.getElementById('content').innerHTML = `
+      <h1 class="verdict">Always.</h1>
+      <p class="reason" style="margin-top:1rem">Couldn't reach the weather API. Doesn't matter. It's always a good day for coffee.</p>
+      <button class="reload" onclick="location.reload()" style="margin-top:1.5rem">Try again ↻</button>
+    `;
+  }
+}
+
+render();
+</script>
+</body>
+</html>

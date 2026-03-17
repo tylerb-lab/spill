@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Spill Manifesto</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&family=Crimson+Pro:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f5f0e8;--ink:#2d1a08;--rust:#d4501a;--yellow:#f0c040;--mid:#7a6a50;--border:rgba(45,26,8,.1);}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Crimson Pro',serif;overflow-x:hidden;}
+
+.classified{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--rust);color:#faf6ee;text-align:center;padding:.4rem;font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.3em;}
+
+header{padding:8rem 2.5rem 5rem;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;}
+.header-bg{position:absolute;inset:0;font-family:'Syne',sans-serif;font-size:22vw;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(45,26,8,.04);line-height:1;pointer-events:none;display:flex;align-items:center;justify-content:center;white-space:nowrap;}
+.header-label{font-family:'Syne Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--rust);margin-bottom:1.5rem;}
+.header-label::before{content:'// ';}
+h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,10vw,8rem);font-weight:800;line-height:.88;letter-spacing:-.03em;margin-bottom:2rem;position:relative;}
+h1 em{color:var(--rust);font-style:italic;font-family:'Crimson Pro',serif;font-weight:300;}
+.header-sub{font-size:1rem;font-weight:300;color:var(--mid);line-height:1.8;max-width:520px;font-style:italic;position:relative;}
+
+.ticker{overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:.5rem 0;background:var(--ink);}
+.ticker-track{display:flex;gap:0;animation:tick 20s linear infinite;white-space:nowrap;}
+.ti{font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--bg);padding:0 2rem;}
+@keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+article{max-width:760px;margin:0 auto;padding:6rem 2.5rem;}
+.section{margin-bottom:5rem;}
+.s-num{font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--rust);margin-bottom:.75rem;}
+h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:1.5rem;}
+h2 em{color:var(--rust);font-style:normal;}
+p{font-size:1.15rem;font-weight:300;line-height:1.95;color:var(--ink);margin-bottom:1.25rem;}
+.pull{font-size:clamp(1.4rem,4vw,2rem);font-style:italic;font-weight:300;color:var(--rust);border-left:4px solid var(--rust);padding:.75rem 2rem;margin:2.5rem 0;line-height:1.4;}
+strong{font-family:'Syne',sans-serif;font-weight:800;font-size:.95em;}
+.divider{height:2px;background:var(--border);margin:4rem 0;}
+.signed{font-family:'Syne Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--mid);margin-top:4rem;padding-top:2rem;border-top:2px solid var(--border);}
+
+footer-spill{display:block;text-align:center;padding:3rem;border-top:2px solid var(--ink);background:var(--ink);color:var(--bg);font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;letter-spacing:-.02em;}
+footer-spill em{color:var(--rust);}
+
+#backLink{position:fixed;bottom:1.5rem;right:1.5rem;font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:rgba(212,80,26,.5);text-decoration:none;text-transform:uppercase;background:var(--bg);padding:.3rem .6rem;border:1px solid var(--border);}
+#backLink:hover{color:var(--rust);}
+</style>
+</head>
+<body>
+
+<div class="classified">⚠ CLASSIFIED - YOU WEREN'T SUPPOSED TO FIND THIS ⚠</div>
+
+<header>
+  <div class="header-bg">SPILL</div>
+  <p class="header-label">Internal Document - Not for public distribution</p>
+  <h1>The Spill<br><em>Manifesto.</em></h1>
+  <p class="header-sub">A completely unhinged document about coffee culture, why most of it is wrong, and what we actually believe. Written at 11pm after three espressos.</p>
+</header>
+
+<div class="ticker"><div class="ticker-track">
+  <span class="ti">DARK ROAST IS COWARDICE</span><span class="ti">·</span>
+  <span class="ti">BUY A BURR GRINDER</span><span class="ti">·</span>
+  <span class="ti">SUPERMARKET BEANS ARE PROPAGANDA</span><span class="ti">·</span>
+  <span class="ti">WEIGH YOUR COFFEE</span><span class="ti">·</span>
+  <span class="ti">THE FLAT WHITE WAS INVENTED IN AUSTRALIA PROBABLY</span><span class="ti">·</span>
+  <span class="ti">OAT MILK IS FINE ACTUALLY</span><span class="ti">·</span>
+  <span class="ti">CLEAN YOUR GRINDER</span><span class="ti">·</span>
+  <span class="ti">DARK ROAST IS COWARDICE</span><span class="ti">·</span>
+  <span class="ti">BUY A BURR GRINDER</span><span class="ti">·</span>
+  <span class="ti">SUPERMARKET BEANS ARE PROPAGANDA</span><span class="ti">·</span>
+  <span class="ti">WEIGH YOUR COFFEE</span><span class="ti">·</span>
+  <span class="ti">THE FLAT WHITE WAS INVENTED IN AUSTRALIA PROBABLY</span><span class="ti">·</span>
+  <span class="ti">OAT MILK IS FINE ACTUALLY</span><span class="ti">·</span>
+  <span class="ti">CLEAN YOUR GRINDER</span><span class="ti">·</span>
+</div></div>
+
+<article>
+
+  <div class="section">
+    <p class="s-num">001</p>
+    <h2>Dark roast is <em>cowardice.</em></h2>
+    <p>We're going to start here because nobody else will say it. Dark roast is not a preference. It is a cover-up. You are burning the bean until it tastes like char instead of coffee, and then you are calling it "bold" and "strong" and charging $6 for it at every airport in the world.</p>
+    <p>The thing you are covering up is the coffee itself. Its origin. Its variety. The specific farm it came from, the altitude, the processing method, the care that went into picking it. Dark roast burns all of that away. You might as well be brewing the bag.</p>
+    <div class="pull">"Dark roast has less caffeine too, by the way. Heat destroys caffeine. The thing you're buying for strength is actually the weakest version of the bean."</div>
+    <p>We are not saying you have to love light roast. Some people genuinely prefer the flavour of dark roast and that is fine. We are saying that dark roast as the <strong>default</strong> - as the thing you get everywhere unless you specifically ask otherwise - is a tragedy that we are actively working to reverse.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">002</p>
+    <h2>Supermarket beans are <em>not coffee.</em></h2>
+    <p>The coffee in the supermarket is not fresh. It cannot be fresh. By the time it is grown, harvested, processed, exported, roasted, packaged, shipped to a distribution centre, shipped to a store, and then sits on the shelf for three weeks, it is aged. It is stale. The interesting flavour compounds - the ones that make coffee worth drinking - have long since evaporated.</p>
+    <p>The best before date on the bag is a lie. Not a malicious one. Just a technically-true-but-misleading one. The coffee won't hurt you after that date. It just won't taste like anything. It tasted like nothing before that date, too, if we're being honest.</p>
+    <div class="pull">"Fresh coffee is 4-21 days post-roast. That's the window. Every specialty roaster prints this date on the bag. Supermarkets do not."</div>
+    <p>We understand that specialty coffee costs more. It does. A good bag of Ethiopian Yirgacheffe from a local roaster is $28-32 for 250g. A supermarket bag is $8. We are not pretending otherwise. But consider: you are probably spending $5-7 per day on coffee from a café. One good bag of beans makes roughly 15-20 cups at home. The maths is not complicated.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">003</p>
+    <h2>Your grinder is the <em>problem.</em></h2>
+    <p>If you have a blade grinder - the ones that look like a small food processor, that spin a little metal blade - we are very sorry to tell you that it is not a grinder. It is a randomiser. It produces grounds of wildly different sizes: some the size of dust, some nearly whole beans. The dust over-extracts (bitter). The large pieces under-extract (sour). Your coffee tastes like the average of a bad cup and a worse cup.</p>
+    <p>A burr grinder - which crushes the bean between two abrasive surfaces - produces uniform particle sizes. Uniform extraction. Consistent, repeatable results. This is the single most impactful upgrade you can make. More than the machine. More than the beans. More than the water. The grinder.</p>
+    <div class="pull">"The Timemore C2 is $80 AUD. It will embarrass electric grinders three times its price. There is no excuse not to own one."</div>
+    <p>The Baratza Encore is $200. The Timemore C2 is $80. The 1Zpresso JX-Pro is $180. Any of these will transform your coffee. You do not need to spend $700 on a Niche Zero to get dramatically better results. You just need to stop using the blade thing.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">004</p>
+    <h2>The coffee gatekeepers are <em>killing the culture.</em></h2>
+    <p>There is a type of coffee person - and we have all met them - who uses knowledge as a weapon rather than a gift. They will correct your pronunciation of Yirgacheffe. They will ask if you know what processing method your beans used. They will look at your flat white and say "interesting" in a way that means the opposite. They have a monopod for their latte art videos.</p>
+    <p>These people are bad for coffee. Not because their knowledge is wrong - most of it is correct - but because they have decided that the point of knowing things is to make other people feel like they don't belong. And every person who feels unwelcome at a specialty café goes back to instant coffee and we all lose.</p>
+    <div class="pull">"The best cup of coffee is the one you enjoy. Not the one with the highest extraction yield. Not the one with the most complex tasting notes. The one that makes you happy."</div>
+    <p>Add sugar if you want. Drink oat milk. Use a Nespresso machine. Get a medium roast instead of a light roast. None of these are crimes. The crime is making someone feel bad for where they're starting from.</p>
+    <p>Spill exists because we believe coffee knowledge should be shared freely, without condescension, to anyone who's curious. That is the whole thing. That is the manifesto.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">005</p>
+    <h2>Water is <em>not neutral.</em></h2>
+    <p>This is the one that sounds like we've gone too far and then turns out to be completely true. Water makes up 98-99% of your cup of coffee. The mineral content of that water - specifically the magnesium and calcium levels, the total dissolved solids - directly affects extraction. Soft water under-extracts. Very hard water over-extracts. Chlorinated water fights with the aromatic compounds.</p>
+    <p>The ideal water for coffee is around 150ppm total dissolved solids. Most Sydney tap water runs at 50-120ppm depending on area. Melbourne tap water is famously soft. London is very hard. These differences are real and they affect your cup and you have been ignoring them your whole life.</p>
+    <div class="pull">"A Brita jug removes chlorine. BWT adds magnesium back. Third Wave Water is minerals you add to distilled water. Each one will improve your coffee more than you'd expect."</div>
+    <p>You don't need to go full mad scientist about this. A Brita filter is $30 and will make a noticeable difference. That's the starter pack. The rabbit hole goes deeper if you want it to.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">006</p>
+    <h2>The flat white was probably <em>Australian.</em></h2>
+    <p>New Zealand also claims it. Both countries are wrong and both are right and the argument is twenty years old and will never be resolved and we don't care. What we care about is that the flat white - double ristretto, about 150ml of silky microfoam, no froth performance, no art required - is the best milk coffee ever invented and we will stake our reputation on this.</p>
+    <p>The cappuccino is too foamy. The latte is too big. The cortado is too small for the milk to do its job. The flat white is the exact right ratio of espresso to milk, in the exact right volume, producing a flavour that the ristretto base creates specifically. Sweet, intense, cut perfectly by the milk.</p>
+    <div class="pull">"The key is a ristretto not a standard shot. 18g in, 27g out. The shorter pull extracts only the sweet compounds and leaves the bitter ones behind. This is why flat whites from good cafés taste different to your home machine."</div>
+    <p>If you make nothing else from this entire website, make a proper flat white with a ristretto base. At the correct temperature. In a preheated cup. We promise it will change your understanding of what coffee can be.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">007</p>
+    <h2>Instant coffee is <em>not the enemy.</em></h2>
+    <p>We know. After six sections of telling you dark roast is cowardice and supermarket beans are propaganda and your grinder is ruining your life, this feels like a contradiction. It isn't.</p>
+    <p>Instant coffee is the most accessible, most democratic, most widely available coffee in the world. Two billion cups a day. It is what people in remote areas drink. It is what shift workers drink at 3am when nothing else is available. It is what you drink when you're in a hotel room with no equipment and you need to be a human being by 8am.</p>
+    <div class="pull">"The Dalgona whipped coffee trend happened because a billion people suddenly had time and instant coffee and a whisk and nothing else. And it was genuinely good."</div>
+    <p>Our instant hacks section exists because instant coffee, treated with a tiny bit of creativity, can produce drinks that are genuinely enjoyable. Not as good as a well-pulled espresso on dialled-in beans. But good. Accessible. For everyone. Which is the whole point.</p>
+    <p>Coffee snobbery that looks down on instant coffee is snobbery about accessibility. We are not interested in that. If someone's journey to great coffee starts with a dalgona whipped instant at 2am, that is a journey worth supporting.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">008</p>
+    <h2>Clean your <em>equipment.</em></h2>
+    <p>This section is short because it is simple. Coffee oils go rancid. Rancid coffee oils taste bitter, stale, and like old ashtrays. If your espresso machine has not been backflushed with Cafiza this week, it is contributing rancid flavour to every shot. If your grinder burrs have not been cleaned in six months, same problem. If your Aeropress rubber seal has not been washed properly, you can probably smell it from here.</p>
+    <p>Clean your equipment. Backflush weekly. Clean your grinder monthly with Grindz tablets. Run your Aeropress seal under hot water after every use. Rinse your V60 filter before brewing. These are not optional steps. They are the difference between coffee that tastes like coffee and coffee that tastes like what coffee used to be.</p>
+    <div class="pull">"The most common reason home espresso tastes bad is not bad beans or bad technique. It's a dirty machine. This is fixable in ten minutes."</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <p class="s-num">009</p>
+    <h2>The <em>end.</em></h2>
+    <p>If you've read this far, you are one of us. Welcome. This is Spill. We write about coffee like we care about it because we genuinely, embarrassingly, unreasonably care about it. We think about extraction yields at inappropriate times. We have opinions about water mineral content at dinner parties. We have made our friends taste the same Ethiopian natural prepared three different ways to "prove a point."</p>
+    <p>We are not sorry about any of this. Coffee is worth caring about. Not because it makes you seem sophisticated or knowledgeable. Because a truly great cup of coffee - pulled correctly, from properly sourced beans, with good water, through clean equipment - is one of the small daily pleasures available to nearly everyone. And we think more people deserve to experience it.</p>
+    <p>That's Spill. Buy a burr grinder. Find a local roaster. Weigh your coffee. Try a light roast once. And drink whatever makes you happy.</p>
+    <div class="pull">"There's no wrong way to enjoy coffee. There are just better ways to brew it."</div>
+
+    <div class="signed">
+      - The Spill team<br>
+      Written at 11:47pm. Three espressos deep. Grinder: 1Zpresso JX-Pro at 3.2 clicks.<br>
+      Beans: Ethiopia Guji Zone, natural, 14 days post-roast. Score: 9.0/10.<br>
+      This document is classified. You were not supposed to find it. ☕
+    </div>
+  </div>
+
+</article>
+
+<footer-spill>Spill<em>.</em></footer-spill>
+
+<a href="index.html" id="backLink">← Back to Spill</a>
+</body>
+</html>
