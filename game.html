@@ -106,7 +106,9 @@ function startGame() {
   document.getElementById('timerDisplay').textContent = '60';
   updHearts();
   gameRunning = true;
-  timerInterval = setInterval(() => { timeLeft--; document.getElementById('timerDisplay').textContent=timeLeft; if(timeLeft<=0) endGame(); }, 1000);
+  sfxStart();
+  setTimeout(startMusic, 400);
+  timerInterval = setInterval(() => { timeLeft--; document.getElementById('timerDisplay').textContent=timeLeft; if(timeLeft<=0){ stopMusicSlowly(); endGame(); } }, 1000);
   requestAnimationFrame(loop);
 }
 
@@ -215,7 +217,7 @@ function update(dt) {
   nx=Math.max(0,Math.min(W-TILE,nx)); ny=Math.max(0,Math.min(H-TILE,ny));
   if(canMove(nx,player.y)) player.x=nx;
   if(canMove(player.x,ny)) player.y=ny;
-  if(moving){player.frameTimer+=dt; if(player.frameTimer>8){player.frame++;player.frameTimer=0;}}
+  if(moving){player.frameTimer+=dt; if(player.frameTimer>8){player.frame++;player.frameTimer=0;if(player.frame%2===0)sfxStep();}}
   if(player.invincible>0) player.invincible--;
 
   // Coffee collection
@@ -225,7 +227,8 @@ function update(dt) {
       cafe.collected=true; player.score++;
       document.getElementById('scoreDisplay').textContent=player.score;
       floatTexts.push({x:player.x+8,y:player.y-8,text:`+1 ${cafe.label}!`,alpha:1});
-      if(player.score>=cafes.length) endGame();
+      sfxCollect();
+      if(player.score>=cafes.length){ sfxWin(); endGame(); return; }
     }
   });
 
@@ -250,7 +253,8 @@ function update(dt) {
       hitFlash=1;
       updHearts();
       floatTexts.push({x:player.x+8,y:player.y-16,text:'CRITIC!',alpha:1});
-      if(player.health<=0){ endGame(true); return; }
+      sfxHit();
+      if(player.health<=0){ sfxDie(); stopMusicSlowly(); endGame(true); return; }
       // Knock player back only if destination is walkable
       const kx = player.x + (player.x-e.x>0?24:-24);
       const ky = player.y + (player.y-e.y>0?24:-24);
@@ -281,6 +285,206 @@ function draw() {
 }
 
 draw();
+
+// ═══════════════════════════════════════
+//  8-BIT AUDIO ENGINE
+// ═══════════════════════════════════════
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+// ── SOUND EFFECTS ──
+function sfx(freq, type, duration, vol=0.3, slide=0) {
+  const ac = getAudio();
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  osc.connect(gain); gain.connect(ac.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, ac.currentTime);
+  if (slide) osc.frequency.linearRampToValueAtTime(slide, ac.currentTime + duration);
+  gain.gain.setValueAtTime(vol, ac.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + duration);
+  osc.start(ac.currentTime);
+  osc.stop(ac.currentTime + duration);
+}
+
+function sfxCollect() {
+  // Rising arpeggio — satisfying coffee collect
+  const ac = getAudio();
+  [523, 659, 784, 1047].forEach((f, i) => {
+    setTimeout(() => sfx(f, 'square', 0.1, 0.25), i * 60);
+  });
+}
+
+function sfxHit() {
+  // Descending buzz — ouch
+  sfx(220, 'sawtooth', 0.08, 0.4, 80);
+  setTimeout(() => sfx(150, 'sawtooth', 0.1, 0.3, 60), 80);
+}
+
+function sfxDie() {
+  // Dramatic falling tone
+  const ac = getAudio();
+  sfx(440, 'sawtooth', 0.15, 0.4, 110);
+  setTimeout(() => sfx(330, 'sawtooth', 0.15, 0.35, 80), 150);
+  setTimeout(() => sfx(220, 'sawtooth', 0.2, 0.3, 55), 300);
+  setTimeout(() => sfx(110, 'sawtooth', 0.4, 0.25, 55), 450);
+}
+
+function sfxStart() {
+  // Ascending fanfare
+  [262, 330, 392, 523, 659].forEach((f, i) => {
+    setTimeout(() => sfx(f, 'square', 0.12, 0.3), i * 80);
+  });
+}
+
+function sfxWin() {
+  // Victory jingle
+  const melody = [523,523,523,392,523,659,784];
+  melody.forEach((f, i) => {
+    setTimeout(() => sfx(f, 'square', 0.15, 0.35), i * 100);
+  });
+}
+
+function sfxStep() {
+  // Quiet footstep tick
+  sfx(80 + Math.random()*20, 'square', 0.03, 0.06);
+}
+
+function sfxCritic() {
+  // Ominous approach warning
+  sfx(180, 'sawtooth', 0.08, 0.15, 120);
+}
+
+// ── 8-BIT MUSIC ENGINE ──
+let musicPlaying = false;
+let musicNodes = [];
+let musicInterval = null;
+let beatStep = 0;
+
+// Song: upbeat coffee-chase theme
+// Pattern repeats every 16 steps
+const TEMPO = 150; // BPM
+const STEP = (60 / TEMPO / 4) * 1000; // 16th note in ms
+
+// Melody notes (frequency, or 0 = rest)
+const melody = [
+  523,0,659,0, 784,659,523,0,
+  440,0,523,0, 659,0,523,392,
+];
+// Bass notes
+const bass = [
+  130,0,130,0, 165,0,165,0,
+  110,0,110,0, 130,0,130,0,
+];
+// Harmony
+const harmony = [
+  0,330,0,330, 0,392,0,330,
+  0,275,0,330, 0,392,0,275,
+];
+
+function playNote(freq, type, duration, vol, when) {
+  if (!freq) return;
+  const ac = getAudio();
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  const when_s = when / 1000;
+  osc.connect(gain); gain.connect(ac.destination);
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.001, ac.currentTime + when_s);
+  gain.gain.linearRampToValueAtTime(vol, ac.currentTime + when_s + 0.01);
+  gain.gain.setValueAtTime(vol, ac.currentTime + when_s + duration * 0.7);
+  gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + when_s + duration);
+  osc.start(ac.currentTime + when_s);
+  osc.stop(ac.currentTime + when_s + duration + 0.05);
+  musicNodes.push(osc);
+}
+
+function scheduleBar() {
+  const now = 0;
+  for (let step = 0; step < 16; step++) {
+    const t = now + step * STEP;
+    const i = step % 16;
+    // Melody — square wave
+    if (melody[i]) playNote(melody[i], 'square', STEP * 0.8 / 1000, 0.12, t);
+    // Bass — square wave lower
+    if (bass[i]) playNote(bass[i], 'square', STEP * 1.5 / 1000, 0.15, t);
+    // Harmony — triangle
+    if (harmony[i]) playNote(harmony[i], 'triangle', STEP * 0.7 / 1000, 0.08, t);
+    // Hi-hat on every step
+    {
+      const ac = getAudio();
+      const buf = ac.createBuffer(1, ac.sampleRate * 0.03, ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random()*2-1) * (1 - j/data.length);
+      const src = ac.createBufferSource();
+      const gain = ac.createGain();
+      src.buffer = buf;
+      src.connect(gain); gain.connect(ac.destination);
+      gain.gain.value = step % 2 === 0 ? 0.06 : 0.03;
+      src.start(ac.currentTime + t / 1000);
+      musicNodes.push(src);
+    }
+    // Kick on beats 1 and 3 (steps 0 and 8)
+    if (step === 0 || step === 8) {
+      const ac = getAudio();
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, ac.currentTime + t/1000);
+      osc.frequency.exponentialRampToValueAtTime(40, ac.currentTime + t/1000 + 0.1);
+      gain.gain.setValueAtTime(0.3, ac.currentTime + t/1000);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + t/1000 + 0.15);
+      osc.start(ac.currentTime + t/1000);
+      osc.stop(ac.currentTime + t/1000 + 0.2);
+      musicNodes.push(osc);
+    }
+    // Snare on beats 2 and 4 (steps 4 and 12)
+    if (step === 4 || step === 12) {
+      const ac = getAudio();
+      const buf = ac.createBuffer(1, ac.sampleRate * 0.08, ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random()*2-1) * Math.exp(-j/(ac.sampleRate*0.04));
+      const src = ac.createBufferSource();
+      const gain = ac.createGain();
+      src.buffer = buf;
+      src.connect(gain); gain.connect(ac.destination);
+      gain.gain.value = 0.15;
+      src.start(ac.currentTime + t/1000);
+      musicNodes.push(src);
+    }
+  }
+}
+
+function startMusic() {
+  if (musicPlaying) return;
+  musicPlaying = true;
+  scheduleBar();
+  const barDuration = 16 * STEP;
+  musicInterval = setInterval(() => {
+    if (!musicPlaying) return;
+    // Clear old nodes
+    musicNodes = musicNodes.filter(n => { try { return true; } catch(e) { return false; } });
+    scheduleBar();
+  }, barDuration);
+}
+
+function stopMusic() {
+  musicPlaying = false;
+  clearInterval(musicInterval);
+  musicNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+  musicNodes = [];
+}
+
+function stopMusicSlowly() {
+  // Fade out feel — just stop after a short delay
+  setTimeout(stopMusic, 500);
+}
+
 </script>
 </body>
 </html>
