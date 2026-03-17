@@ -525,6 +525,14 @@
     }
   });
 })();
+
+let typed = '';
+document.addEventListener('keydown', e => {
+  typed += e.key.toLowerCase();
+  typed = typed.slice(-5);
+  if (typed === 'spill') window.location.href = 'manifesto.html';
+  if (typed.slice(-4) === 'brew') window.location.href = 'weather.html';
+});
 </script>
 </body>
 </html>
