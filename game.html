@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spill. — Coffee Run</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #1a1208; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: monospace; overflow: hidden; }
+#gameWrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#hud { display: flex; gap: 32px; align-items: center; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: #f0c040; }
+#hud span { color: #d4501a; font-size: 18px; font-weight: bold; }
+#hearts { font-size: 18px; letter-spacing: 4px; }
+#gameCanvas { border: 3px solid #d4501a; image-rendering: pixelated; cursor: none; box-shadow: 0 0 40px rgba(212,80,26,0.3), 0 0 80px rgba(212,80,26,0.1); }
+#overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(26,18,8,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; margin-top: 40px; }
+#overlay h1 { color: #f0c040; font-size: 28px; letter-spacing: 4px; text-transform: uppercase; text-shadow: 2px 2px 0 #d4501a; }
+#overlay p { color: #faf6ee; font-size: 12px; letter-spacing: 2px; text-align: center; line-height: 2; }
+#overlay .big { font-size: 48px; }
+#startBtn { background: #d4501a; color: #faf6ee; border: none; padding: 10px 28px; font-family: monospace; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
+#startBtn:hover { background: #f0c040; color: #1a1208; }
+#backLink { color: rgba(212,80,26,0.5); font-size: 11px; letter-spacing: 2px; text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+#backLink:hover { color: #d4501a; }
+#gameWrap::after { content: ''; position: absolute; top: 40px; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px); pointer-events: none; z-index: 10; }
+</style>
+</head>
+<body>
+<div id="gameWrap">
+  <div id="hud">
+    <div>☕ <span id="scoreDisplay">0</span></div>
+    <div id="hearts">♥♥♥</div>
+    <div>⏱ <span id="timerDisplay">60</span>s</div>
+  </div>
+  <canvas id="gameCanvas" width="480" height="400"></canvas>
+  <div id="overlay">
+    <div class="big">☕</div>
+    <h1>Coffee Run</h1>
+    <p>Collect coffees from cafés around Sydney.<br>Avoid the critics — they'll steal your hearts!<br>3 hits and it's game over.</p>
+    <p>WASD or Arrow Keys to move (hold to keep moving)</p>
+    <button id="startBtn" onclick="startGame()">Start →</button>
+    <p id="finalScore" style="display:none;color:#f0c040;font-size:18px;"></p>
+  </div>
+  <a href="index.html" id="backLink">← Back to Spill</a>
+</div>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const W = 480, H = 400, TILE = 16, COLS = 30, ROWS = 25;
+
+const C = {
+  road:'#2a2018', pavement:'#3d3020', building:'#4a3828',
+  window:'#f0c040', winDark:'#c8a030', grass:'#2a4a28',
+  playerShirt:'#d4501a', coffee:'#d4501a', coffeeBg:'#f0c040',
+  enemy:'#5a3060', enemyEye:'#ff4444', cafe:'#5a3828', cafeSign:'#d4501a',
+  text:'#f0c040', tree:'#2a4a28', treeTrunk:'#3d2010',
+};
+
+// MAP
+const map = [];
+for (let r = 0; r < ROWS; r++) { map[r] = []; for (let c = 0; c < COLS; c++) map[r][c] = 1; }
+for (let c = 0; c < COLS; c++) { map[6][c]=0; map[7][c]=0; map[14][c]=0; map[15][c]=0; map[21][c]=0; map[22][c]=0; }
+for (let r = 0; r < ROWS; r++) { map[r][7]=0; map[r][8]=0; map[r][16]=0; map[r][17]=0; map[r][24]=0; map[r][25]=0; }
+function fillB(r1,c1,r2,c2,t){ for(let r=r1;r<=r2;r++) for(let c=c1;c<=c2;c++) map[r][c]=t; }
+fillB(1,1,5,6,2); fillB(1,9,5,15,2); fillB(1,18,5,23,2); fillB(1,26,5,29,2);
+fillB(9,1,13,6,2); fillB(9,1,11,3,4); fillB(9,9,13,15,3);
+fillB(9,18,13,23,2); fillB(9,18,11,20,4); fillB(9,26,13,29,2);
+fillB(17,1,20,6,2); fillB(17,4,19,6,4); fillB(17,9,20,15,2); fillB(17,18,20,23,2); fillB(17,21,19,23,4); fillB(17,26,20,29,2);
+
+const cafes = [
+  {col:2,row:8,collected:false,label:"Spill HQ"},
+  {col:19,row:8,collected:false,label:"Market Lane"},
+  {col:5,row:13,collected:false,label:"Proud Mary"},
+  {col:22,row:13,collected:false,label:"St Ali"},
+  {col:10,row:16,collected:false,label:"Seven Seeds"},
+  {col:27,row:16,collected:false,label:"Mecca"},
+  {col:3,row:21,collected:false,label:"Single O"},
+  {col:20,row:21,collected:false,label:"ONA"},
+];
+
+const player = { x:12*TILE, y:11*TILE, speed:2.5, facing:0, frame:0, frameTimer:0, score:0, health:3, invincible:0 };
+
+// Enemies — each has a patrol path (waypoints they walk between)
+const enemyDefs = [
+  {x:4*TILE,  y:7*TILE,  waypoints:[[4,6],[4,13],[10,13],[10,6]], wi:0, t:0, speed:1.2},
+  {x:20*TILE, y:7*TILE,  waypoints:[[20,6],[20,13],[26,13],[26,6]], wi:0, t:0, speed:1.4},
+  {x:12*TILE, y:15*TILE, waypoints:[[12,14],[18,14],[18,22],[12,22]], wi:0, t:0, speed:1.1},
+  {x:26*TILE, y:7*TILE,  waypoints:[[26,6],[26,22],[8,22],[8,6]], wi:0, t:0, speed:1.0},
+  {x:2*TILE,  y:21*TILE, waypoints:[[2,21],[6,21],[6,14],[2,14]], wi:0, t:0, speed:1.3},
+];
+let enemies = [];
+
+const keys = {};
+document.addEventListener('keydown', e => { keys[e.key] = true; e.preventDefault(); });
+document.addEventListener('keyup',   e => { keys[e.key] = false; });
+
+let gameRunning = false, timeLeft = 60, timerInterval = null;
+let hitFlash = 0, floatTexts = [];
+
+function startGame() {
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('finalScore').style.display = 'none';
+  player.x=12*TILE; player.y=11*TILE; player.score=0; player.health=3; player.invincible=0;
+  timeLeft=60; hitFlash=0; floatTexts=[];
+  cafes.forEach(c => c.collected = false);
+  enemies = enemyDefs.map(e => ({...e, x:e.waypoints[0][0]*TILE, y:e.waypoints[0][1]*TILE, wi:0, t:0, waypoints:e.waypoints}));
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('timerDisplay').textContent = '60';
+  updHearts();
+  gameRunning = true;
+  timerInterval = setInterval(() => { timeLeft--; document.getElementById('timerDisplay').textContent=timeLeft; if(timeLeft<=0) endGame(); }, 1000);
+  requestAnimationFrame(loop);
+}
+
+function updHearts() {
+  document.getElementById('hearts').textContent = '♥'.repeat(player.health) + '♡'.repeat(3-player.health);
+}
+
+function endGame(dead=false) {
+  gameRunning = false;
+  clearInterval(timerInterval);
+  const overlay = document.getElementById('overlay');
+  const finalScore = document.getElementById('finalScore');
+  overlay.style.display = 'flex';
+  finalScore.style.display = 'block';
+  const score = player.score;
+  let msg = dead ? "The critics defeated you. Sydney weeps." :
+    score>=8 ? "☕ Coffee legend!" : score>=5 ? "Pretty good!" : score>=2 ? "Keep practising!" : "The critics won...";
+  finalScore.textContent = `You collected ${score}/8 coffees. ${msg}`;
+  document.getElementById('startBtn').textContent = 'Play again →';
+}
+
+function tileAt(px, py) {
+  const col=Math.floor(px/TILE), row=Math.floor(py/TILE);
+  if(row<0||row>=ROWS||col<0||col>=COLS) return 2;
+  return map[row][col];
+}
+function canMove(nx, ny) {
+  const m=2;
+  return !([tileAt(nx+m,ny+m),tileAt(nx+TILE-m,ny+m),tileAt(nx+m,ny+TILE-m),tileAt(nx+TILE-m,ny+TILE-m)].some(t=>t===2||t===4));
+}
+
+function drawTile(r, c, type) {
+  const x=c*TILE, y=r*TILE;
+  if(type===0){ ctx.fillStyle=C.road; ctx.fillRect(x,y,TILE,TILE); if((c+r)%8===0){ctx.fillStyle='rgba(240,192,64,0.15)';ctx.fillRect(x+6,y,4,TILE);} }
+  else if(type===1){ ctx.fillStyle=C.pavement; ctx.fillRect(x,y,TILE,TILE); ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(x,y,1,TILE); ctx.fillRect(x,y,TILE,1); }
+  else if(type===2){ ctx.fillStyle=C.building; ctx.fillRect(x,y,TILE,TILE); if(r%2===0&&c%2===0){ctx.fillStyle=Math.random()>.3?C.window:C.winDark;ctx.fillRect(x+3,y+3,6,8);} }
+  else if(type===3){ ctx.fillStyle=C.grass; ctx.fillRect(x,y,TILE,TILE); }
+  else if(type===4){ ctx.fillStyle=C.cafe; ctx.fillRect(x,y,TILE,TILE); ctx.fillStyle=C.cafeSign; ctx.fillRect(x+2,y+2,TILE-4,4); }
+}
+
+function drawMap() {
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawTile(r,c,map[r][c]);
+  for(let r=9;r<=13;r++) for(let c=9;c<=15;c++) if((r+c)%3===0){const x=c*TILE+4,y=r*TILE;ctx.fillStyle=C.treeTrunk;ctx.fillRect(x+3,y+8,4,8);ctx.fillStyle=C.tree;ctx.fillRect(x,y+2,10,10);}
+}
+
+function drawCoffees() {
+  cafes.forEach(cafe => {
+    if(cafe.collected) return;
+    const x=cafe.col*TILE, y=cafe.row*TILE;
+    const pulse=1+0.1*Math.sin(Date.now()/300);
+    ctx.save(); ctx.translate(x+TILE/2,y+TILE/2); ctx.scale(pulse,pulse);
+    ctx.fillStyle=C.coffeeBg; ctx.beginPath(); ctx.arc(0,0,7,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#1a1208'; ctx.fillRect(-4,-3,8,6);
+    ctx.fillStyle=C.coffee; ctx.fillRect(-3,-4,6,2);
+    ctx.restore();
+  });
+}
+
+function drawPlayer() {
+  const x=player.x, y=player.y;
+  // Blink when invincible
+  if(player.invincible>0 && Math.floor(player.invincible/4)%2) return;
+  const f=Math.floor(player.frame)%2;
+  ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fillRect(x+2,y+14,12,3);
+  ctx.fillStyle=C.playerShirt; ctx.fillRect(x+4,y+6,8,7);
+  ctx.fillStyle='#1a1208';
+  if(f===0){ctx.fillRect(x+4,y+12,3,4);ctx.fillRect(x+9,y+12,3,4);}
+  else{ctx.fillRect(x+4,y+12,3,3);ctx.fillRect(x+8,y+13,3,3);}
+  ctx.fillStyle='#e8c8a0'; ctx.fillRect(x+4,y+1,8,7);
+  ctx.fillStyle='#1a1208';
+  if(player.facing===0){ctx.fillRect(x+5,y+4,2,2);ctx.fillRect(x+9,y+4,2,2);}
+  else if(player.facing===1){ctx.fillRect(x+5,y+2,2,2);ctx.fillRect(x+9,y+2,2,2);}
+  else if(player.facing===2){ctx.fillRect(x+4,y+3,2,2);ctx.fillRect(x+4,y+6,2,2);}
+  else{ctx.fillRect(x+10,y+3,2,2);ctx.fillRect(x+10,y+6,2,2);}
+  ctx.fillStyle='#3d1a08'; ctx.fillRect(x+4,y+1,8,3);
+  if(player.score>0){ctx.fillStyle=C.coffeeBg;ctx.fillRect(x+12,y+6,5,4);ctx.fillStyle=C.coffee;ctx.fillRect(x+12,y+5,5,2);}
+}
+
+function drawEnemy(e) {
+  const x=e.x, y=e.y;
+  ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fillRect(x+2,y+14,12,3);
+  ctx.fillStyle=C.enemy; ctx.fillRect(x+3,y+6,10,8);
+  ctx.fillStyle='#c8a0c8'; ctx.fillRect(x+4,y+1,8,7);
+  ctx.fillStyle=C.enemyEye; ctx.fillRect(x+5,y+3,2,2); ctx.fillRect(x+9,y+3,2,2);
+  ctx.strokeStyle='#f0c040'; ctx.lineWidth=1; ctx.strokeRect(x+8,y+2,4,4);
+  ctx.fillStyle='#2a1428'; ctx.fillRect(x+4,y+13,3,4); ctx.fillRect(x+9,y+13,3,4);
+}
+
+let lastTime = 0;
+function loop(timestamp) {
+  if(!gameRunning) return;
+  const dt = Math.min((timestamp-lastTime)/16.67, 3);
+  lastTime = timestamp;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function update(dt) {
+  // Player movement — hold keys to keep moving
+  let nx=player.x, ny=player.y, moving=false;
+  if(keys['ArrowLeft']||keys['a']||keys['A'])  { nx-=player.speed*dt; player.facing=2; moving=true; }
+  if(keys['ArrowRight']||keys['d']||keys['D']) { nx+=player.speed*dt; player.facing=3; moving=true; }
+  if(keys['ArrowUp']||keys['w']||keys['W'])    { ny-=player.speed*dt; player.facing=1; moving=true; }
+  if(keys['ArrowDown']||keys['s']||keys['S'])  { ny+=player.speed*dt; player.facing=0; moving=true; }
+  nx=Math.max(0,Math.min(W-TILE,nx)); ny=Math.max(0,Math.min(H-TILE,ny));
+  if(canMove(nx,player.y)) player.x=nx;
+  if(canMove(player.x,ny)) player.y=ny;
+  if(moving){player.frameTimer+=dt; if(player.frameTimer>8){player.frame++;player.frameTimer=0;}}
+  if(player.invincible>0) player.invincible--;
+
+  // Coffee collection
+  cafes.forEach(cafe => {
+    if(cafe.collected) return;
+    if(Math.abs(player.x-cafe.col*TILE)<TILE && Math.abs(player.y-cafe.row*TILE)<TILE){
+      cafe.collected=true; player.score++;
+      document.getElementById('scoreDisplay').textContent=player.score;
+      floatTexts.push({x:player.x+8,y:player.y-8,text:`+1 ${cafe.label}!`,alpha:1});
+      if(player.score>=cafes.length) endGame();
+    }
+  });
+
+  // Enemy patrol movement — walk between waypoints
+  enemies.forEach(e => {
+    const wp = e.waypoints[e.wi];
+    const tx=wp[0]*TILE, ty=wp[1]*TILE;
+    const dx=tx-e.x, dy=ty-e.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<2){
+      e.x=tx; e.y=ty;
+      e.wi=(e.wi+1)%e.waypoints.length;
+    } else {
+      e.x+=dx/dist*e.speed*dt;
+      e.y+=dy/dist*e.speed*dt;
+    }
+
+    // Hit player
+    if(player.invincible<=0 && Math.abs(player.x-e.x)<TILE-2 && Math.abs(player.y-e.y)<TILE-2){
+      player.health--;
+      player.invincible=90; // 1.5s of invincibility after hit
+      hitFlash=1;
+      updHearts();
+      floatTexts.push({x:player.x+8,y:player.y-16,text:'CRITIC!',alpha:1});
+      if(player.health<=0){ endGame(true); return; }
+      // Knock player back only if destination is walkable
+      const kx = player.x + (player.x-e.x>0?24:-24);
+      const ky = player.y + (player.y-e.y>0?24:-24);
+      if(canMove(kx, player.y)) player.x = kx;
+      if(canMove(player.x, ky)) player.y = ky;
+    }
+  });
+
+  // Float texts
+  floatTexts.forEach(ft=>{ft.y-=0.5*dt;ft.alpha-=0.015*dt;});
+  floatTexts=floatTexts.filter(ft=>ft.alpha>0);
+  if(hitFlash>0) hitFlash-=0.05;
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  drawMap();
+  drawCoffees();
+  enemies.forEach(drawEnemy);
+  drawPlayer();
+  // Float texts
+  floatTexts.forEach(ft=>{ctx.globalAlpha=ft.alpha;ctx.fillStyle=C.text;ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.fillText(ft.text,ft.x,ft.y);});
+  ctx.globalAlpha=1; ctx.textAlign='left';
+  // Hit flash
+  if(hitFlash>0){ctx.fillStyle=`rgba(212,80,26,${hitFlash*0.4})`;ctx.fillRect(0,0,W,H);}
+  // Low time
+  if(timeLeft<=10){ctx.fillStyle=`rgba(212,80,26,${0.1+0.05*Math.sin(Date.now()/150)})`;ctx.fillRect(0,0,W,H);}
+}
+
+draw();
+</script>
+</body>
+</html>

@@ -224,6 +224,7 @@
     <li><a href="beans.html">Beans</a></li>
     <li><a href="gear.html">Gear</a></li>
     <li><a href="posts.html">All Posts</a></li>
+    <li><a href="about.html">About</a></li>
   </ul>
   <a href="#newsletter" class="nav-sub">Subscribe ☕</a>
 </nav>
@@ -402,6 +403,7 @@
       <ul class="footer-links">
         <li><a href="posts.html?filter=cafes">Café Reviews</a></li>
         <li><a href="posts.html">All Posts</a></li>
+    <li><a href="about.html">About</a></li>
         <li><a href="#featured">Latest</a></li>
         <li><a href="#newsletter">Newsletter</a></li>
       </ul>
@@ -496,6 +498,26 @@
     // re-init filters after rendering
     if (typeof initFilters === 'function') initFilters();
   }
+})();
+
+/* ── SECRET GAME ── */
+(function(){
+  let clicks=0;
+  const logo=document.querySelector('.logo-wrap');
+  if(!logo)return;
+  logo.addEventListener('click',function(e){
+    e.preventDefault();
+    clicks++;
+    if(clicks>=5){ window.location.href='game.html'; clicks=0; }
+    else if(clicks>=3){
+      // subtle hint after 3 clicks
+      const hint=document.createElement('div');
+      hint.textContent='...';
+      hint.style.cssText='position:fixed;bottom:20px;right:20px;color:var(--rust);font-family:Syne Mono,monospace;font-size:.6rem;letter-spacing:.2em;opacity:.4;pointer-events:none;z-index:9999;';
+      document.body.appendChild(hint);
+      setTimeout(()=>hint.remove(),1000);
+    }
+  });
 })();
 </script>
 </body>
