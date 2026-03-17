@@ -9,7 +9,8 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f5f0e8;--ink:#2d1a08;--rust:#d4501a;--yellow:#f0c040;--mid:#7a6a50;--border:rgba(45,26,8,.1);}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--ink);font-family:'Crimson Pro',serif;overflow-x:hidden;}
+body{background:var(--bg);color:var(--ink);font-family:'Crimson Pro',serif;overflow-x:hidden;transition:transform 8s cubic-bezier(.2,0,.4,1);}
+body.tilting{transform:rotate(3deg) scale(1.02);transform-origin:center top;}
 
 .classified{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--rust);color:#faf6ee;text-align:center;padding:.4rem;font-family:'Syne Mono',monospace;font-size:.6rem;letter-spacing:.3em;}
 
@@ -163,7 +164,7 @@ footer-spill em{color:var(--rust);}
 
   <div class="divider"></div>
 
-  <div class="section">
+  <div class="section" id="lastSection">
     <p class="s-num">009</p>
     <h2>The <em>end.</em></h2>
     <p>If you've read this far, you are one of us. Welcome. This is Spill. We write about coffee like we care about it because we genuinely, embarrassingly, unreasonably care about it. We think about extraction yields at inappropriate times. We have opinions about water mineral content at dinner parties. We have made our friends taste the same Ethiopian natural prepared three different ways to "prove a point."</p>
@@ -182,7 +183,24 @@ footer-spill em{color:var(--rust);}
 </article>
 
 <footer-spill>Spill<em>.</em></footer-spill>
-<a href="oracle.html" style="position:fixed;bottom:16px;right:16px;font-size:8px;color:rgba(245,240,232,.1);text-decoration:none;transition:color .3s;z-index:50" onmouseover="this.style.color='rgba(245,240,232,.35)'" onmouseout="this.style.color='rgba(245,240,232,.1)'">◆</a>
+
+<!-- oracle trigger: fixed bottom-right -->
+<a href="oracle.html" style="position:fixed;bottom:16px;right:16px;font-size:8px;color:rgba(45,26,8,.1);text-decoration:none;transition:color .3s;z-index:50" onmouseover="this.style.color='rgba(45,26,8,.35)'" onmouseout="this.style.color='rgba(45,26,8,.1)'">◆</a>
+
 <a href="index.html" id="backLink">← Back to Spill</a>
+
+<script>
+// page tilt when scrolled to bottom
+(function(){
+  let tilted=false;
+  window.addEventListener('scroll',()=>{
+    if(tilted)return;
+    if(window.scrollY+window.innerHeight>=document.body.scrollHeight-60){
+      tilted=true;
+      setTimeout(()=>document.body.classList.add('tilting'),1200);
+    }
+  });
+})();
+</script>
 </body>
 </html>
