@@ -233,7 +233,7 @@
 <section id="hero">
   <div class="hero-left">
     <div class="hero-bg-text">☕</div>
-    <div class="hero-tag fade-in"><div class="hero-tag-dot"></div>Est. 2026 — Coffee Blog</div>
+    <div class="hero-tag fade-in"><div class="hero-tag-dot"></div>Est. 2024 — Coffee Blog</div>
     <h1 class="hero-h1 fade-in-1">
       We know<br>too much<br>
       <span class="italic">about coffee.</span>
@@ -502,20 +502,26 @@
 
 /* ── SECRET GAME ── */
 (function(){
-  let clicks=0;
+  let clicks=0, timer=null;
   const logo=document.querySelector('.logo-wrap');
   if(!logo)return;
   logo.addEventListener('click',function(e){
     e.preventDefault();
     clicks++;
-    if(clicks>=5){ window.location.href='game.html'; clicks=0; }
-    else if(clicks>=3){
-      // subtle hint after 3 clicks
+    // Reset counter if idle for 2 seconds
+    clearTimeout(timer);
+    timer=setTimeout(()=>{ clicks=0; },2000);
+    if(clicks>=5){
+      clicks=0;
+      window.location.href='game.html';
+      return;
+    }
+    if(clicks>=3){
       const hint=document.createElement('div');
-      hint.textContent='...';
-      hint.style.cssText='position:fixed;bottom:20px;right:20px;color:var(--rust);font-family:Syne Mono,monospace;font-size:.6rem;letter-spacing:.2em;opacity:.4;pointer-events:none;z-index:9999;';
+      hint.textContent='.'.repeat(clicks);
+      hint.style.cssText='position:fixed;bottom:20px;right:20px;color:var(--rust);font-family:Syne Mono,monospace;font-size:.8rem;letter-spacing:.3em;opacity:.6;pointer-events:none;z-index:9999;transition:opacity .5s;';
       document.body.appendChild(hint);
-      setTimeout(()=>hint.remove(),1000);
+      setTimeout(()=>hint.remove(),800);
     }
   });
 })();
