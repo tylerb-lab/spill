@@ -96,6 +96,7 @@ let gameRunning = false, timeLeft = 60, timerInterval = null;
 let hitFlash = 0, floatTexts = [];
 
 function startGame() {
+  resumeAudio();
   document.getElementById('overlay').style.display = 'none';
   document.getElementById('finalScore').style.display = 'none';
   player.x=12*TILE; player.y=11*TILE; player.score=0; player.health=3; player.invincible=0;
@@ -291,9 +292,24 @@ draw();
 // ═══════════════════════════════════════
 let audioCtx = null;
 function getAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
   return audioCtx;
 }
+
+// Unlock audio on first interaction anywhere on the page
+document.addEventListener('click', function unlock() {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  const ac = getAudio();
+  if (ac.state === 'suspended') ac.resume();
+}, { once: false });
+
+document.addEventListener('keydown', function unlock() {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  const ac = getAudio();
+  if (ac.state === 'suspended') ac.resume();
+}, { once: false });
 
 // ── SOUND EFFECTS ──
 function sfx(freq, type, duration, vol=0.3, slide=0) {
@@ -333,7 +349,13 @@ function sfxDie() {
   setTimeout(() => sfx(110, 'sawtooth', 0.4, 0.25, 55), 450);
 }
 
+function resumeAudio() {
+  const ac = getAudio();
+  if (ac.state === 'suspended') ac.resume();
+}
+
 function sfxStart() {
+  resumeAudio();
   // Ascending fanfare
   [262, 330, 392, 523, 659].forEach((f, i) => {
     setTimeout(() => sfx(f, 'square', 0.12, 0.3), i * 80);
