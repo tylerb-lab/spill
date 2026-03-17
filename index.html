@@ -150,7 +150,7 @@
 .tip-arrow { font-size: 1rem; color: var(--rust); opacity: 0; transition: opacity .2s, transform .2s; }
 
 /* ── BEANS PREVIEW ── */
-#beans-preview { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--green); }
+#beans-preview { padding: 5rem 2.5rem; border-bottom: 2px solid var(--ink); background: var(--green); position: relative; }
 #beans-preview .sec-label { color: var(--yellow); }
 #beans-preview .sec-title { color: var(--cream); }
 .beans-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: rgba(245,240,232,.1); border: 2px solid rgba(245,240,232,.15); }
@@ -243,6 +243,8 @@
       <a href="#featured" class="btn btn-filled">Start reading →</a>
       <a href="recipes.html" class="btn btn-outline" style="color:var(--cream);border-color:rgba(245,240,232,.4);">Brew guides</a>
     </div>
+    <!-- horoscope: hidden at bottom of hero left -->
+    <a href="horoscope.html" style="position:absolute;bottom:1.5rem;right:1.5rem;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.08);text-decoration:none;transition:color .3s" onmouseover="this.style.color='rgba(245,240,232,.3)'" onmouseout="this.style.color='rgba(245,240,232,.08)'">✦</a>
   </div>
 
   <div class="hero-right">
@@ -275,6 +277,8 @@
       <p class="ha-title">Why your flat white tastes like sadness (and how to fix it)</p>
       <div class="ha-meta"><span>5 min read</span><span>Brew Guides</span><span>March 2026</span></div>
     </a>
+    <!-- funeral: tiny dagger bottom-right of hero image area -->
+    <a href="funeral.html" style="position:absolute;top:1.2rem;right:1.4rem;font-size:10px;color:rgba(245,240,232,.08);text-decoration:none;transition:color .3s;z-index:4" onmouseover="this.style.color='rgba(245,240,232,.28)'" onmouseout="this.style.color='rgba(245,240,232,.08)'">†</a>
   </div>
 </section>
 
@@ -343,16 +347,23 @@
     <a href="tips.html#beans" class="tip-row"><span class="tip-num">03</span><div class="tip-content"><p class="tip-title">Fresh beans > expensive machine</p><p class="tip-desc">Beans over 4 weeks old are stale. Always.</p></div><span class="tip-tag">Beans</span><span class="tip-arrow">→</span></a>
     <a href="tips.html#preheat" class="tip-row"><span class="tip-num">04</span><div class="tip-content"><p class="tip-title">Preheat literally everything</p><p class="tip-desc">Cold cup + hot espresso = sad coffee.</p></div><span class="tip-tag">Espresso</span><span class="tip-arrow">→</span></a>
   </div>
-  <div style="margin-top:2rem;"><a href="tips.html" class="btn btn-outline">All tips →</a></div>
+  <div style="margin-top:2rem;">
+    <a href="tips.html" class="btn btn-outline">All tips →</a>
+    <!-- grind: hidden after tips CTA -->
+    <a href="grind.html" style="display:inline-block;margin-left:16px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,18,8,.1);text-decoration:none;transition:color .3s;vertical-align:middle" onmouseover="this.style.color='rgba(26,18,8,.35)'" onmouseout="this.style.color='rgba(26,18,8,.1)'">or just grind it →</a>
+  </div>
 </section>
 
 <!-- BEANS PREVIEW -->
-<section id="beans-preview" style="position:relative;">
+<section id="beans-preview">
+  <!-- mood trigger: tiny ♪ top right of beans section -->
+  <a href="mood.html" style="position:absolute;top:2.4rem;right:2.5rem;font-size:1.1rem;color:var(--yellow);opacity:0.22;text-decoration:none;cursor:pointer;transition:opacity 0.25s;line-height:1;" onmouseover="this.style.opacity='0.55'" onmouseout="this.style.opacity='0.22'">♪</a>
   <p class="sec-label">Origin Reviews</p>
   <h2 class="sec-title">Beans we're <em>into</em></h2>
-  <a href="mood.html" style="position:absolute;top:2.8rem;right:2.5rem;font-size:1.1rem;color:var(--yellow);opacity:0.22;text-decoration:none;cursor:pointer;transition:opacity 0.25s;line-height:1;" onmouseover="this.style.opacity='0.55'" onmouseout="this.style.opacity='0.22'">♪</a>
   <div class="beans-grid" id="beansGrid"><!-- loaded from JS --></div>
-  <div style="margin-top:2.5rem;text-align:center;"><a href="beans.html" class="btn btn-filled" style="background:var(--yellow);color:var(--ink);border-color:var(--ink);">All bean reviews →</a></div>
+  <div style="margin-top:2.5rem;text-align:center;">
+    <a href="beans.html" class="btn btn-filled" style="background:var(--yellow);color:var(--ink);border-color:var(--ink);">All bean reviews →</a>
+  </div>
 </section>
 
 <!-- ALL POSTS GRID -->
@@ -389,6 +400,8 @@
     <div>
       <span class="footer-logo-text">Spill<span>.</span></span>
       <p class="footer-tagline">The coffee blog for people who think about coffee way too much.</p>
+      <!-- confession: very faint at bottom of logo col -->
+      <a href="confession.html" style="display:block;margin-top:1.2rem;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,18,8,.1);text-decoration:none;transition:color .3s" onmouseover="this.style.color='rgba(26,18,8,.35)'" onmouseout="this.style.color='rgba(26,18,8,.1)'">something to confess?</a>
     </div>
     <div>
       <p class="footer-col-h">Content</p>
@@ -404,7 +417,7 @@
       <ul class="footer-links">
         <li><a href="posts.html?filter=cafes">Café Reviews</a></li>
         <li><a href="posts.html">All Posts</a></li>
-    <li><a href="about.html">About</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="#featured">Latest</a></li>
         <li><a href="#newsletter">Newsletter</a></li>
       </ul>
@@ -420,6 +433,10 @@
   </div>
   <div class="footer-bottom">
     <span class="footer-copy">© 2026 Spill. Coffee Blog</span>
+    <!-- oracle: tiny diamond at end of copyright -->
+    <a href="oracle.html" style="font-size:8px;color:rgba(26,18,8,.12);text-decoration:none;margin-left:10px;transition:color .3s" onmouseover="this.style.color='rgba(26,18,8,.4)'" onmouseout="this.style.color='rgba(26,18,8,.12)'">◆</a>
+    <!-- void: tiny square far right before socials -->
+    <a href="void.html" style="font-size:8px;color:rgba(26,18,8,.1);text-decoration:none;margin-left:8px;transition:color .3s" onmouseover="this.style.color='rgba(26,18,8,.35)'" onmouseout="this.style.color='rgba(26,18,8,.1)'">■</a>
     <div class="footer-socials">
       <a href="#">Instagram</a>
       <a href="#">TikTok</a>
@@ -496,12 +513,11 @@
         <p class="pt-excerpt">${p.excerpt}</p>
         <div class="pt-meta"><span>${p.date}</span><span>${p.readTime}</span></div>
       </a>`).join('');
-    // re-init filters after rendering
     if (typeof initFilters === 'function') initFilters();
   }
 })();
 
-/* ── SECRET GAME ── */
+/* ── SECRET: 5x logo click → game ── */
 (function(){
   let clicks=0, timer=null;
   const logo=document.querySelector('.logo-wrap');
@@ -509,14 +525,9 @@
   logo.addEventListener('click',function(e){
     e.preventDefault();
     clicks++;
-    // Reset counter if idle for 2 seconds
     clearTimeout(timer);
     timer=setTimeout(()=>{ clicks=0; },2000);
-    if(clicks>=5){
-      clicks=0;
-      window.location.href='game.html';
-      return;
-    }
+    if(clicks>=5){ clicks=0; window.location.href='game.html'; return; }
     if(clicks>=3){
       const hint=document.createElement('div');
       hint.textContent='.'.repeat(clicks);
@@ -527,6 +538,7 @@
   });
 })();
 
+/* ── SECRET: type "spill" → manifesto, "brew" → weather ── */
 let typed = '';
 document.addEventListener('keydown', e => {
   typed += e.key.toLowerCase();
@@ -534,16 +546,6 @@ document.addEventListener('keydown', e => {
   if (typed === 'spill') window.location.href = 'manifesto.html';
   if (typed.slice(-4) === 'brew') window.location.href = 'weather.html';
 });
-
-// Konami code → oracle
-(function(){
-  const code=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  let pos=0;
-  document.addEventListener('keydown',e=>{
-    if(e.key===code[pos]){pos++;if(pos===code.length){pos=0;window.location.href='oracle.html';}}
-    else pos=0;
-  });
-})();
 </script>
 </body>
 </html>
