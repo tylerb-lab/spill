@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Coffee Horoscope — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0806;--rust:#d4501a;--yellow:#f0c040;--cream:#f5f0e8;--dim:rgba(245,240,232,.3);--dimmer:rgba(245,240,232,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--cream);font-family:'Syne Mono',monospace;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:7px;height:7px;background:var(--yellow);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#crr{position:fixed;width:24px;height:24px;border:1px solid rgba(240,192,64,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:500}
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;z-index:10;transition:color .2s}.back:hover{color:var(--rust)}
+/* stars bg */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:80px 24px 60px;position:relative;z-index:1}
+.hdr{text-align:center;margin-bottom:56px;opacity:0;animation:up .8s ease .1s forwards}
+.hdr-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);margin-bottom:12px;opacity:.7}
+.hdr-title{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(48px,9vw,80px);line-height:.9;letter-spacing:-.02em;margin-bottom:10px}
+.hdr-sub{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+/* sign grid */
+.sign-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:800px;background:rgba(245,240,232,.06);border:1px solid rgba(245,240,232,.08);margin-bottom:48px;opacity:0;animation:up .8s ease .3s forwards}
+.sign-btn{background:transparent;border:none;cursor:pointer;padding:22px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:background .2s;font-family:'Syne Mono',monospace}
+.sign-btn:hover,.sign-btn.active{background:rgba(240,192,64,.08)}
+.sign-btn.active .sign-symbol{color:var(--yellow)}
+.sign-symbol{font-size:22px;line-height:1;transition:transform .3s}
+.sign-btn:hover .sign-symbol{transform:scale(1.2)}
+.sign-name{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.sign-dates{font-size:8px;color:rgba(245,240,232,.18);margin-top:2px}
+/* result */
+.result{width:100%;max-width:640px;opacity:0;animation:up .8s ease .5s forwards;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.result-idle{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);display:flex;align-items:center;gap:12px}
+.result-idle::before,.result-idle::after{content:'';width:24px;height:1px;background:var(--dimmer)}
+.result-card{display:none;flex-direction:column;align-items:center;gap:0;text-align:center}
+.rc-sign{font-size:48px;margin-bottom:16px;animation:starSpin 8s linear infinite}
+@keyframes starSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.rc-name{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);margin-bottom:20px}
+.rc-divider{width:40px;height:1px;background:linear-gradient(to right,transparent,var(--yellow),transparent);margin-bottom:20px}
+.rc-brew{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(22px,4vw,34px);color:var(--cream);line-height:1.3;margin-bottom:16px;letter-spacing:-.01em}
+.rc-brew strong{font-style:normal;color:var(--yellow)}
+.rc-reading{font-size:12px;color:var(--dim);line-height:1.75;max-width:480px;margin-bottom:24px}
+.rc-verdict{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);border:1px solid rgba(212,80,26,.25);padding:8px 20px;border-radius:2px}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.sign-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="crr"></div>
+<canvas class="stars" id="stars"></canvas>
+<a href="index.html" class="back">← spill.</a>
+<div class="page">
+  <div class="hdr">
+    <p class="hdr-label">Spill. Astrology</p>
+    <h1 class="hdr-title">your coffee<br>horoscope.</h1>
+    <p class="hdr-sub">the stars know what you should be drinking</p>
+  </div>
+  <div class="sign-grid" id="signGrid"></div>
+  <div class="result" id="result">
+    <p class="result-idle">select your sign</p>
+    <div class="result-card" id="resultCard">
+      <div class="rc-sign" id="rcSign"></div>
+      <p class="rc-name" id="rcName"></p>
+      <div class="rc-divider"></div>
+      <p class="rc-brew" id="rcBrew"></p>
+      <p class="rc-reading" id="rcReading"></p>
+      <p class="rc-verdict" id="rcVerdict"></p>
+    </div>
+  </div>
+</div>
+<script>
+const cur=document.getElementById('cur'),crr=document.getElementById('crr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.11;ry+=(my-ry)*.11;crr.style.left=rx+'px';crr.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+// stars
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+for(let i=0;i<180;i++){ctx.beginPath();ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height,Math.random()*.8,0,Math.PI*2);ctx.fillStyle=`rgba(245,240,232,${Math.random()*.25})`;ctx.fill()}
+
+const SIGNS=[
+  {symbol:'♈',name:'Aries',dates:'Mar 21–Apr 19',brew:'Double ristretto, no mercy',reading:'You ordered before the barista finished saying hello. Your grind is too coarse and so is your personality. This is a compliment. You finish your coffee before it is technically safe to consume. Mercury is in retrograde and so is your patience.',verdict:'Drink it standing up'},
+  {symbol:'♉',name:'Taurus',dates:'Apr 20–May 20',brew:'The most expensive single origin on the menu',reading:'You have a favourite mug. You have had it for eleven years. You will be buried with it. You spent forty minutes this morning reading about Ethiopian natural process beans and you regret nothing. Venus rules you and so does your local specialty café.',verdict:'You deserve nice things'},
+  {symbol:'♊',name:'Gemini',dates:'May 21–Jun 20',brew:'Espresso tonic then immediately a latte',reading:'You ordered two different things and somehow finished both. You have opinions about every brew method and change them weekly. Your coffee order is different every single visit. The barista both loves and fears you. This is correct.',verdict:'Chaotic but correct'},
+  {symbol:'♋',name:'Cancer',dates:'Jun 21–Jul 22',brew:'A warm, milky flat white at your regular café',reading:'You have a regular café. The staff know your order. This is the peak of human achievement and you have reached it. You make coffee for other people before yourself. The moon controls the tides and also your emotional response to a perfectly textured milk.',verdict:'Nurturing but haunted'},
+  {symbol:'♌',name:'Leo',dates:'Jul 23–Aug 22',brew:'A cortado in a glass so the layers show',reading:'You wanted people to see the layers. You wanted people to see you drinking it. The sun is your ruling planet and you consume coffee like it too — at the centre of everything, generating heat, refusing to be ignored. The latte art was good. You photographed it.',verdict:'Main character energy'},
+  {symbol:'♍',name:'Virgo',dates:'Aug 23–Sep 22',brew:'Precisely weighed pour over, 93.5°C',reading:'You have a scale. You have a thermometer. You have a spreadsheet tracking your extraction yield since March. Mercury rules you and also your inability to enjoy anything without first optimising it. Your coffee is objectively the best at the table. Everyone knows it.',verdict:'Correct but exhausting'},
+  {symbol:'♎',name:'Libra',dates:'Sep 23–Oct 22',brew:'Whatever everyone else is having',reading:'You spent twelve minutes deciding and ordered what the person behind you got. You liked it. Your cold brew and your oat latte are in perfect aesthetic harmony. Venus guides you toward beauty and balance and also toward cafés with good natural light for photographs.',verdict:'Indecisive but lovely'},
+  {symbol:'♏',name:'Scorpio',dates:'Oct 23–Nov 21',brew:'Black coffee, no explanation',reading:'You drink it black and you make eye contact while doing it. You know things about the origin of this bean that the roaster has not yet published. Pluto rules transformation and you have already decided everyone else at this table is drinking wrong. You are probably right.',verdict:'Intimidating. Correct.'},
+  {symbol:'♐',name:'Sagittarius',dates:'Nov 22–Dec 21',brew:'Whatever they drink in the country you just got back from',reading:'You have been to the farm. Not a coffee farm specifically, but you have been to a farm and you bring this up often. Jupiter expands your horizons and your caffeine tolerance. You once had an incredible espresso in a city you cannot pronounce and you have been chasing it since.',verdict:'Worldly and restless'},
+  {symbol:'♑',name:'Capricorn',dates:'Dec 22–Jan 19',brew:'Strong long black, back at the desk by 8:03',reading:'You drink coffee for function not pleasure and you have made peace with this. Saturn rules discipline and you rule your caffeine schedule with an iron fist. You do not understand why people take photos of their coffee. You are the most efficient person at this table by a significant margin.',verdict:'Efficient. A little sad.'},
+  {symbol:'♒',name:'Aquarius',dates:'Jan 20–Feb 18',brew:'Some fermented experimental process thing nobody else ordered',reading:'You found the most obscure item on the menu and ordered it with quiet confidence. Uranus rules innovation and you have been drinking that natural process Yemeni since before it was available in this country. You explained why oat milk is better for the planet to someone who did not ask.',verdict:'Right about everything, eventually'},
+  {symbol:'♓',name:'Pisces',dates:'Feb 19–Mar 20',brew:'A dreamy iced latte you forgot you ordered',reading:'Your coffee went cold while you were thinking about something. This has happened before. Neptune rules dreams and also your attention span. You make the best coffee recommendations because you have no agenda. Your intuition about roast profiles is genuinely unsettling. You ordered decaf once by accident and it was fine.',verdict:'Soft. Surprisingly deep.'},
+];
+
+const grid=document.getElementById('signGrid');
+SIGNS.forEach((s,i)=>{
+  const btn=document.createElement('button');
+  btn.className='sign-btn';
+  btn.innerHTML=`<span class="sign-symbol">${s.symbol}</span><span class="sign-name">${s.name}</span><span class="sign-dates">${s.dates}</span>`;
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sign-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    showSign(s);
+  });
+  grid.appendChild(btn);
+});
+
+function showSign(s){
+  const idle=document.querySelector('.result-idle');
+  const card=document.getElementById('resultCard');
+  idle.style.display='none';
+  card.style.display='flex';
+  document.getElementById('rcSign').textContent=s.symbol;
+  document.getElementById('rcName').textContent=s.name+' — '+s.dates;
+  document.getElementById('rcBrew').innerHTML='Your drink: <strong>'+s.brew+'</strong>';
+  document.getElementById('rcReading').textContent=s.reading;
+  document.getElementById('rcVerdict').textContent=s.verdict;
+}
+</script>
+</body>
+</html>

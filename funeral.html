@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>A Funeral — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital,wght@1,300;1,400;0,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080806;--rust:#d4501a;--cream:rgba(245,240,232,.85);--dim:rgba(245,240,232,.28);--dimmer:rgba(245,240,232,.08)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--cream);font-family:'Syne Mono',monospace;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:6px;height:6px;background:rgba(245,240,232,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:500}
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;z-index:10;transition:color .2s}.back:hover{color:var(--cream)}
+/* rain */
+.rain{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.drop{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(245,240,232,.08));animation:fall linear infinite}
+@keyframes fall{from{transform:translateY(-20px)}to{transform:translateY(110vh)}}
+/* page */
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:80px 24px 60px;position:relative;z-index:2}
+/* programme */
+.programme{width:100%;max-width:520px;background:rgba(245,240,232,.03);border:1px solid var(--dimmer);padding:48px 40px;text-align:center;position:relative;opacity:0;animation:up 1s ease .2s forwards}
+.programme::before{content:'';position:absolute;top:12px;left:12px;right:12px;bottom:12px;border:1px solid var(--dimmer);pointer-events:none}
+.prog-label{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:24px}
+/* coffin illustration */
+.coffin-wrap{margin:20px auto 28px;opacity:.6}
+/* title */
+.deceased{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(32px,6vw,52px);color:rgba(245,240,232,.9);line-height:1;letter-spacing:-.02em;margin-bottom:6px}
+.dates{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:28px}
+.divider{width:60px;height:1px;background:var(--dimmer);margin:0 auto 28px}
+/* eulogy */
+.eulogy{font-family:'Crimson Pro',serif;font-size:15px;line-height:1.8;color:var(--dim);margin-bottom:28px;text-align:left}
+.eulogy p{margin-bottom:14px}
+/* mourners */
+.mourners-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.mourners{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:32px}
+.mourner{font-size:10px;letter-spacing:.1em;color:var(--dim);background:var(--dimmer);border:1px solid rgba(245,240,232,.06);padding:5px 12px;border-radius:2px}
+/* flowers */
+.flowers{font-size:24px;letter-spacing:8px;margin-bottom:28px;opacity:.4}
+/* rip */
+.rip{font-family:'Crimson Pro',serif;font-style:italic;font-size:20px;color:rgba(245,240,232,.3);letter-spacing:.06em}
+/* bottom */
+.outro{margin-top:32px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:center;opacity:0;animation:up .8s ease 1.2s forwards}
+.outro a{color:var(--rust);text-decoration:none}
+/* which coffee picker */
+.picker{width:100%;max-width:520px;margin-bottom:32px;opacity:0;animation:up .8s ease .1s forwards;text-align:center}
+.picker-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.picker-btns{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.pbtn{background:transparent;border:1px solid var(--dimmer);color:var(--dim);font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.1em;padding:8px 14px;cursor:pointer;transition:all .2s;border-radius:2px}
+.pbtn:hover,.pbtn.active{border-color:rgba(245,240,232,.3);color:var(--cream)}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div class="rain" id="rain"></div>
+<a href="index.html" class="back">← spill.</a>
+<div class="page">
+  <div class="picker">
+    <p class="picker-label">Who are we burying today?</p>
+    <div class="picker-btns" id="pickerBtns"></div>
+  </div>
+  <div class="programme" id="prog" style="display:none">
+    <p class="prog-label">Order of Service</p>
+    <div class="coffin-wrap">
+      <svg width="80" height="100" viewBox="0 0 80 100" fill="none">
+        <path d="M20 10 L60 10 L72 30 L72 85 Q72 92 64 92 L16 92 Q8 92 8 85 L8 30 Z" fill="rgba(245,240,232,.06)" stroke="rgba(245,240,232,.15)" stroke-width="1"/>
+        <path d="M24 40 L56 40" stroke="rgba(245,240,232,.1)" stroke-width="1"/>
+        <path d="M28 48 L52 48" stroke="rgba(245,240,232,.08)" stroke-width="1"/>
+        <ellipse cx="40" cy="55" rx="10" ry="6" fill="none" stroke="rgba(245,240,232,.1)" stroke-width="1"/>
+        <path d="M36 55 L44 55 M40 51 L40 59" stroke="rgba(245,240,232,.15)" stroke-width="1"/>
+      </svg>
+    </div>
+    <p class="deceased" id="deceased"></p>
+    <p class="dates" id="dates"></p>
+    <div class="divider"></div>
+    <div class="eulogy" id="eulogy"></div>
+    <p class="mourners-label">survived by</p>
+    <div class="mourners" id="mourners"></div>
+    <div class="flowers">🌹🌹🌹</div>
+    <p class="rip" id="ripText"></p>
+  </div>
+  <div class="outro" id="outro" style="display:none">
+    <p>gone but not forgotten. <a href="recipes.html">brew something better →</a></p>
+  </div>
+</div>
+<script>
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
+
+// rain
+const rain=document.getElementById('rain');
+for(let i=0;i<60;i++){const d=document.createElement('div');d.className='drop';const h=40+Math.random()*120;d.style.cssText=`left:${Math.random()*100}%;height:${h}px;animation-duration:${0.6+Math.random()*1.2}s;animation-delay:${Math.random()*3}s`;rain.appendChild(d)}
+
+const COFFEES=[
+  {name:'Instant Coffee',dates:'Invented 1901 — Should have stayed there',
+   eulogy:'<p>It was there when nothing else was. At 3am in a service station. In a motel room with one sad sachet. In your university flat with no money and no hope. We forgive it for tasting like burnt regret because it showed up when better things could not.</p><p>It was consistent, in its way. Consistently wrong, but consistent.</p>',
+   mourners:['Weary travellers','University students','Gas station attendants','People who gave up'],
+   rip:'RIP. You served your purpose. Barely.'},
+  {name:'Supermarket Beans (Pre-Ground)',dates:'Roasted possibly last year — Definitely not this week',
+   eulogy:'<p>You were affordable. You were available. You were there in the pantry every morning like a bad habit we kept meaning to break. Your flavour profile was described by nobody as anything other than "fine, I guess."</p><p>You taught us what we didn\'t want. In that way, you were a teacher.</p>',
+   mourners:['People on a budget','People in denial','People who haven\'t discovered specialty yet','Parents'],
+   rip:'RIP. You were fine. Just fine.'},
+  {name:'The Bad Café Espresso',dates:'Ordered hopefully — Received with confusion',
+   eulogy:'<p>The menu said single origin. The cup said otherwise. The milk was correct but the shot tasted like a disagreement. You arrived at the wrong temperature. You left the wrong memory.</p><p>We tipped anyway, because we are not monsters.</p>',
+   mourners:['Optimistic visitors','The barista who was having a day','The café\'s one-star review author'],
+   rip:'RIP. We should have ordered the batch brew.'},
+  {name:'The Over-Extracted Pour Over',dates:'12pm attempt — Abandoned 12:08',
+   eulogy:'<p>We got the ratio right. We got the temperature right. We got the bloom right. Somewhere between the second pour and the finish it became punishment. Bitter in a way that could not be explained by chemistry alone. Bitter like a message.</p><p>We drank most of it. We are not proud.</p>',
+   mourners:['The scale','The gooseneck kettle','Our optimism','Twenty grams of good beans'],
+   rip:'RIP. It wasn\'t the beans\' fault.'},
+  {name:'Cold Brew Left Too Long',dates:'Sunday night — Found the following Friday',
+   eulogy:'<p>We made you with such intention. Glass jar. Good ratio. The right fridge shelf. And then we forgot about you for five days and when we found you again you had become something else. Something with opinions.</p><p>We poured you down the sink and felt nothing.</p>',
+   mourners:['Our past selves','The jar','Those beans','A note that said "remember to strain Monday"'],
+   rip:'RIP. You were a lesson about follow-through.'},
+];
+
+const btns=document.getElementById('pickerBtns');
+COFFEES.forEach((c,i)=>{
+  const b=document.createElement('button');
+  b.className='pbtn';b.textContent=c.name;
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    showFuneral(c);
+  });
+  btns.appendChild(b);
+});
+
+function showFuneral(c){
+  const prog=document.getElementById('prog');
+  const outro=document.getElementById('outro');
+  prog.style.display='block';outro.style.display='block';
+  prog.style.opacity='0';prog.style.transform='translateY(12px)';
+  setTimeout(()=>{prog.style.transition='opacity .8s,transform .8s';prog.style.opacity='1';prog.style.transform='translateY(0)'},50);
+  document.getElementById('deceased').textContent=c.name;
+  document.getElementById('dates').textContent=c.dates;
+  document.getElementById('eulogy').innerHTML=c.eulogy;
+  document.getElementById('mourners').innerHTML=c.mourners.map(m=>`<span class="mourner">${m}</span>`).join('');
+  document.getElementById('ripText').textContent=c.rip;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Confessions — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#1a1208;--rust:#d4501a;--yellow:#f0c040;--cream:#f5f0e8;--espresso:#2d1a08;--dim:rgba(245,240,232,.28);--dimmer:rgba(245,240,232,.08)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--cream);font-family:'Syne Mono',monospace;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:7px;height:7px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");pointer-events:none;z-index:500}
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;z-index:10;transition:color .2s}.back:hover{color:var(--rust)}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center}
+.hdr{margin-bottom:56px;opacity:0;animation:up .7s ease .1s forwards}
+.hdr-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;opacity:.7}
+.hdr-title{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(44px,8vw,76px);line-height:.92;letter-spacing:-.02em;margin-bottom:10px}
+.hdr-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+/* booth */
+.booth{width:100%;max-width:600px;position:relative;opacity:0;animation:up .8s ease .3s forwards}
+.booth-window{background:var(--espresso);border:2px solid rgba(245,240,232,.08);border-radius:2px;padding:48px 40px;position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.booth-window::before{content:'CONFESSIONAL';position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,240,232,.12)}
+.confess-num{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);opacity:.6;margin-bottom:20px}
+.confess-text{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(18px,3vw,26px);line-height:1.45;color:var(--cream);letter-spacing:-.01em;transition:opacity .4s,transform .4s}
+.confess-text.fade{opacity:0;transform:translateY(8px)}
+.confess-attr{margin-top:18px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:opacity .4s}
+.confess-attr.fade{opacity:0}
+/* candle flicker */
+.candle{position:absolute;bottom:16px;right:20px;display:flex;flex-direction:column;align-items:center;gap:0}
+.flame{width:8px;height:14px;background:var(--yellow);border-radius:50% 50% 30% 30%;animation:flicker .7s ease-in-out infinite;transform-origin:bottom}
+@keyframes flicker{0%,100%{transform:scaleX(1) scaleY(1)}33%{transform:scaleX(.8) scaleY(1.1)}66%{transform:scaleX(1.1) scaleY(.95)}}
+.wick{width:1px;height:8px;background:rgba(245,240,232,.4)}
+.wax{width:10px;height:20px;background:rgba(245,240,232,.15);border-radius:1px}
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-top:20px}
+.ctrl-btn{background:transparent;border:1px solid rgba(245,240,232,.12);color:var(--dim);font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:10px 22px;cursor:pointer;transition:all .2s;border-radius:2px}
+.ctrl-btn:hover{border-color:var(--rust);color:var(--rust)}
+.counter{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-top:14px}
+/* submit own */
+.submit-wrap{width:100%;max-width:600px;margin-top:36px;opacity:0;animation:up .8s ease .6s forwards}
+.submit-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.submit-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(245,240,232,.12);font-family:'Crimson Pro',serif;font-style:italic;font-size:18px;color:var(--cream);padding:10px 4px;outline:none;caret-color:var(--rust);text-align:center}
+.submit-input::placeholder{color:rgba(245,240,232,.15)}
+.submit-btn{margin-top:14px;background:transparent;border:1px solid rgba(212,80,26,.3);color:var(--rust);font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:10px 24px;cursor:pointer;transition:all .2s}
+.submit-btn:hover{background:rgba(212,80,26,.08)}
+.submit-confirm{font-size:10px;letter-spacing:.1em;color:var(--dim);margin-top:8px;min-height:16px;font-style:italic;font-family:'Crimson Pro',serif}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<a href="index.html" class="back">← spill.</a>
+<div class="page">
+  <div class="hdr">
+    <p class="hdr-label">Anonymous Submissions</p>
+    <h1 class="hdr-title">the coffee<br>confession booth.</h1>
+    <p class="hdr-sub">we don't judge. we absolutely judge.</p>
+  </div>
+  <div class="booth">
+    <div class="booth-window">
+      <div class="candle"><div class="flame"></div><div class="wick"></div><div class="wax"></div></div>
+      <p class="confess-num" id="cnum">confession #001</p>
+      <p class="confess-text" id="ctext"></p>
+      <p class="confess-attr" id="cattr"></p>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" id="prevBtn">← prev</button>
+      <button class="ctrl-btn" id="nextBtn">next →</button>
+      <button class="ctrl-btn" id="randBtn">random</button>
+    </div>
+    <p class="counter" id="counter"></p>
+  </div>
+  <div class="submit-wrap">
+    <p class="submit-label">have something to confess?</p>
+    <input class="submit-input" id="subInput" placeholder="I've been lying about my grind size for years..." maxlength="140"/>
+    <div style="text-align:center"><button class="submit-btn" id="subBtn">confess anonymously</button></div>
+    <p class="submit-confirm" id="subConfirm"></p>
+  </div>
+</div>
+<script>
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
+
+const CONFESSIONS=[
+  {text:"I have been buying supermarket beans for three months and telling everyone it's a small-batch single origin from a roaster in Marrickville.",attr:"Anonymous, Sydney"},
+  {text:"I pretend to enjoy the natural process but honestly I just like saying 'natural process' at brunch.",attr:"Anonymous, Melbourne"},
+  {text:"I own a Comandante grinder. I have never once cleaned it properly.",attr:"Anonymous"},
+  {text:"I told my partner the espresso machine was an investment. It cost more than our first holiday together.",attr:"Anonymous, Brisbane"},
+  {text:"I have made my Aeropress recipe sound more complicated than it is to impress people at dinner parties.",attr:"Anonymous"},
+  {text:"I let my café crush think I drink it black. I add oat milk the moment they turn around.",attr:"Anonymous, Perth"},
+  {text:"I once described a coffee as having 'notes of dark cherry and tobacco' and I had no idea what it tasted like. People nodded.",attr:"Anonymous"},
+  {text:"I have never actually tasted the difference between a ristretto and a normale. I just order the ristretto.",attr:"Anonymous, Adelaide"},
+  {text:"My hand grinder broke six weeks ago and I have been using pre-ground since. I have told no one.",attr:"Anonymous"},
+  {text:"I clicked a YouTube video called 'Is Your V60 Good Enough?' at 1am and I cried a little.",attr:"Anonymous"},
+  {text:"I own four brew methods and use the same one every single day. The others are decoration.",attr:"Anonymous, Canberra"},
+  {text:"I said the café was bad because of the extraction. It was bad because I was in a bad mood.",attr:"Anonymous"},
+  {text:"I bought expensive beans specifically so I could post them. I haven't brewed them yet.",attr:"Anonymous"},
+  {text:"I told someone their grind was too coarse. I was wrong. I have never admitted this.",attr:"Anonymous"},
+  {text:"I drink instant coffee on camping trips and I enjoy it more than anything from my home setup.",attr:"Anonymous"},
+  {text:"I have a rating system. I have never given anything below a seven because I feel bad for the barista.",attr:"Anonymous, Hobart"},
+  {text:"I describe myself as 'not a morning person' but I wake up excited about coffee every day.",attr:"Anonymous"},
+  {text:"I spent forty minutes dialling in a new bean and then left it on the counter and it went cold.",attr:"Anonymous"},
+];
+
+let idx=0;
+const ctext=document.getElementById('ctext'),cattr=document.getElementById('cattr'),cnum=document.getElementById('cnum'),counter=document.getElementById('counter');
+let local=JSON.parse(localStorage.getItem('spill_confessions')||'[]');
+const all=()=>[...CONFESSIONS,...local];
+
+function show(i,dir=1){
+  ctext.classList.add('fade');cattr.classList.add('fade');
+  setTimeout(()=>{
+    const list=all();
+    idx=((i%list.length)+list.length)%list.length;
+    const c=list[idx];
+    cnum.textContent='confession #'+String(idx+1).padStart(3,'0');
+    ctext.textContent=c.text;
+    cattr.textContent=c.attr||'Anonymous';
+    counter.textContent=(idx+1)+' of '+list.length+' confessions';
+    ctext.classList.remove('fade');cattr.classList.remove('fade');
+  },400);
+}
+show(0);
+document.getElementById('nextBtn').addEventListener('click',()=>show(idx+1));
+document.getElementById('prevBtn').addEventListener('click',()=>show(idx-1));
+document.getElementById('randBtn').addEventListener('click',()=>show(Math.floor(Math.random()*all().length)));
+
+document.getElementById('subBtn').addEventListener('click',()=>{
+  const val=document.getElementById('subInput').value.trim();
+  const conf=document.getElementById('subConfirm');
+  if(!val){conf.textContent='you have to actually confess something.';return;}
+  local.push({text:val,attr:'Anonymous (you, just now)'});
+  localStorage.setItem('spill_confessions',JSON.stringify(local));
+  document.getElementById('subInput').value='';
+  conf.textContent='received. your sins are noted.';
+  setTimeout(()=>{conf.textContent='';show(all().length-1);},1800);
+});
+</script>
+</body>
+</html>

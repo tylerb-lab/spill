@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Barista. — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#1a0e06;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:none;font-family:'Syne Mono',monospace}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:#d4501a;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(212,80,26,.6)}
+.back{position:fixed;top:14px;left:18px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.3);text-decoration:none;z-index:200;transition:color .2s}.back:hover{color:#d4501a}
+.hud{position:fixed;top:0;left:0;right:0;height:42px;background:linear-gradient(180deg,#2d1a08,#1e1006);border-bottom:2px solid #3a2010;display:flex;align-items:center;justify-content:space-between;padding:0 14px;z-index:100}
+.hud-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#f5f0e8;letter-spacing:-.01em}
+.hud-title span{color:#d4501a}
+.hud-r{display:flex;align-items:center;gap:14px}
+.hstat{text-align:center}
+.hstat-n{font-size:14px;color:#f0c040;font-weight:700;line-height:1}
+.hstat-l{font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-top:1px}
+.lives{display:flex;gap:4px;align-items:center}
+.life-h{width:12px;height:12px;background:#d4501a;border-radius:50%;box-shadow:0 0 4px rgba(212,80,26,.5);transition:all .3s}
+.life-h.lost{background:#3a1a08;box-shadow:none}
+.tbar{position:fixed;top:42px;left:0;right:0;height:5px;background:#1a0e04;z-index:100}
+.tfill{height:100%;background:linear-gradient(90deg,#d4501a,#f0c040);transition:width .1s linear;border-radius:0 3px 3px 0}
+.canvas-wrap{margin-top:47px;position:relative}
+canvas{display:block}
+/* html buttons overlaid */
+.drink-btns{position:absolute;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dbtn{width:52px;height:52px;border-radius:10px;border:2px solid rgba(255,255,255,.15);background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(0,0,0,.2));cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:all .15s;position:relative;overflow:hidden;backdrop-filter:blur(2px)}
+.dbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.18),transparent);border-radius:8px;pointer-events:none}
+.dbtn:hover{background:linear-gradient(160deg,rgba(212,80,26,.4),rgba(212,80,26,.15));border-color:rgba(212,80,26,.7);transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,80,26,.3)}
+.dbtn:active{transform:translateY(0);box-shadow:none}
+.dbtn.correct{background:linear-gradient(160deg,rgba(72,209,138,.4),rgba(42,100,60,.2));border-color:#48d18a;box-shadow:0 0 12px rgba(72,209,138,.4)}
+.dbtn.wrong{border-color:#ff4030;animation:btnWrong .3s ease}
+@keyframes btnWrong{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.dbtn-icon{font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.dbtn-label{font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.7);font-family:'Syne Mono',monospace}
+.serve-btn{position:absolute;background:linear-gradient(160deg,#d4501a,#b83e10);color:#fff;font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #f0c040;padding:8px 16px;border-radius:8px;cursor:pointer;display:none;box-shadow:0 4px 12px rgba(212,80,26,.4);transition:all .2s}
+.serve-btn.show{display:block}
+.serve-btn:hover{background:linear-gradient(160deg,#e86030,#c84e20);transform:translateY(-2px);box-shadow:0 6px 16px rgba(212,80,26,.5)}
+.serve-btn:active{transform:translateY(0)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(45,26,8,.95);border:2px solid #5a3018;border-radius:8px;color:#f5f0e8;font-size:10px;letter-spacing:.1em;padding:8px 18px;opacity:0;transition:all .25s;z-index:300;white-space:nowrap;font-family:'Crimson Pro',serif;font-style:italic;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.overlay{position:fixed;inset:0;background:rgba(15,8,2,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:400;text-align:center;padding:32px}
+.ov-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#d4501a;margin-bottom:14px;opacity:.8}
+.ov-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(38px,7vw,64px);color:#f5f0e8;letter-spacing:-.02em;margin-bottom:10px}
+.ov-title span{color:#d4501a}
+.ov-sub{font-size:12px;color:rgba(245,240,232,.45);line-height:1.85;max-width:380px;margin-bottom:28px;letter-spacing:.03em}
+.ov-btn{background:linear-gradient(160deg,#d4501a,#b83e10);color:#fff;font-family:'Syne Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;border:2px solid #f0c040;padding:13px 30px;cursor:pointer;border-radius:8px;box-shadow:0 4px 16px rgba(212,80,26,.35);transition:all .2s}
+.ov-btn:hover{background:linear-gradient(160deg,#e86030,#c84e20);transform:translateY(-2px)}
+.score-big{font-family:'Syne',sans-serif;font-weight:800;font-size:56px;color:#f0c040;line-height:1;margin-bottom:2px;text-shadow:0 2px 12px rgba(240,192,64,.4)}
+.score-lbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:18px}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<a href="index.html" class="back">← spill.</a>
+<div class="hud">
+  <div class="hud-title">Barista<span>.</span></div>
+  <div class="hud-r">
+    <div class="hstat"><div class="hstat-n" id="scoreEl">0</div><div class="hstat-l">score</div></div>
+    <div class="hstat"><div class="hstat-n" id="servedEl">0</div><div class="hstat-l">served</div></div>
+    <div class="lives"><div class="life-h" id="lh0"></div><div class="life-h" id="lh1"></div><div class="life-h" id="lh2"></div></div>
+  </div>
+</div>
+<div class="tbar"><div class="tfill" id="tfill" style="width:100%"></div></div>
+<div class="canvas-wrap" id="wrap">
+  <canvas id="c"></canvas>
+  <div class="drink-btns" id="drinkBtns"></div>
+  <button class="serve-btn" id="serveBtn">hand it over →</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="startOv">
+  <p class="ov-label">Spill. Arcade</p>
+  <div class="ov-title">Barista<span>.</span></div>
+  <p class="ov-sub">Customer walks up and orders. Hit the right button on the machine to brew it. Hand it over before they lose patience. 3 walkouts ends the shift.</p>
+  <button class="ov-btn" id="startBtn">start shift</button>
+</div>
+<div class="overlay" id="goOv" style="display:none">
+  <p class="ov-label">shift over</p>
+  <div class="score-big" id="goScore">0</div>
+  <div class="score-lbl">points</div>
+  <div class="ov-title" id="goTitle" style="font-size:clamp(26px,4vw,42px);margin-bottom:8px">done.</div>
+  <p class="ov-sub" id="goSub"></p>
+  <button class="ov-btn" id="restartBtn">another shift</button>
+</div>
+
+<script>
+// cursor
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function cl(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(cl)})();
+
+// ── CANVAS ──
+const W=480,H=340;
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+canvas.width=W; canvas.height=H;
+
+// position HTML buttons
+function posUI(){
+  // drink buttons sit above the machine buttons row — at bottom portion of canvas
+  const db=document.getElementById('drinkBtns');
+  db.style.left='50%'; db.style.transform='translateX(-50%)';
+  db.style.bottom='14px'; db.style.top='auto';
+  db.style.width='340px';
+  const sv=document.getElementById('serveBtn');
+  sv.style.right='24px'; sv.style.bottom='22px';
+}
+posUI();
+
+// ── DRINKS ──
+const DRINKS=[
+  {id:'esp',  label:'Espresso', icon:'☕', orders:['one espresso.','double shot please.','espresso, black.','short black thanks.'], liquid:'#2a1206', foam:null},
+  {id:'fw',   label:'Flat White',icon:'🥛',orders:['flat white thanks.','oat flat white.','flat white please!','fw to have here.'], liquid:'#8b5e3c', foam:'#f0e8d8'},
+  {id:'lat',  label:'Latte',    icon:'☕', orders:['latte please.','large oat latte.','latte extra hot.','can i get a latte?'], liquid:'#a07040', foam:'#f5ede0'},
+  {id:'cap',  label:'Cappuccino',icon:'☕',orders:['cap please.','dry cap thanks.','cappuccino extra foam.','cap, no sugar.'], liquid:'#c49a6c', foam:'#fff8f0'},
+  {id:'cb',   label:'Cold Brew', icon:'🧊',orders:['cold brew please.','cold brew over ice.','cold brew, no ice.','do you have cold brew?'], liquid:'#180e04', foam:null},
+  {id:'cor',  label:'Cortado',   icon:'☕',orders:['cortado thanks.','one cortado.','cortado no sugar.','can i do a cortado?'], liquid:'#7a4828', foam:'#e8d4b8'},
+];
+
+// ── COLOUR PALETTE ──
+const P={
+  // scene
+  wallTop:'#7a4e2a',   wallBot:'#5a3a1a',
+  wallTile:'#8a5e36',  wallTileDark:'#6a4620',
+  wallLight:'#c49a6a', // warm light patches
+  floorOur:'#3d2010',  floorStripe:'#2d1608',
+  // counter
+  cTop:'#c49a5a',      cTopHi:'#e0b870',   cTopSha:'#9a7030',
+  cFront:'#8b5e3c',    cFrontDark:'#6b4020',
+  cEdge:'#5a3010',
+  // machine colours
+  mBody:'#2a1a0a',     mFace:'#1a0e06',
+  mHi:'rgba(255,255,255,.12)', mSha:'rgba(0,0,0,.4)',
+  mChrome:'#c0a060',   mScreen:'#0d1a10',
+  mBtn:'#3a2010',
+  // cup
+  cupBg:'#f5f0e8',     cupLine:'#8b5e3c',
+  // customer
+  skins:['#f5c89a','#d4956a','#c07848','#8b5530','#5a3018'],
+  shirts:['#4a6a9a','#7a5a3a','#5a8a5a','#8a4a6a','#4a7a8a','#9a6a3a'],
+  hairs:['#1a1208','#8b5e3c','#f0c040','#3a3020','#c0a060','#5a2010'],
+  // ui
+  rust:'#d4501a',      yellow:'#f0c040',
+  cream:'#f5f0e8',     black:'#1a0e06',
+};
+
+// ── DRAWING HELPERS ──
+function rect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(x,y,w,h)}
+function rrect(x,y,w,h,r,col){ctx.fillStyle=col;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function grad(x,y,w,h,c1,c2,vert=true){
+  const g=vert?ctx.createLinearGradient(x,y,x,y+h):ctx.createLinearGradient(x,y,x+w,y);
+  g.addColorStop(0,c1);g.addColorStop(1,c2);
+  ctx.fillStyle=g;ctx.fillRect(x,y,w,h);
+}
+function rgrad(x,y,r,c1,c2){
+  const g=ctx.createRadialGradient(x,y,0,x,y,r);
+  g.addColorStop(0,c1);g.addColorStop(1,c2);
+  return g;
+}
+function circle(x,y,r,col){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
+function stroke(x,y,w,h,col,lw=1.5){ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.strokeRect(x+lw/2,y+lw/2,w-lw,h-lw)}
+function txt(str,x,y,col,size,font='Syne Mono'){ctx.fillStyle=col;ctx.font=`${size}px '${font}', monospace`;ctx.textBaseline='middle';ctx.textAlign='center';ctx.fillText(str,x,y)}
+
+// ── SCENE ──
+function drawBackground(){
+  // Their side — warm café wall
+  grad(0,0,W,190,P.wallTop,P.wallBot);
+  // tile pattern on their wall
+  for(let row=0;row<4;row++){
+    for(let col=0;col<8;col++){
+      const tx=col*62+(row%2===0?0:31),ty=row*48;
+      grad(tx,ty,60,46,P.wallTile,P.wallTileDark);
+      ctx.strokeStyle='rgba(0,0,0,.2)';ctx.lineWidth=1;ctx.strokeRect(tx,ty,60,46);
+      // grout highlight
+      ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;ctx.strokeRect(tx+1,ty+1,58,44);
+    }
+  }
+  // wall sconce light glow
+  [100,380].forEach(lx=>{
+    const gl=ctx.createRadialGradient(lx,60,0,lx,60,90);
+    gl.addColorStop(0,'rgba(240,192,64,.18)');gl.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=gl;ctx.fillRect(lx-90,0,180,140);
+    // sconce body
+    grad(lx-8,30,16,28,'#c8a050','#8a6820');
+    rrect(lx-10,26,20,8,3,'#d4b060');
+    circle(lx,58,5,'#f0c040');
+    circle(lx,58,3,'#fff8e0');
+  });
+  // menu board on wall
+  drawMenuBoard();
+}
+
+function drawMenuBoard(){
+  const bx=180,by=8,bw=120,bh=68;
+  rrect(bx,by,bw,bh,4,P.mBody);
+  grad(bx+2,by+2,bw-4,bh-4,'#1a1008','#0d0804');
+  ctx.strokeStyle='#c49a50';ctx.lineWidth=2;
+  ctx.strokeRect(bx+1,by+1,bw-2,bh-2);
+  txt('SPILL.',bx+bw/2,by+14,'#f0c040',10,'Syne');
+  ctx.strokeStyle='rgba(240,192,64,.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(bx+8,by+22);ctx.lineTo(bx+bw-8,by+22);ctx.stroke();
+  const items=['Espresso','Flat White','Latte','Cold Brew'];
+  items.forEach((it,i)=>{
+    ctx.fillStyle='rgba(245,240,232,.55)';ctx.font="7px 'Syne Mono',monospace";
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(it,bx+10,by+30+i*10);
+  });
+}
+
+function drawCounter(){
+  // counter top surface — thick, glossy
+  grad(0,192,W,22,P.cTopHi,P.cTop);
+  // specular highlight stripe
+  grad(0,192,W,5,'rgba(255,255,255,.25)','rgba(255,255,255,.0)');
+  ctx.strokeStyle=P.cTopSha;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,213);ctx.lineTo(W,213);ctx.stroke();
+  // counter front face
+  grad(0,214,W,H-214,'#a07040','#7a5020');
+  // edge shadow under top
+  grad(0,214,W,12,'rgba(0,0,0,.35)','rgba(0,0,0,0)');
+  // vertical panel lines on front
+  [120,240,360].forEach(x=>{
+    grad(x,216,2,H-218,'rgba(255,255,255,.08)','rgba(255,255,255,.0)');
+    grad(x+2,216,2,H-218,'rgba(0,0,0,.15)','rgba(0,0,0,0)');
+  });
+  // under-counter shadow on floor
+  grad(0,H-20,W,20,'rgba(0,0,0,.4)','rgba(0,0,0,0)');
+}
+
+// ── MACHINE ──
+const MX=148, MY=105, MW=184, MH=90;
+
+function drawMachine(){
+  // machine shadow
+  const msha=ctx.createRadialGradient(MX+MW/2,MY+MH+8,0,MX+MW/2,MY+MH+8,MW*0.6);
+  msha.addColorStop(0,'rgba(0,0,0,.35)');msha.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=msha;ctx.fillRect(MX-20,MY+MH-10,MW+40,30);
+
+  // main body
+  const mbg=ctx.createLinearGradient(MX,MY,MX+MW,MY+MH);
+  mbg.addColorStop(0,'#3a2412');mbg.addColorStop(.5,'#2a1a0a');mbg.addColorStop(1,'#1e1206');
+  rrect(MX,MY,MW,MH,8,P.mBody);
+  ctx.fillStyle=mbg;ctx.beginPath();ctx.roundRect(MX,MY,MW,MH,8);ctx.fill();
+  // body highlight top
+  grad(MX+4,MY+2,MW-8,8,'rgba(255,255,255,.15)','rgba(255,255,255,0)');
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(MX+1,MY+1,MW-2,MH-2,7);ctx.stroke();
+
+  // chrome trim strips
+  grad(MX,MY+6,MW,4,P.mChrome,'#8a7030');
+  grad(MX,MY+MH-10,MW,4,'#8a7030',P.mChrome);
+
+  // display screen
+  const sx=MX+16,sy=MY+12,sw=MW-32,sh=28;
+  rrect(sx,sy,sw,sh,4,'#0d1a10');
+  grad(sx+2,sy+2,sw-4,sh-4,'#0a1a0e','#040e08');
+  ctx.strokeStyle='rgba(72,209,138,.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(sx+1,sy+1,sw-2,sh-2,3);ctx.stroke();
+  // screen glow
+  const scgl=ctx.createRadialGradient(sx+sw/2,sy+sh/2,0,sx+sw/2,sy+sh/2,sw/2);
+  scgl.addColorStop(0,'rgba(72,209,138,.08)');scgl.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=scgl;ctx.fillRect(sx,sy,sw,sh);
+
+  // pressure gauges — left + right
+  drawGauge(MX+10,MY+18,14);
+  drawGauge(MX+MW-24,MY+18,14);
+
+  // group head assembly
+  const ghx=MX+MW/2-28,ghy=MY+MH-22;
+  grad(ghx,ghy,56,14,P.mChrome,'#8a7030');
+  rrect(ghx+2,ghy+2,52,10,2,'rgba(0,0,0,.3)');
+  // portafilter
+  grad(MX+MW/2-20,MY+MH-12,40,14,'#8a7030','#5a4820');
+  rrect(MX+MW/2-18,MY+MH-8,36,8,2,'#6a5020');
+
+  // spouts
+  [-14,14].forEach(ox=>{
+    const sx2=MX+MW/2+ox-4;
+    grad(sx2,MY+MH+0,8,12,'#9a8040','#6a5820');
+    rrect(sx2+1,MY+MH+10,6,4,2,'#5a4818');
+  });
+
+  // side water tank
+  grad(MX+MW+2,MY+10,12,MH-20,'#3a2a10','#2a1a08');
+  rrect(MX+MW+3,MY+12,10,MH-24,3,'rgba(255,255,255,.06)');
+
+  // brand text on machine
+  ctx.fillStyle='rgba(240,192,64,.6)';
+  ctx.font="bold 9px 'Syne',sans-serif";
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('SPILL.',MX+MW/2,MY+42);
+}
+
+function drawGauge(cx,cy,r){
+  // gauge face
+  const gg=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+  gg.addColorStop(0,'#1a2a18');gg.addColorStop(1,'#0a1008');
+  circle(cx,cy,r,P.mChrome);
+  ctx.fillStyle=gg;ctx.beginPath();ctx.arc(cx,cy,r-2,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cy,r-1,0,Math.PI*2);ctx.stroke();
+  // needle
+  const angle=-0.5+Math.random()*0.3;
+  ctx.strokeStyle='#48d18a';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx,cy);
+  ctx.lineTo(cx+Math.cos(angle)*(r-4),cy+Math.sin(angle)*(r-4));
+  ctx.stroke();
+  circle(cx,cy,2,'#c0a050');
+}
+
+// ── STEAM ──
+let steamFrames=0,isSteaming=false;
+function drawSteam(){
+  if(!isSteaming)return;
+  steamFrames++;
+  const f=steamFrames;
+  [-14,14].forEach((ox,i)=>{
+    const bx=MX+MW/2+ox;
+    for(let p=0;p<6;p++){
+      const prog=((f*1.5+p*18+i*30)%100)/100;
+      const py=(MY+MH+14)-prog*55;
+      const px2=bx+Math.sin(f*0.08+p*1.2+i)*5*(1+prog);
+      const alpha=(1-prog)*0.5;
+      const r=2+prog*8;
+      const g=ctx.createRadialGradient(px2,py,0,px2,py,r);
+      g.addColorStop(0,`rgba(245,240,232,${alpha})`);
+      g.addColorStop(1,'rgba(245,240,232,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(px2,py,r,0,Math.PI*2);ctx.fill();
+    }
+  });
+}
+
+// ── CUP ──
+let cupOnCounter=false, currentDrinkObj=null;
+function drawCup(x,y){
+  if(!cupOnCounter||!currentDrinkObj)return;
+  const d=currentDrinkObj;
+  const cw=38,ch=52;
+  // cup shadow
+  const csha=ctx.createRadialGradient(x+cw/2,y+ch+4,0,x+cw/2,y+ch+4,24);
+  csha.addColorStop(0,'rgba(0,0,0,.3)');csha.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=csha;ctx.fillRect(x-6,y+ch-6,cw+12,20);
+  // cup body — slightly tapered
+  ctx.beginPath();ctx.moveTo(x+3,y);ctx.lineTo(x+cw-3,y);
+  ctx.lineTo(x+cw,y+ch);ctx.lineTo(x,y+ch);ctx.closePath();
+  grad(x,y,cw,ch,P.cupBg,'#e8e0cc');
+  // liquid fill
+  if(d.liquid){
+    ctx.beginPath();ctx.moveTo(x+3,y+10);ctx.lineTo(x+cw-3,y+10);
+    ctx.lineTo(x+cw-1,y+ch-1);ctx.lineTo(x+1,y+ch-1);ctx.closePath();
+    ctx.fillStyle=d.liquid;ctx.fill();
+  }
+  // foam on top
+  if(d.foam){
+    const fg=ctx.createLinearGradient(x,y+8,x,y+18);
+    fg.addColorStop(0,d.foam);fg.addColorStop(1,d.liquid);
+    ctx.fillStyle=fg;ctx.fillRect(x+3,y+8,cw-6,12);
+    // foam texture dots
+    ctx.fillStyle='rgba(255,255,255,.25)';
+    for(let i=0;i<4;i++) circle(x+6+i*8,y+11,2.5,'rgba(255,255,255,.2)');
+  }
+  // cup outline
+  ctx.beginPath();ctx.moveTo(x+3,y);ctx.lineTo(x+cw-3,y);
+  ctx.lineTo(x+cw,y+ch);ctx.lineTo(x,y+ch);ctx.closePath();
+  ctx.strokeStyle=P.cupLine;ctx.lineWidth=1.5;ctx.stroke();
+  // rim
+  grad(x+2,y,cw-4,8,P.cTopHi,P.cTop);
+  ctx.strokeStyle=P.cupLine;ctx.lineWidth=1;ctx.strokeRect(x+2,y,cw-4,8);
+  // handle
+  ctx.strokeStyle=P.cupLine;ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(x+cw+4,y+28,10,Math.PI*.35,Math.PI*1.65);ctx.stroke();
+  // highlight on cup
+  grad(x+4,y+2,6,ch-6,'rgba(255,255,255,.3)','rgba(255,255,255,.0)');
+  // sleeve band
+  grad(x,y+ch/2,cw,12,P.cFront,P.cFrontDark);
+  ctx.strokeStyle='rgba(0,0,0,.2)';ctx.lineWidth=1;ctx.strokeRect(x,y+ch/2,cw,12);
+}
+
+// ── CUSTOMER ──
+let custX=W+60, custTargetX=W/2;
+let custState='none';
+let custSkin,custShirt,custHair;
+let mouthState='neutral'; // neutral, happy, mad
+let blinkT=0,blink=false;
+let custBobT=0;
+
+function rndCust(){
+  custSkin=P.skins[Math.floor(Math.random()*P.skins.length)];
+  custShirt=P.shirts[Math.floor(Math.random()*P.shirts.length)];
+  custHair=P.hairs[Math.floor(Math.random()*P.hairs.length)];
+  mouthState='neutral';
+}
+
+function drawCustomer(x){
+  const cx=Math.round(x);
+  // bob
+  const bob=custState==='idle'?Math.sin(custBobT*0.04)*2:0;
+  const cy=bob;
+
+  // ── TORSO / SHOULDERS (behind counter, only visible upper chest up) ──
+  // We draw full body but the counter will paint over chest-down
+  // Wide shoulders
+  const sw=80, sh=55;
+  const tx=cx-sw/2, ty=155+cy;
+
+  // shirt body gradient
+  const sg=ctx.createLinearGradient(tx,ty,tx+sw,ty+sh);
+  sg.addColorStop(0,lighten(custShirt,.15));
+  sg.addColorStop(1,darken(custShirt,.2));
+  rrect(tx,ty,sw,sh,6,custShirt);
+  ctx.fillStyle=sg;ctx.beginPath();ctx.roundRect(tx,ty,sw,sh,6);ctx.fill();
+  // shirt highlight
+  grad(tx+4,ty+2,sw-8,10,'rgba(255,255,255,.18)','rgba(255,255,255,0)');
+  ctx.strokeStyle='rgba(0,0,0,.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(tx,ty,sw,sh,6);ctx.stroke();
+
+  // collar/neck
+  const nw=22,nh=20;
+  const ng=ctx.createLinearGradient(cx-nw/2,ty-nh,cx+nw/2,ty);
+  ng.addColorStop(0,custSkin);ng.addColorStop(1,darken(custSkin,.1));
+  rrect(cx-nw/2,ty-nh+4,nw,nh,4,custSkin);
+  ctx.fillStyle=ng;ctx.beginPath();ctx.roundRect(cx-nw/2,ty-nh+4,nw,nh,4);ctx.fill();
+
+  // ── HEAD ──
+  const hw=58,hh=66;
+  const hx=cx-hw/2, hy=ty-nh-hh+8+cy;
+
+  // head shadow beneath
+  const hsha=ctx.createRadialGradient(cx,hy+hh+4,0,cx,hy+hh+4,30);
+  hsha.addColorStop(0,'rgba(0,0,0,.2)');hsha.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=hsha;ctx.fillRect(cx-30,hy+hh-6,60,18);
+
+  // head shape
+  const hg=ctx.createLinearGradient(hx,hy,hx+hw,hy+hh);
+  hg.addColorStop(0,lighten(custSkin,.12));
+  hg.addColorStop(.6,custSkin);
+  hg.addColorStop(1,darken(custSkin,.15));
+  rrect(hx,hy,hw,hh,22,custSkin);
+  ctx.fillStyle=hg;ctx.beginPath();ctx.roundRect(hx,hy,hw,hh,22);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(hx,hy,hw,hh,22);ctx.stroke();
+
+  // ears
+  [hx-6, hx+hw+2].forEach((ex,i)=>{
+    rrect(ex,hy+hh/2-10,12,18,6,custSkin);
+    rrect(ex+(i===0?2:2),hy+hh/2-6,8,10,4,darken(custSkin,.08));
+  });
+
+  // hair
+  drawHair(cx,hy,hw,hh,custHair);
+
+  // eyes
+  drawEyes(cx,hy+hh*.38,blink);
+
+  // nose
+  drawNose(cx,hy+hh*.56,custSkin);
+
+  // mouth
+  drawMouth(cx,hy+hh*.72,mouthState);
+
+  // cheeks when happy
+  if(mouthState==='happy'){
+    ctx.fillStyle='rgba(220,100,80,.18)';
+    circle(cx-18,hy+hh*.62,10,'rgba(220,100,80,.18)');
+    circle(cx+18,hy+hh*.62,10,'rgba(220,100,80,.18)');
+  }
+}
+
+function drawHair(cx,hy,hw,hh,col){
+  const hx=cx-hw/2;
+  const hg=ctx.createLinearGradient(hx,hy,hx+hw,hy+hh*.4);
+  hg.addColorStop(0,lighten(col,.1));
+  hg.addColorStop(1,darken(col,.15));
+  // top hair cap
+  ctx.fillStyle=hg;
+  ctx.beginPath();
+  ctx.ellipse(cx,hy+hh*.18,hw*.54,hh*.3,0,Math.PI,0);
+  ctx.fill();
+  // side hair
+  ctx.fillStyle=col;
+  rrect(hx-2,hy+hh*.1,14,hh*.45,4,col);
+  rrect(hx+hw-12,hy+hh*.1,14,hh*.45,4,col);
+  ctx.strokeStyle='rgba(0,0,0,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.ellipse(cx,hy+hh*.18,hw*.54,hh*.3,0,Math.PI,0);ctx.stroke();
+}
+
+function drawEyes(cx,ey,blink){
+  [-16,16].forEach((ox,i)=>{
+    const ex=cx+ox,ry=ey;
+    if(blink){
+      // closed eye line
+      ctx.strokeStyle=P.black;ctx.lineWidth=2;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ex-7,ry);ctx.quadraticCurveTo(ex,ry+3,ex+7,ry);ctx.stroke();
+    } else {
+      // eye white
+      rrect(ex-8,ry-7,16,14,5,'#f8f8f8');
+      // iris
+      const ig=rgrad(ex,ry,6,'#5a8aa0','#2a4a60');
+      ctx.fillStyle=ig;circle(ex,ry,6,ig);
+      // pupil
+      circle(ex+1,ry,3.5,'#0a0a0a');
+      // glint
+      circle(ex+2,ry-2,1.5,'rgba(255,255,255,.9)');
+      // eyelid shadow
+      grad(ex-8,ry-7,16,5,'rgba(0,0,0,.12)','rgba(0,0,0,0)');
+      // eyelashes / outline
+      ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(ex-8,ry-7,16,14,5);ctx.stroke();
+    }
+    // eyebrow
+    const browCol=darken(custHair,.1);
+    ctx.fillStyle=browCol;ctx.beginPath();
+    ctx.ellipse(ex,ry-12,7,3,i===0?-.15:.15,0,Math.PI*2);ctx.fill();
+  });
+}
+
+function drawNose(cx,ny,skin){
+  ctx.fillStyle=darken(skin,.08);
+  ctx.beginPath();ctx.ellipse(cx,ny,5,4,0,0,Math.PI);ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,.1)';
+  circle(cx-4,ny+1,2.5,'rgba(0,0,0,.1)');
+  circle(cx+4,ny+1,2.5,'rgba(0,0,0,.1)');
+}
+
+function drawMouth(cx,my2,state){
+  ctx.strokeStyle=P.black;ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+  if(state==='happy'){
+    // big smile
+    ctx.beginPath();ctx.moveTo(cx-12,my2);ctx.quadraticCurveTo(cx,my2+12,cx+12,my2);ctx.stroke();
+    // teeth
+    rrect(cx-8,my2-2,16,5,2,'#f8f8f8');
+    ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx,my2-2);ctx.lineTo(cx,my2+3);ctx.stroke();
+  } else if(state==='mad'){
+    // frown
+    ctx.beginPath();ctx.moveTo(cx-11,my2+4);ctx.quadraticCurveTo(cx,my2-4,cx+11,my2+4);ctx.stroke();
+    // angry brows
+    ctx.strokeStyle=darken(custHair,.1);ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(cx-20,my2-28);ctx.lineTo(cx-8,my2-24);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+8,my2-24);ctx.lineTo(cx+20,my2-28);ctx.stroke();
+  } else {
+    // neutral
+    ctx.beginPath();ctx.moveTo(cx-9,my2);ctx.quadraticCurveTo(cx,my2+3,cx+9,my2);ctx.stroke();
+  }
+}
+
+// colour helpers
+function lighten(hex,amt){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return '#'+[r,g,b].map(v=>Math.min(255,Math.round(v+v*amt)).toString(16).padStart(2,'0')).join('');
+}
+function darken(hex,amt){return lighten(hex,-amt)}
+
+// ── SPEECH BUBBLE ──
+let speechText='',speechVisible=false;
+function drawSpeech(x){
+  if(!speechVisible||!speechText)return;
+  ctx.font="10px 'Syne Mono',monospace";
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const words=speechText.split(' ');
+  const lines=[];let cur='';
+  words.forEach(w=>{
+    if(ctx.measureText((cur+' '+w).trim()).width>130){lines.push(cur.trim());cur=w;}
+    else cur=(cur+' '+w).trim();
+  });
+  if(cur)lines.push(cur);
+  const pw=Math.min(160,lines.reduce((m,l)=>Math.max(m,ctx.measureText(l).width),0)+24);
+  const ph=lines.length*16+14;
+  const bx=Math.min(Math.max(x-pw/2,8),W-pw-8);
+  const by=62;
+  // shadow
+  rrect(bx+3,by+3,pw,ph,10,'rgba(0,0,0,.2)');
+  // bubble
+  rrect(bx,by,pw,ph,10,P.cream);
+  ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(bx,by,pw,ph,10);ctx.stroke();
+  // highlight
+  grad(bx+4,by+2,pw-8,8,'rgba(255,255,255,.6)','rgba(255,255,255,0)');
+  // tail
+  const tx2=Math.min(Math.max(x,bx+16),bx+pw-16);
+  ctx.fillStyle=P.cream;
+  ctx.beginPath();ctx.moveTo(tx2-6,by+ph);ctx.lineTo(tx2,by+ph+10);ctx.lineTo(tx2+6,by+ph);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(tx2-6,by+ph);ctx.lineTo(tx2,by+ph+10);ctx.lineTo(tx2+6,by+ph);ctx.stroke();
+  // text
+  lines.forEach((l,i)=>{
+    ctx.fillStyle=P.black;ctx.font="10px 'Syne Mono',monospace";
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(l,bx+pw/2,by+10+i*16);
+  });
+}
+
+// ── PATIENCE BAR ──
+let patience=1;
+function drawPatienceBar(){
+  if(custState==='none'||custState==='leaving-happy'||custState==='leaving-mad')return;
+  const bx=W-120,by=H-34,bw=100,bh=10;
+  // backing
+  rrect(bx-2,by-2,bw+4,bh+4,5,'rgba(0,0,0,.4)');
+  rrect(bx,by,bw,bh,4,'rgba(0,0,0,.4)');
+  // fill
+  const col=patience>0.5?'#48d18a':patience>0.25?'#f0c040':'#d4501a';
+  const filled=Math.max(0,Math.round(bw*patience));
+  if(filled>0){
+    const pg=ctx.createLinearGradient(bx,by,bx+filled,by);
+    pg.addColorStop(0,lighten(col,.2));pg.addColorStop(1,col);
+    ctx.fillStyle=pg;ctx.beginPath();ctx.roundRect(bx,by,filled,bh,4);ctx.fill();
+  }
+  ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(bx,by,bw,bh,4);ctx.stroke();
+  // label
+  ctx.fillStyle='rgba(245,240,232,.5)';ctx.font="7px 'Syne Mono',monospace";
+  ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText('PATIENCE',bx-6,by+hh/2+5);
+}
+const hh=5;
+
+// ── RENDER LOOP ──
+let gameRunning=false,displayText='READY',madeCorrect=false;
+let gameStart=0;
+const GAME_DUR=90000,PAT_DUR=11000;
+let patStart=0,score=0,served=0,lives=3,inputLocked=false;
+
+function render(){
+  ctx.clearRect(0,0,W,H);
+  // 1. background (their wall)
+  drawBackground();
+  // 2. customer — drawn behind counter
+  custBobT++;
+  blinkT++;if(blinkT>100){blink=true;}if(blinkT>106){blink=false;blinkT=0;}
+  if(custState!=='none'){
+    if(custState==='entering') custX+=(custTargetX-custX)*0.1;
+    else if(custState==='leaving-happy') custX-=4;
+    else if(custState==='leaving-mad') custX+=5;
+    drawCustomer(custX);
+    drawSpeech(custX);
+  }
+  // 3. counter ON TOP — clips customer body below counter top
+  drawCounter();
+  // 4. machine on our side
+  drawMachine();
+  drawSteam();
+  // 5. cup on counter
+  drawCup(W-100,178);
+  // 6. patience
+  drawPatienceBar();
+  // 7. machine display
+  ctx.fillStyle='#48d18a';ctx.font="bold 9px 'Syne Mono',monospace";
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(displayText,MX+MW/2,MY+27);
+  // update patience
+  if(gameRunning&&(custState==='idle'||custState==='entering')){
+    patience=Math.max(0,1-(Date.now()-patStart)/PAT_DUR);
+    if(patience<=0&&!madeCorrect&&!inputLocked) walkOut();
+  }
+  if(gameRunning){
+    const e=Date.now()-gameStart;
+    document.getElementById('tfill').style.width=Math.max(0,(1-e/GAME_DUR)*100)+'%';
+    if(e>=GAME_DUR) endGame();
+  }
+  requestAnimationFrame(render);
+}
+render();
+
+// ── GAME LOGIC ──
+function spawnCustomer(){
+  if(!gameRunning)return;
+  rndCust();madeCorrect=false;cupOnCounter=false;isSteaming=false;inputLocked=false;
+  currentDrinkObj=DRINKS[Math.floor(Math.random()*DRINKS.length)];
+  custX=W+80;custTargetX=W/2;custState='entering';
+  displayText='ORDER UP';patience=1;
+  document.getElementById('serveBtn').classList.remove('show');
+  setTimeout(()=>{
+    if(!gameRunning)return;
+    custState='idle';
+    speechText=currentDrinkObj.orders[Math.floor(Math.random()*currentDrinkObj.orders.length)];
+    speechVisible=true;patStart=Date.now();
+    setTimeout(()=>speechVisible=false,3200);
+  },800);
+}
+
+function pressBtn(id){
+  if(!gameRunning||madeCorrect||inputLocked||custState!=='idle')return;
+  const btn=document.querySelector(`.dbtn[data-id="${id}"]`);
+  if(id===currentDrinkObj.id){
+    btn&&btn.classList.add('correct');
+    setTimeout(()=>btn&&btn.classList.remove('correct'),600);
+    displayText='BREWING';isSteaming=true;steamFrames=0;speechVisible=false;inputLocked=true;
+    setTimeout(()=>{
+      isSteaming=false;displayText='READY';
+      madeCorrect=true;cupOnCounter=true;
+      document.getElementById('serveBtn').classList.add('show');
+      toast('looking good — hand it over');
+    },1800);
+  } else {
+    btn&&btn.classList.add('wrong');
+    setTimeout(()=>btn&&btn.classList.remove('wrong'),400);
+    patience=Math.max(0,patience-.15);
+    patStart=Date.now()-((1-patience)*PAT_DUR);
+    toast('wrong drink — try again');
+  }
+}
+
+document.getElementById('serveBtn').addEventListener('click',()=>{
+  if(!madeCorrect)return;
+  mouthState='happy';
+  const pts=Math.round(40+patience*90);
+  score+=pts;served++;
+  document.getElementById('scoreEl').textContent=score;
+  document.getElementById('servedEl').textContent=served;
+  toast('+'+pts+' pts');
+  cupOnCounter=false;document.getElementById('serveBtn').classList.remove('show');
+  speechText='thanks!';speechVisible=true;
+  setTimeout(()=>{speechVisible=false;custState='leaving-happy';},700);
+  setTimeout(()=>{custState='none';displayText='READY';if(gameRunning)setTimeout(spawnCustomer,500);},1500);
+});
+
+function walkOut(){
+  if(inputLocked)return;
+  inputLocked=true;mouthState='mad';
+  speechText='forget it.';speechVisible=true;
+  setTimeout(()=>{speechVisible=false;custState='leaving-mad';},500);
+  loseLife();
+  setTimeout(()=>{custState='none';displayText='READY';if(gameRunning)setTimeout(spawnCustomer,600);},1100);
+}
+
+function loseLife(){
+  if(lives>0){lives--;document.getElementById('lh'+lives).classList.add('lost');}
+  if(lives<=0){gameRunning=false;setTimeout(endGame,900);}
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// build drink buttons
+function buildBtns(){
+  const wrap=document.getElementById('drinkBtns');wrap.innerHTML='';
+  DRINKS.forEach(d=>{
+    const b=document.createElement('button');
+    b.className='dbtn';b.dataset.id=d.id;
+    b.innerHTML=`<span class="dbtn-icon">${d.icon}</span><span class="dbtn-label">${d.label}</span>`;
+    b.addEventListener('click',()=>pressBtn(d.id));
+    wrap.appendChild(b);
+  });
+}
+buildBtns();
+
+function startGame(){
+  document.getElementById('startOv').style.display='none';
+  score=0;served=0;lives=3;gameRunning=true;gameStart=Date.now();
+  ['lh0','lh1','lh2'].forEach(id=>document.getElementById(id).classList.remove('lost'));
+  document.getElementById('scoreEl').textContent='0';
+  document.getElementById('servedEl').textContent='0';
+  spawnCustomer();
+}
+
+function endGame(){
+  gameRunning=false;
+  const best=parseInt(localStorage.getItem('spill_barista_best')||'0');
+  if(score>best)localStorage.setItem('spill_barista_best',score);
+  const b=Math.max(score,best);
+  document.getElementById('goScore').textContent=score;
+  document.getElementById('goTitle').textContent=score>280?'legendary shift.':score>150?'pretty decent.':score>60?'needs practice.':'rough morning.';
+  document.getElementById('goSub').innerHTML=`${served} customers served · best ever: ${b} pts`;
+  document.getElementById('goOv').style.display='flex';
+  custState='none';
+}
+
+document.getElementById('startBtn').addEventListener('click',startGame);
+document.getElementById('restartBtn').addEventListener('click',()=>{
+  document.getElementById('goOv').style.display='none';
+  score=0;served=0;lives=3;gameRunning=true;gameStart=Date.now();
+  ['lh0','lh1','lh2'].forEach(id=>document.getElementById(id).classList.remove('lost'));
+  document.getElementById('scoreEl').textContent='0';
+  document.getElementById('servedEl').textContent='0';
+  document.getElementById('tfill').style.width='100%';
+  spawnCustomer();
+});
+</script>
+</body>
+</html>

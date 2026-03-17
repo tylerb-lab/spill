@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Coffee Tier List — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital@1&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f5f0e8;--ink:#1a1208;--rust:#d4501a;--yellow:#f0c040;--green:#2a4a28;--espresso:#2d1a08;--mid:#7a6050;--border:#d4c8a8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Syne Mono',monospace;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:7px;height:7px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);text-decoration:none;z-index:10;transition:color .2s}.back:hover{color:var(--rust)}
+.page{max-width:860px;margin:0 auto;padding:80px 24px 60px}
+.hdr{text-align:center;margin-bottom:48px;opacity:0;animation:up .7s ease .1s forwards}
+.hdr-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:10px}
+.hdr-title{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(42px,8vw,72px);line-height:.92;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px}
+.hdr-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
+/* tiers */
+.tiers{display:flex;flex-direction:column;gap:3px;margin-bottom:32px;opacity:0;animation:up .8s ease .3s forwards}
+.tier-row{display:flex;align-items:stretch;min-height:72px;border:1.5px solid var(--border)}
+.tier-label{width:64px;min-width:64px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;border-right:1.5px solid var(--border);flex-shrink:0}
+.tier-S .tier-label{background:#d4501a;color:#fff}
+.tier-A .tier-label{background:#e07020;color:#fff}
+.tier-B .tier-label{background:#e8a020;color:#fff}
+.tier-C .tier-label{background:#c8b040;color:#fff}
+.tier-D .tier-label{background:#8a9848;color:#fff}
+.tier-F .tier-label{background:#6a7a6a;color:#fff}
+.tier-drop{flex:1;display:flex;flex-wrap:wrap;gap:6px;padding:8px;align-content:flex-start;min-height:72px;transition:background .15s}
+.tier-drop.drag-over{background:rgba(212,80,26,.06)}
+/* unranked */
+.unranked-wrap{opacity:0;animation:up .8s ease .5s forwards}
+.unranked-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+.unranked-pool{display:flex;flex-wrap:wrap;gap:6px;padding:16px;border:1.5px dashed var(--border);min-height:80px;transition:background .15s}
+.unranked-pool.drag-over{background:rgba(212,80,26,.04)}
+/* drink chips */
+.drink{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border);padding:7px 12px;font-size:11px;letter-spacing:.04em;cursor:grab;user-select:none;border-radius:2px;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.drink:active{cursor:grabbing;transform:scale(1.04);box-shadow:0 4px 16px rgba(26,18,8,.15)}
+.drink.dragging{opacity:.4}
+.drink-emoji{font-size:14px}
+/* actions */
+.actions{display:flex;gap:10px;margin-top:24px;opacity:0;animation:up .8s ease .7s forwards}
+.act-btn{background:transparent;border:1.5px solid var(--border);font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:10px 20px;cursor:pointer;color:var(--mid);transition:all .2s}
+.act-btn:hover{border-color:var(--rust);color:var(--rust)}
+.act-btn.primary{background:var(--rust);border-color:var(--rust);color:#fff}
+.act-btn.primary:hover{background:#b84016}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<a href="index.html" class="back">← spill.</a>
+<div class="page">
+  <div class="hdr">
+    <p class="hdr-label">Spill. Tier List</p>
+    <h1 class="hdr-title">rank every<br>coffee drink.</h1>
+    <p class="hdr-sub">drag them into position. defend your choices.</p>
+  </div>
+  <div class="tiers" id="tiers">
+    <div class="tier-row tier-S"><div class="tier-label">S</div><div class="tier-drop" data-tier="S"></div></div>
+    <div class="tier-row tier-A"><div class="tier-label">A</div><div class="tier-drop" data-tier="A"></div></div>
+    <div class="tier-row tier-B"><div class="tier-label">B</div><div class="tier-drop" data-tier="B"></div></div>
+    <div class="tier-row tier-C"><div class="tier-label">C</div><div class="tier-drop" data-tier="C"></div></div>
+    <div class="tier-row tier-D"><div class="tier-label">D</div><div class="tier-drop" data-tier="D"></div></div>
+    <div class="tier-row tier-F"><div class="tier-label">F</div><div class="tier-drop" data-tier="F"></div></div>
+  </div>
+  <div class="unranked-wrap">
+    <p class="unranked-label">Unranked — drag into a tier</p>
+    <div class="unranked-pool" id="pool"></div>
+  </div>
+  <div class="actions">
+    <button class="act-btn" id="resetBtn">Reset</button>
+    <button class="act-btn primary" id="saveBtn">Save & Share</button>
+  </div>
+  <div id="shareOut" style="display:none;margin-top:16px;font-size:11px;color:var(--mid);line-height:1.8;font-family:'Crimson Pro',serif;font-style:italic;padding:16px;border:1px solid var(--border)"></div>
+</div>
+<script>
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
+
+const DRINKS=[
+  {id:'espresso',label:'Espresso',emoji:'☕'},
+  {id:'flatwhite',label:'Flat White',emoji:'🥛'},
+  {id:'latte',label:'Latte',emoji:'☕'},
+  {id:'cappuccino',label:'Cappuccino',emoji:'☕'},
+  {id:'coldcrew',label:'Cold Brew',emoji:'🧊'},
+  {id:'aeropress',label:'Aeropress',emoji:'⚗️'},
+  {id:'v60',label:'V60',emoji:'🫗'},
+  {id:'lungo',label:'Lungo',emoji:'☕'},
+  {id:'ristretto',label:'Ristretto',emoji:'💧'},
+  {id:'macchiato',label:'Macchiato',emoji:'☕'},
+  {id:'cortado',label:'Cortado',emoji:'☕'},
+  {id:'frenchpress',label:'French Press',emoji:'🫖'},
+  {id:'moka',label:'Moka Pot',emoji:'🫖'},
+  {id:'tonic',label:'Espresso Tonic',emoji:'🥤'},
+  {id:'affogato',label:'Affogato',emoji:'🍨'},
+  {id:'iced',label:'Iced Latte',emoji:'🧊'},
+  {id:'decaf',label:'Decaf',emoji:'😶'},
+  {id:'instant',label:'Instant Coffee',emoji:'💀'},
+];
+
+const pool=document.getElementById('pool');
+let dragged=null;
+
+function makeDrink(d){
+  const el=document.createElement('div');
+  el.className='drink';
+  el.draggable=true;
+  el.dataset.id=d.id;
+  el.innerHTML=`<span class="drink-emoji">${d.emoji}</span>${d.label}`;
+  el.addEventListener('dragstart',e=>{dragged=el;setTimeout(()=>el.classList.add('dragging'),0)});
+  el.addEventListener('dragend',()=>{dragged=null;el.classList.remove('dragging')});
+  return el;
+}
+
+// init pool
+DRINKS.forEach(d=>pool.appendChild(makeDrink(d)));
+
+// drop zones
+document.querySelectorAll('.tier-drop, .unranked-pool').forEach(zone=>{
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    if(dragged) zone.appendChild(dragged);
+  });
+});
+
+// save
+document.getElementById('saveBtn').addEventListener('click',()=>{
+  const out=document.getElementById('shareOut');
+  let lines=[];
+  document.querySelectorAll('.tier-drop').forEach(z=>{
+    const tier=z.dataset.tier;
+    const names=[...z.querySelectorAll('.drink')].map(d=>d.dataset.id);
+    if(names.length) lines.push(`${tier}: ${names.join(', ')}`);
+  });
+  if(!lines.length){out.style.display='block';out.textContent='you haven\'t ranked anything yet. drag some drinks.';return;}
+  out.style.display='block';
+  out.textContent='Your tier list:\n'+lines.join('\n')+'\n\nspill.coffee — the only ranking that matters.';
+});
+
+// reset
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  pool.innerHTML='';
+  document.querySelectorAll('.tier-drop').forEach(z=>z.innerHTML='');
+  document.getElementById('shareOut').style.display='none';
+  DRINKS.forEach(d=>pool.appendChild(makeDrink(d)));
+});
+</script>
+</body>
+</html>

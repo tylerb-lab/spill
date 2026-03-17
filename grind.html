@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Grind. — Spill.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Syne+Mono&family=Crimson+Pro:ital,wght@1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f5f0e8;--ink:#1a1208;--rust:#d4501a;--yellow:#f0c040;--green:#2a4a28;--espresso:#2d1a08;--mid:#7a6050;--border:#d4c8a8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Syne Mono',monospace;overflow:hidden;cursor:none}
+#cur{position:fixed;width:7px;height:7px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.back{position:fixed;top:26px;left:28px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);text-decoration:none;z-index:10;transition:color .2s}.back:hover{color:var(--rust)}
+.page{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;user-select:none}
+/* header */
+.game-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(36px,7vw,64px);letter-spacing:-.03em;margin-bottom:4px;text-align:center}
+.game-title span{color:var(--rust)}
+.game-sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:40px;text-align:center}
+/* zone */
+.zone-wrap{position:relative;width:min(480px,90vw);height:180px;background:#fff;border:2px solid var(--border);overflow:hidden;margin-bottom:24px}
+/* zones */
+.zone{position:absolute;top:0;bottom:0}
+.zone-bad-l{left:0;width:20%;background:rgba(212,80,26,.12)}
+.zone-ok-l{left:20%;width:15%;background:rgba(240,192,64,.15)}
+.zone-good{left:35%;width:30%;background:rgba(42,74,40,.12)}
+.zone-ok-r{left:65%;width:15%;background:rgba(240,192,64,.15)}
+.zone-bad-r{left:80%;width:20%;background:rgba(212,80,26,.12)}
+/* zone labels */
+.zlbl{position:absolute;top:8px;font-size:8px;letter-spacing:.12em;text-transform:uppercase;width:100%;text-align:center}
+.zone-bad-l .zlbl,.zone-bad-r .zlbl{color:var(--rust)}
+.zone-ok-l .zlbl,.zone-ok-r .zlbl{color:#a07820}
+.zone-good .zlbl{color:var(--green)}
+/* bean */
+.bean{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;transition:none;cursor:pointer}
+.bean-inner{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15))}
+/* indicator line */
+.indicator{position:absolute;top:0;bottom:0;width:2px;background:var(--rust);left:50%;transform:translateX(-50%);opacity:.3;pointer-events:none}
+/* verdict */
+.verdict{height:48px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:16px}
+.verdict-main{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(20px,4vw,28px);opacity:0;transition:opacity .3s}
+.verdict-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);opacity:0;transition:opacity .3s;margin-top:4px}
+/* score */
+.score-row{display:flex;gap:28px;align-items:center;justify-content:center;margin-bottom:24px}
+.score-item{text-align:center}
+.score-num{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;line-height:1;margin-bottom:2px}
+.score-lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
+/* button */
+.grind-btn{background:var(--espresso);color:var(--bg);font-family:'Syne Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;border:none;padding:14px 36px;cursor:pointer;border-radius:2px;transition:background .15s;margin-bottom:8px}
+.grind-btn:hover{background:var(--rust)}
+.grind-btn:active{transform:scale(.97)}
+.hint{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
+/* multiplier bar */
+.multi-bar{width:min(480px,90vw);height:6px;background:var(--border);border-radius:3px;margin-bottom:16px;overflow:hidden}
+.multi-fill{height:100%;background:var(--rust);border-radius:3px;width:0%;transition:width .3s}
+.multi-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);text-align:center;margin-bottom:20px}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<a href="index.html" class="back">← spill.</a>
+<div class="page">
+  <h1 class="game-title">Grind<span>.</span></h1>
+  <p class="game-sub">click the bean when it's in the sweet spot</p>
+  <div class="zone-wrap" id="zoneWrap">
+    <div class="zone zone-bad-l"><p class="zlbl">sour</p></div>
+    <div class="zone zone-ok-l"><p class="zlbl">ok</p></div>
+    <div class="zone zone-good"><p class="zlbl">perfect</p></div>
+    <div class="zone zone-ok-r"><p class="zlbl">ok</p></div>
+    <div class="zone zone-bad-r"><p class="zlbl">bitter</p></div>
+    <div class="indicator"></div>
+    <div class="bean" id="bean"><div class="bean-inner">☕</div></div>
+  </div>
+  <div class="verdict">
+    <p class="verdict-main" id="vMain"></p>
+    <p class="verdict-sub" id="vSub"></p>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><div class="score-num" id="scoreNum">0</div><div class="score-lbl">score</div></div>
+    <div class="score-item"><div class="score-num" id="streakNum">0</div><div class="score-lbl">streak</div></div>
+    <div class="score-item"><div class="score-num" id="bestNum">0</div><div class="score-lbl">best</div></div>
+  </div>
+  <div class="multi-bar"><div class="multi-fill" id="multiFill"></div></div>
+  <p class="multi-label" id="multiLabel">multiplier ×1</p>
+  <button class="grind-btn" id="mainBtn">start grinding</button>
+  <p class="hint" id="hint">click the bean — not the button</p>
+</div>
+<script>
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
+
+const bean=document.getElementById('bean');
+const wrap=document.getElementById('zoneWrap');
+const vMain=document.getElementById('vMain');
+const vSub=document.getElementById('vSub');
+const scoreEl=document.getElementById('scoreNum');
+const streakEl=document.getElementById('streakNum');
+const bestEl=document.getElementById('bestNum');
+const multiFill=document.getElementById('multiFill');
+const multiLabel=document.getElementById('multiLabel');
+const mainBtn=document.getElementById('mainBtn');
+const hint=document.getElementById('hint');
+
+let running=false,pos=0,dir=1,speed=2.5,raf=null;
+let score=0,streak=0,best=parseInt(localStorage.getItem('spill_grind_best')||'0'),multi=1;
+bestEl.textContent=best;
+
+const VERDICTS={
+  perfect:['Perfect extraction.','Sweet spot. Nailed it.','Chef\'s kiss. Actually.','The ratio gods are pleased.','Peak extraction. Rare.'],
+  ok:['Decent. Could be worse.','Not bad. Not great.','Your barista would forgive you.','Acceptable. Don\'t brag.','Fine. It\'s fine.'],
+  sour:['Under-extracted. Sad.','Tastes like a lemon argued with coffee.','Coarser grind. Try again.','Sour notes. You went early.','Your pour over is crying.'],
+  bitter:['Over-extracted. Rookie error.','Bitter like a bad review.','Finer grind needed. Or better timing.','Your espresso has opinions about you.','Burnt. Move on.'],
+};
+
+function getVerdict(type){
+  const arr=VERDICTS[type];
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function getZone(pct){
+  if(pct<20)return'sour';
+  if(pct<35)return'ok';
+  if(pct<65)return'perfect';
+  if(pct<80)return'ok';
+  return'bitter';
+}
+
+function showVerdict(type,pts){
+  const colors={perfect:getComputedStyle(document.documentElement).getPropertyValue('--green'),ok:'#8a6010',sour:'#c04020',bitter:'#8a3010'};
+  vMain.style.color=colors[type]||'var(--ink)';
+  vMain.textContent=getVerdict(type);
+  vSub.textContent=pts>0?'+'+pts+' points':'no points. rough.';
+  vMain.style.opacity='1';vSub.style.opacity='1';
+  setTimeout(()=>{vMain.style.opacity='0';vSub.style.opacity='0';},1400);
+}
+
+function updateMulti(){
+  multi=streak>=10?4:streak>=6?3:streak>=3?2:1;
+  multiFill.style.width=Math.min(streak/10*100,100)+'%';
+  multiLabel.textContent='multiplier ×'+multi+(streak>=10?' 🔥':'');
+}
+
+function loop(){
+  if(!running)return;
+  const w=wrap.clientWidth-40;
+  pos+=speed*dir;
+  if(pos>=w){pos=w;dir=-1;}
+  if(pos<=0){pos=0;dir=1;}
+  // vary speed slightly
+  speed=2+Math.random()*0.05;
+  bean.style.left=pos+'px';
+  raf=requestAnimationFrame(loop);
+}
+
+function startGame(){
+  running=true;
+  mainBtn.style.display='none';
+  hint.textContent='click the bean!';
+  pos=0;dir=1;speed=2.5;
+  raf=requestAnimationFrame(loop);
+}
+
+bean.addEventListener('click',()=>{
+  if(!running)return;
+  const w=wrap.clientWidth-40;
+  const pct=(pos/w)*100;
+  const zone=getZone(pct);
+  let pts=0;
+  if(zone==='perfect'){pts=100*multi;streak++;}
+  else if(zone==='ok'){pts=30*multi;streak=Math.max(0,streak-1);}
+  else{pts=0;streak=0;}
+  score+=pts;
+  if(score>best){best=score;localStorage.setItem('spill_grind_best',best);}
+  scoreEl.textContent=score;
+  streakEl.textContent=streak;
+  bestEl.textContent=best;
+  updateMulti();
+  showVerdict(zone,pts);
+  // briefly pause then resume faster
+  running=false;
+  cancelAnimationFrame(raf);
+  speed=Math.min(speed+0.3,6);
+  setTimeout(()=>{running=true;raf=requestAnimationFrame(loop);},400);
+});
+
+mainBtn.addEventListener('click',startGame);
+</script>
+</body>
+</html>
