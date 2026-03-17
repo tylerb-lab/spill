@@ -80,24 +80,24 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
 (function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(loop)})();
 
 const DRINKS=[
-  {id:'espresso',label:'Espresso',emoji:'☕'},
-  {id:'flatwhite',label:'Flat White',emoji:'🥛'},
-  {id:'latte',label:'Latte',emoji:'☕'},
-  {id:'cappuccino',label:'Cappuccino',emoji:'☕'},
-  {id:'coldcrew',label:'Cold Brew',emoji:'🧊'},
-  {id:'aeropress',label:'Aeropress',emoji:'⚗️'},
-  {id:'v60',label:'V60',emoji:'🫗'},
-  {id:'lungo',label:'Lungo',emoji:'☕'},
-  {id:'ristretto',label:'Ristretto',emoji:'💧'},
-  {id:'macchiato',label:'Macchiato',emoji:'☕'},
-  {id:'cortado',label:'Cortado',emoji:'☕'},
-  {id:'frenchpress',label:'French Press',emoji:'🫖'},
-  {id:'moka',label:'Moka Pot',emoji:'🫖'},
-  {id:'tonic',label:'Espresso Tonic',emoji:'🥤'},
-  {id:'affogato',label:'Affogato',emoji:'🍨'},
-  {id:'iced',label:'Iced Latte',emoji:'🧊'},
-  {id:'decaf',label:'Decaf',emoji:'😶'},
-  {id:'instant',label:'Instant Coffee',emoji:'💀'},
+  {id:'espresso',label:'Espresso'},
+  {id:'flatwhite',label:'Flat White'},
+  {id:'latte',label:'Latte'},
+  {id:'cappuccino',label:'Cappuccino'},
+  {id:'coldcrew',label:'Cold Brew'},
+  {id:'aeropress',label:'Aeropress'},
+  {id:'v60',label:'V60'},
+  {id:'lungo',label:'Lungo'},
+  {id:'ristretto',label:'Ristretto'},
+  {id:'macchiato',label:'Macchiato'},
+  {id:'cortado',label:'Cortado'},
+  {id:'frenchpress',label:'French Press'},
+  {id:'moka',label:'Moka Pot'},
+  {id:'tonic',label:'Espresso Tonic'},
+  {id:'affogato',label:'Affogato'},
+  {id:'iced',label:'Iced Latte'},
+  {id:'decaf',label:'Decaf'},
+  {id:'instant',label:'Instant Coffee'},
 ];
 
 const pool=document.getElementById('pool');
@@ -108,7 +108,7 @@ function makeDrink(d){
   el.className='drink';
   el.draggable=true;
   el.dataset.id=d.id;
-  el.innerHTML=`<span class="drink-emoji">${d.emoji}</span>${d.label}`;
+  el.innerHTML=d.label;
   el.addEventListener('dragstart',e=>{dragged=el;setTimeout(()=>el.classList.add('dragging'),0)});
   el.addEventListener('dragend',()=>{dragged=null;el.classList.remove('dragging')});
   return el;
